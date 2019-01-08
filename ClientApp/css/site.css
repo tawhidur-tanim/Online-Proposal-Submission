@@ -1,9 +1,9 @@
-/* This file should be reviewed. It's not optimal, but it works for now. */
+/* 
 .navbar {
     display: list-item;
 }
 
-/* Highlighting rules for nav menu items */
+
 .nav-item a.active,
 .nav-item a.active:hover,
 .nav-item a.active:focus {
@@ -18,7 +18,7 @@
     color: white;
 }
 
-/* Keep the nav menu independent of scrolling and on top of other items */
+
 .main-nav {
     position: fixed;
     top: 0;
@@ -28,17 +28,17 @@
 }
 
 @media (max-width: 767px) {
-    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+
     body {
         padding-top: 50px;
     }
 }
 
 @media (min-width: 768px) {
-    /* On small screens, convert the nav menu to a vertical sidebar */
+
     .main-nav {
         height: 100%;
-        width: calc(25% - 20px);
+        width: calc(25% - 100px);
     }    
     .main-nav .navbar {
         border-radius: 0px;
@@ -70,10 +70,17 @@
     }
     
     .navbar a {
-        /* If a menu item's text is too long, truncate it */
-        width: 95%; /* Bug to fix here. Width 100% overflow. */
+
+        width: 95%; 
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 }
+
+
+  
+
+  
+
+   */

@@ -1,51 +1,19 @@
-﻿<template>
-    <div>
-        <h1>Weather forecast</h1>
-
-        <p>This component demonstrates fetching data from the server.</p>
-
-        <div v-if="!forecasts" class="text-center">
-            <p><em>Loading...</em></p>
-            <h1><icon icon="spinner" pulse/></h1>            
-        </div>
-
-        <template v-if="forecasts">
-            <table class="table">
-                <thead  class="bg-dark text-white">
-                    <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr :class="index % 2 == 0 ? 'bg-white' : 'bg-light'" v-for="(forecast, index) in forecasts" :key="index">
-                        <td>{{ forecast.dateFormatted }}</td>
-                        <td>{{ forecast.temperatureC }}</td>
-                        <td>{{ forecast.temperatureF }}</td>
-                        <td>{{ forecast.summary }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <nav aria-label="...">
-                <ul class="pagination justify-content-center">
-                    <li :class="'page-item' + (currentPage == 1 ? ' disabled' : '')">
-                        <a class="page-link" href="#" tabindex="-1" @click="loadPage(currentPage - 1)">Previous</a>
-                    </li>
-                    <li :class="'page-item' + (n == currentPage ? ' active' : '')" v-for="(n, index) in totalPages" :key="index">
-                        <a class="page-link" href="#" @click="loadPage(n)">{{n}}</a>
-                    </li>
-                    <li :class="'page-item' + (currentPage < totalPages ? '' : ' disabled')">
-                        <a class="page-link" href="#" @click="loadPage(currentPage + 1)">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </template>
+<template>
+  <div class="content">
+    <div class="content-header">
+      <h1>Weather forecast</h1>
     </div>
+
+    <appTable :tableConfig="config">
+    </appTable>
+
+  </div>
 </template>
 
 <script>
+
+import table from './clientTable.vue'
+
 export default {
   computed: {
     totalPages: function () {
@@ -58,7 +26,88 @@ export default {
       forecasts: null,
       total: 0,
       pageSize: 5,
-      currentPage: 1
+      currentPage: 1,
+
+      config:{
+        data: [
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        {
+          name: 'Tanim',
+          age: 23
+        },
+        ],
+        columns: ["name","age"],
+        actions:{
+          Edit: {
+            callBack: function(row,root){
+                console.log("Row___________",row);
+            root.$toastr.s('success')
+            },
+            cssClass: "btn-success"
+          },
+          Delete: {
+            callBack: function(row){
+                console.log("Row___________",row,);
+            },
+            cssClass: "btn-danger"
+          }
+        },
+
+        templates:{
+
+          age: function(row,h){
+
+            return h('button', { 'class': 'btn btn-warning btn-sm' }, row.age);
+
+          }
+        }
+      },
+
+
+     
     }
   },
 
@@ -87,11 +136,19 @@ export default {
       //        this.forecasts = response.data
       //    })
       //    .catch((error) => console.log(error))*/
+    },
+
+    showToast(){
+      this.$toastr('success', 'i am a toastr success', 'hello')
     }
   },
 
   async created () {
     this.loadPage(1)
+  },
+
+  components:{
+    appTable: table
   }
 }
 </script>

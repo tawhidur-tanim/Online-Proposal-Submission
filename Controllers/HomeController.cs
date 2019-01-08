@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProjectFinal101.Controllers
@@ -12,6 +13,12 @@ namespace ProjectFinal101.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        [Authorize]
+        public IActionResult Protected()
+        {
+            return Ok("Authorized");
         }
     }
 }

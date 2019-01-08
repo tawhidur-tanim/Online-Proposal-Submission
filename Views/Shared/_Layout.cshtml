@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - aspnetcore_Vue_starter</title>
-
-    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Online Proposal Submission</title>
+    <link rel="stylesheet" href="~/dist/Admin/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
+    <!-- <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" /> -->
+    <link rel="stylesheet" href="~/dist/Admin/dist/css/AdminLTE.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/Admin/dist/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/skins/_all-skins.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/Admin/plugins/iCheck/flat/blue.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/Admin/plugins/morris/morris.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
     </environment>
 </head>
-
-<body>
+<body class="skin-blue">
     @RenderBody()
-
     <script src="~/dist/vendor.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)
 </body>
-
 </html>
