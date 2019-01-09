@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import Auth from "./AuthModule"
 Vue.use(Vuex)
 
 // TYPES
@@ -8,7 +8,12 @@ const MAIN_SET_COUNTER = 'MAIN_SET_COUNTER'
 
 // STATE
 const state = {
-  counter: 1
+  counter: 1,
+
+  toast: {
+    success: false,
+    error: false
+  }
 }
 
 // MUTATIONS
@@ -28,5 +33,9 @@ const actions = ({
 export default new Vuex.Store({
   state,
   mutations,
-  actions
+  actions,
+
+  modules: {
+    Auth
+  }
 })

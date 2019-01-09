@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="~/dist/Admin/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
     <!-- <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" /> -->
     <link rel="stylesheet" href="~/dist/Admin/dist/css/AdminLTE.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/dist/Admin/dist/css/font-awesome.min.css" asp-append-version="true" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/dist/Admin/dist/css/ionicons.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/dist/skins/_all-skins.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/dist/Admin/plugins/iCheck/flat/blue.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/dist/Admin/plugins/morris/morris.css" asp-append-version="true" />
@@ -16,7 +17,7 @@
         <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
     </environment>
 </head>
-<body class="skin-blue">
+<body class="skin-blue sidebar-mini" id="bodyClass">
     @RenderBody()
     <script src="~/dist/vendor.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)

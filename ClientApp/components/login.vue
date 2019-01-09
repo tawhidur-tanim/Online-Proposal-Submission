@@ -1,28 +1,26 @@
 <template>
-
-
   <div>
     <div class="container">
       <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
-          <h1 class="text-center login-title">Sign in to continue to Bootsnipp</h1>
+          <h1 class="text-center login-title">Sign in</h1>
           <div class="account-wall">
             <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                  alt="">
             <form class="form-signin">
-              <input type="text" class="form-control" placeholder="Email" required autofocus>
-              <input type="password" class="form-control" placeholder="Password" required>
-              <button class="btn btn-lg btn-primary btn-block" type="submit">
+              <input type="text" class="form-control" placeholder="exp: 151-35-964" required autofocus v-model="userId">
+              <input type="password" class="form-control" placeholder="Password" required  v-model="password" >
+              <button class="btn btn-lg btn-primary btn-block" v-on:click.prevent="login" >
                 Sign in
               </button>
-              <label class="checkbox pull-left">
+              <!--<label class="checkbox pull-left">
                 <input type="checkbox" value="remember-me">
                 Remember me
-              </label>
+              </label>-->
               <a href="#" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
             </form>
           </div>
-          <a href="#" class="text-center new-account">Create an account </a>
+          <!--<a href="#" class="text-center new-account">Create an account </a>-->
         </div>
       </div>
     </div>
@@ -30,6 +28,25 @@
   </div>
 
 </template>
+
+<script>
+  export default {
+    data: () => ({
+
+      userId: '',
+      password: ''
+    }),
+
+    methods: {
+
+      login() {
+
+        this.$store.dispatch('logIn', { UserName: this.userId, Password: this.password });
+      }
+    }
+  }
+</script>
+
 
 <style scoped>
 

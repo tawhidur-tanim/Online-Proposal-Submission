@@ -6,23 +6,69 @@ import { sync } from 'vuex-router-sync'
 import App from 'components/app-root'
 import { FontAwesomeIcon } from './icons'
 import { ClientTable } from 'vue-tables-2'
+import Toastr from 'vue-toastr'
+import VueLoader from 'vue-loading-overlay'
+import VeeValidate from 'vee-validate';
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 let options = {};
 let useVuex = false;
 let theme = "bootstrap3";
 let template = "default";
 
-Vue.use(ClientTable, options, useVuex, theme, template);
-// Registration of global components
-Vue.component('icon', FontAwesomeIcon)
+Vue.use(VeeValidate)
+Vue.use(VueLoader);
+Vue.use(ClientTable, options, useVuex, theme, template)
 
+Vue.component('icon', FontAwesomeIcon)
+Vue.directive('click-outside', {
+  bind: function (el, binding, vNode) {
+    // Provided expression must evaluate to a function.
+    if (typeof binding.value !== 'function') {
+      const compName = vNode.context.name
+      var warn = '[Vue-click-outside:] provided expression ' + binding.expression + ' is not a function, but has to be'
+      if (compName) {
+        warn += 'Found in component ' + compName
+      }
+
+      console.warn(warn)
+    }
+    // Define Handler and cache it on the element
+    const bubble = binding.modifiers.bubble
+    const handler = function (e) {
+      if (bubble || (!el.contains(e.target) && el !== e.target)) {
+        binding.value(e)
+      }
+    }
+    el.__vueClickOutside__ = handler
+
+    // add Event Listeners
+    document.addEventListener('click', handler)
+  },
+
+  unbind: function (el, binding) {
+    // Remove Event Listeners
+    document.removeEventListener('click', el.__vueClickOutside__);
+    el.__vueClickOutside__ = null
+  }
+})
+
+axios.interceptors.request.use(config => {
+  console.log('Request Interceptor', config)
+  return config
+})
+
+axios.interceptors.response.use(res => {
+  console.log('Response Interceptor', res)
+  return res
+})
+axios.defaults.headers.get['Accepts'] = 'application/json'
 Vue.prototype.$http = axios
 
-import Toastr from 'vue-toastr';
-// import toastr scss file: need webpack sass-loader
-require('vue-toastr/src/vue-toastr.scss');
-// Register plugin
-Vue.use(Toastr, { /* options */ });
+
+require('vue-toastr/src/vue-toastr.scss')
+
+Vue.use(Toastr, { /* options */ })
 
 sync(store, router)
 

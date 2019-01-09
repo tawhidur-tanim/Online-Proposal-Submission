@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="wrraper">
     <!--<NavNew></NavNew>-->
+    <router-view name="nav"></router-view>
     <div :class="contentWrapper">
       <router-view></router-view>
     </div>
@@ -20,11 +21,13 @@
 
       data () {
         return {}
+    }, 
+
+    created() {
+
+      this.$store.dispatch('tryLogIn');
     },
-
     mounted() {
-
-      console.log(this.$route)
     },
 
     computed: {
@@ -39,7 +42,6 @@
       contentWrapper() {
 
         return {
-
           'content-wrapper': this.$route.name !== "login"
         }
       }

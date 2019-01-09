@@ -82,10 +82,7 @@ export default {
         columns: ["name","age"],
         actions:{
           Edit: {
-            callBack: function(row,root){
-                console.log("Row___________",row);
-            root.$toastr.s('success')
-            },
+            callBack: this.edit,
             cssClass: "btn-success"
           },
           Delete: {
@@ -140,7 +137,20 @@ export default {
 
     showToast(){
       this.$toastr('success', 'i am a toastr success', 'hello')
+    },
+    edit(row, root) {
+      console.log("Row___________", row);
+      let loader = this.$loading.show({
+        loader: 'spinner',
+        color: '#0ACFE8'
+      });
+
+      setTimeout(function () {
+        loader.hide();
+      },2000)
+      root.$toastr.s('success')
     }
+   
   },
 
   async created () {
@@ -150,7 +160,7 @@ export default {
   components:{
     appTable: table
   }
-}
+  }
 </script>
 
 <style>

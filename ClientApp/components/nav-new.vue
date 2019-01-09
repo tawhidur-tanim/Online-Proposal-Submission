@@ -12,9 +12,9 @@
       </a>
 
       <!-- Header Navbar -->
-      <nav class="navbar navbar-static-top" role="navigation">
+      <nav class="navbar navbar-static-top" >
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <a href="#" class="sidebar-toggle"  @click="toggleClass">
           <span class="sr-only">Toggle navigation</span>
         </a>
         <!-- Navbar Right Menu -->
@@ -119,13 +119,13 @@
               </ul>
             </li>
             <!-- User Account Menu -->
-            <li class="dropdown user user-menu">
+            <li class="dropdown user user-menu" :class="userMenuOpen" @click="userHeaderMenu = !userHeaderMenu" v-click-outside="clickOutSide" >
               <!-- Menu Toggle Button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
                 <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">Alexander Pierce</span>
+                <span class="hidden-xs">Tawhidur Rahman Tanim</span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
@@ -133,7 +133,7 @@
                   <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    Alexander Pierce - Web Developer
+                    Tawhidur Rahman Tanim - Web Developer
                     <small>Member since Nov. 2012</small>
                   </p>
                 </li>
@@ -141,13 +141,13 @@
                 <li class="user-body">
                   <div class="row">
                     <div class="col-xs-4 text-center">
-                      <a href="#">Followers</a>
+                      <a href="#">Link</a>
                     </div>
                     <div class="col-xs-4 text-center">
-                      <a href="#">Sales</a>
+                      <a href="#">Link</a>
                     </div>
                     <div class="col-xs-4 text-center">
-                      <a href="#">Friends</a>
+                      <a href="#">Link</a>
                     </div>
                   </div>
                   <!-- /.row -->
@@ -158,15 +158,15 @@
                     <a href="#" class="btn btn-default btn-flat">Profile</a>
                   </div>
                   <div class="pull-right">
-                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="#" class="btn btn-default btn-flat" @click="signOut">Sign out</a>
                   </div>
                 </li>
               </ul>
             </li>
             <!-- Control Sidebar Toggle Button -->
-            <li>
+            <!--<li>
               <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-            </li>
+            </li>-->
           </ul>
         </div>
       </nav>
@@ -183,7 +183,7 @@
             <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
-            <p>Alexander Pierce</p>
+            <p>Tawhidur Rahman Tanim</p>
             <!-- Status -->
             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
           </div>
@@ -206,8 +206,8 @@
           <li class="header">HEADER</li>
           <!-- Optionally, you can add icons to the links -->
           <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+          <li><a href="#"><i class="fa fa-gears"></i> <span>Another Link</span></a></li>
+          <li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
@@ -243,7 +243,47 @@
 </template>
 
 <script>
-export default {
+  export default {
+
+    data: () => ({
+
+      userHeaderMenu: false
+        
+    }),
+
+
+    computed: {
+
+      userMenuOpen() {
+
+        return {
+
+          'open': this.userHeaderMenu
+        }
+
+      }
+    },
+
+    methods: {
+
+      clickOutSide() {
+
+        this.userHeaderMenu = false;
+      },
+
+      signOut() {
+
+        this.$store.dispatch('logOut');
+      },
+
+      toggleClass() {
+
+        var el = document.getElementById('bodyClass');
+
+        el.classList.toggle('sidebar-collapse')
+        el.classList.toggle('sidebar-open')
+      }
+    }
 
 }
 </script>
