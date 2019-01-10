@@ -1,6 +1,6 @@
-﻿<template>
-    <div>
-        <h1>Counter</h1>
+<template>
+    <div class="content">
+        <h1 class="content-header">Counter</h1>
 
         <p>This is a simple example of a Vue.js component & Vuex</p>
 
@@ -9,6 +9,10 @@
         </p>
         <p>
             Auto count: <strong>{{ autoCount }}</strong>
+        </p>
+
+      <p>
+            Auto count: <strong>{{ date }}</strong>
         </p>
 
         <button type="button" class="btn btn-primary" @click="incrementCounter()">Increment</button>
@@ -29,7 +33,16 @@
       computed: {
         ...mapState({
           currentCount: state => state.counter
-        })
+        }),
+
+        date() {
+
+          var expireDate = new Date(localStorage.getItem('expireTime'));
+
+          console.log(expireDate, new Date(), localStorage.getItem('expireTime'))
+
+          return this.$moment(expireDate).diff(new Date(), 'seconds')
+        }
       },
 
       methods: {
@@ -50,7 +63,22 @@
         setInterval(() => {
           this.autoCount += 1
         }, 1000)
-      }
+    },
+    beforeRouteEnter(to, from, next) {
+
+      next(vm => {
+
+        console.log(vm.$store.getters.isAuthenticated, vm.$store.getters.state, vm.$store.getters.token, vm.$store.state.Auth.token, to)
+        if (vm.$store.getters.isAuthenticated) {
+
+          return vm.$router.push({ name: to.name })
+        }
+        else {
+          return vm.$router.push('/login')
+        }
+
+      })
+    }
     }
 </script>
 

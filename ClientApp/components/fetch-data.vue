@@ -12,7 +12,7 @@
 
 <script>
 
-import table from './clientTable.vue'
+  import table from '../HelperComponents/clientTable'
 
 export default {
   computed: {
@@ -156,10 +156,26 @@ export default {
   async created () {
     this.loadPage(1)
   },
+    beforeRouteEnter(to, from, next) {
 
+      next(vm => {
+
+        console.log(vm.$store.getters.isAuthenticated, vm.$store.getters.state, vm.$store.getters.token, vm.$store.state.Auth.token, to)
+
+        if (vm.$store.getters.isAuthenticated) {
+
+          return vm.$router.push({ name: to.name })
+        }
+        else {
+          return vm.$router.push('/login')
+        }
+
+      })
+    },
   components:{
     appTable: table
-  }
+    }
+  
   }
 </script>
 

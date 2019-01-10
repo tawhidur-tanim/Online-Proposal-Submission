@@ -10,17 +10,7 @@ export const routes = [
   { name: 'home', path: '/', components: {
     default: HomePage,
     nav: NavBar
-  },
-    beforeEnter(to, from, next) {
-
-      console.log(store.getters.isAuthenticated, store.state.Auth.token)
-
-      if (store.getters.isAuthenticated) {
-       next()
-     } else {
-       next('/login')
-     }
-   },
+  }, 
     display: 'Home', icon: 'home'
   },
 
@@ -28,13 +18,6 @@ export const routes = [
     name: 'counter', path: '/counter', components: {
       default: CounterExample,
       nav: NavBar
-    },
-    beforeEnter(to, from, next) {
-      if (store.getters.isAuthenticated) {
-        next()
-      } else {
-        next('/login')
-      }
     },
     display: 'Counter', icon: 'graduation-cap'
   },
@@ -44,16 +27,17 @@ export const routes = [
       default: FetchData,
       nav: NavBar
     },
-    //beforeEnter(to, from, next) {
-    //  console.log('Routes ', to, from);
-    //  if (store.getters.isAuthenticated) {
-    //    next()
-    //  } else {
-    //    next('/login')
-    //  }
-    //},
     display: 'Fetch data', icon: 'list'
   },
 
   { name: 'login', path: '/login', component: Login, display: 'Fetch data', icon: 'list' }
 ]
+function beforeEnter(to, from, next){
+  console.log(store.getters.isAuthenticated, store.getters.state, store.getters.token, store.state.Auth.token)
+
+  if (store.getters.isAuthenticated) {
+    next()
+  } else {
+    next('/login')
+  }
+}

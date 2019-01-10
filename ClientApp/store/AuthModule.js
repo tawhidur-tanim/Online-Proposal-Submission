@@ -1,5 +1,5 @@
 import axios from 'axios'
-import router from "../router/index"
+import router from '../router/index'
 
 const state = {
 
@@ -15,6 +15,16 @@ const getters = {
   isAuthenticated(state) {
 
     return state.token != null;
+  },
+
+  getToken(state) {
+
+    return state.token;
+  },
+
+  getState(state) {
+
+    return state;
   }
 
 }
@@ -39,7 +49,7 @@ const mutations = {
 
 const actions = {
 
-  'logIn'({commit},authData) {
+  'logIn'({commit, dispatch},authData) {
 
     let loader = this._vm.$loading.show({
       loader: 'spinner',
@@ -53,7 +63,7 @@ const actions = {
         localStorage.setItem('userId', data.id);
 
         commit('authData', data)
-
+        dispatch('tryLogout');
         router.push('/');
         loader.hide()
       })
@@ -75,7 +85,7 @@ const actions = {
     router.replace('/login')
   },
 
-  'tryLogIn'({ commit }) {
+  'tryLogIn'({ commit, dispatch }) {
 
     const token = localStorage.getItem('token');
 
@@ -97,6 +107,17 @@ const actions = {
       expireTime: expireIn
     })
 
+    dispatch('tryLogout');
+  },
+
+  'tryLogout'({ dispatch }) {
+
+    var expireDate = new Date(localStorage.getItem('expireTime'));
+    var miliSeconds = this._vm.$moment(expireDate).diff(new Date(), 'seconds') * 1000;
+
+    setTimeout(function() {
+      dispatch('logOut');
+    }, miliSeconds)
   }
 }
 

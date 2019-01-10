@@ -19,7 +19,7 @@ let template = "default";
 Vue.use(VeeValidate)
 Vue.use(VueLoader);
 Vue.use(ClientTable, options, useVuex, theme, template)
-
+Vue.use(require('vue-moment'))
 Vue.component('icon', FontAwesomeIcon)
 Vue.directive('click-outside', {
   bind: function (el, binding, vNode) {

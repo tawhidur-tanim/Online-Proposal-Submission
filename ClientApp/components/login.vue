@@ -7,16 +7,38 @@
           <div class="account-wall">
             <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                  alt="">
+
             <form class="form-signin">
-              <input type="text" class="form-control" placeholder="exp: 151-35-964" required autofocus v-model="userId">
-              <input type="password" class="form-control" placeholder="Password" required  v-model="password" >
-              <button class="btn btn-lg btn-primary btn-block" v-on:click.prevent="login" >
+              <input type="text"
+                     class="form-control"
+                     name="userId"
+                     placeholder="exp: 151-35-964"
+                     autofocus
+                     data-vv-as="User Id"
+                     v-model="userId"
+                     v-validate="'required'" :class="{error : errors.has('userId')}">
+
+              <span style="color:red">{{ errors.first('userId')}}</span>
+
+              <input type="password"
+                     name="password"
+                     class="form-control"
+                     placeholder="Password"
+                     v-model="password"
+                     data-vv-as="Password"
+                     autocomplete="on"
+                     v-validate="'required'"
+                     :class="{error : errors.has('password')}" >
+
+              <span style="color:red">{{ errors.first('password')}}</span>
+
+              <button class="btn btn-lg btn-primary btn-block" v-on:click.prevent="login">
                 Sign in
               </button>
               <!--<label class="checkbox pull-left">
-                <input type="checkbox" value="remember-me">
-                Remember me
-              </label>-->
+    <input type="checkbox" value="remember-me">
+    Remember me
+  </label>-->
               <a href="#" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
             </form>
           </div>
@@ -41,7 +63,14 @@
 
       login() {
 
-        this.$store.dispatch('logIn', { UserName: this.userId, Password: this.password });
+        this.$validator.validateAll().then((result) => {
+          if (result) {
+
+            this.$store.dispatch('logIn', { UserName: this.userId, Password: this.password });
+
+          }
+        });
+
       }
     }
   }
@@ -124,6 +153,11 @@
   .new-account {
     display: block;
     margin-top: 10px;
+  }
+
+  .error{
+
+    border: 1px solid red;
   }
 
 </style>
