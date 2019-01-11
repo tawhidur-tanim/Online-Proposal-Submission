@@ -9,6 +9,8 @@
     <CodeAnalysisRuleSet>ProjectFinal101.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
 
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Analyzers" Version="2.2.0" />
@@ -31,9 +33,6 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190107193413_IdentityModels.cs" />
     <Compile Remove="Migrations\20190107193413_IdentityModels.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Persistance\EntityConfiguration\" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->

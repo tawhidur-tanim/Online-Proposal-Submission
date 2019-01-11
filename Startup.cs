@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,7 +37,9 @@ namespace ProjectFinal101
                 .AddJsonOptions(mvcJsonOptions =>
                     mvcJsonOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IWeatherRepository, WeatherRepositoryFake>();
+            services.AddScoped<ISemesterRepsitory, SemesterRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
@@ -75,6 +78,8 @@ namespace ProjectFinal101
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            services.AddAutoMapper();
         }
 
 
