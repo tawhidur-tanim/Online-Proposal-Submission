@@ -1,7 +1,7 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Core.Repositories;
+using System;
 using System.Linq;
 
 namespace ProjectFinal101.Controllers.BaseController
@@ -24,30 +24,79 @@ namespace ProjectFinal101.Controllers.BaseController
         }
 
 
-        [Authorize]
+        // [Authorize]
         [HttpPost("Create")]
         public IActionResult Create(TResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var model = _mapper.Map<TResource, TModel>(resource);
+            try
+            {
+                var model = _mapper.Map<TResource, TModel>(resource);
 
-            var modelInDb = _repository.Add(model);
+                var modelInDb = _repository.Add(model);
 
-            _unitOfWork.Complete();
-            return Ok(_mapper.Map<TModel, TResource>(modelInDb));
+                _unitOfWork.Complete();
+
+                return Ok(_mapper.Map<TModel, TResource>(modelInDb));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Something Gone Wrong");
+            }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
 
-            var models = _repository.GetAll();
+            try
+            {
+                var models = _repository.GetAll();
 
-            return Ok(models.Select(_mapper.Map<TModel, TResource>));
+                return Ok(models.Select(_mapper.Map<TModel, TResource>));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
+        [HttpGet("GetSingle/{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                var model = _repository.Get(id);
+
+                return Ok(_mapper.Map<TModel, TResource>(model));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Something Gone Wrong");
+            }
+        }
+
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var model = _repository.Get(id);
+
+                _repository.Remove(model);
+
+                _unitOfWork.Complete();
+
+                return Ok(model);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Something Gone Wrong");
+            }
+        }
     }
 }
