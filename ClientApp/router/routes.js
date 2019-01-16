@@ -3,7 +3,7 @@ import FetchData from 'components/fetch-data'
 import HomePage from 'components/home-page'
 import Login from 'components/login'
 import NavBar from 'components/nav-new'
-import store from "../store/index"
+import semester from 'components/semester'
 
 export const routes = [
 
@@ -29,15 +29,13 @@ export const routes = [
     },
     display: 'Fetch data', icon: 'list'
   },
+  {
+    name: 'semesters', path: '/semesters', components: {
+      default: semester,
+      nav: NavBar
+    }
+  },
 
   { name: 'login', path: '/login', component: Login, display: 'Fetch data', icon: 'list' }
 ]
-function beforeEnter(to, from, next){
-  console.log(store.getters.isAuthenticated, store.getters.state, store.getters.token, store.state.Auth.token)
 
-  if (store.getters.isAuthenticated) {
-    next()
-  } else {
-    next('/login')
-  }
-}

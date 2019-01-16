@@ -4,9 +4,9 @@ using ProjectFinal101.Core.Models;
 
 namespace ProjectFinal101.Persistance.EntityConfiguration
 {
-    public class SemesterConfiguration : IEntityTypeConfiguration<Semester>
+    public class MarksCatagoryConfiguration : IEntityTypeConfiguration<MarksCatagory>
     {
-        public void Configure(EntityTypeBuilder<Semester> builder)
+        public void Configure(EntityTypeBuilder<MarksCatagory> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -14,8 +14,9 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name)
-                .HasMaxLength(255)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(255);
+
         }
     }
 }

@@ -64,6 +64,9 @@ const actions = {
 
         commit('authData', data)
         dispatch('tryLogout');
+
+        this._vm.$http.defaults.headers.common['Authorization'] = "bearer "+data.token;
+
         router.push('/');
         loader.hide()
       })
@@ -81,7 +84,7 @@ const actions = {
     localStorage.removeItem('userId');
 
     commit('clearAuth');
-
+    delete this._vm.$http.defaults.headers.common['Authorization'];
     router.replace('/login')
   },
 

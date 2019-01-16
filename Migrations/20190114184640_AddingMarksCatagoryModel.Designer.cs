@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectFinal101.Persistance;
 
 namespace ProjectFinal101.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190114184640_AddingMarksCatagoryModel")]
+    partial class AddingMarksCatagoryModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,19 +216,6 @@ namespace ProjectFinal101.Migrations
                     b.ToTable("Semesters");
                 });
 
-            modelBuilder.Entity("ProjectFinal101.Core.Models.SemesterCatagory", b =>
-                {
-                    b.Property<int>("MarksCatagoryId");
-
-                    b.Property<int>("SemesterId");
-
-                    b.HasKey("MarksCatagoryId", "SemesterId");
-
-                    b.HasIndex("SemesterId");
-
-                    b.ToTable("SemesterCatagories");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -269,19 +258,6 @@ namespace ProjectFinal101.Migrations
                     b.HasOne("ProjectFinal101.Core.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ProjectFinal101.Core.Models.SemesterCatagory", b =>
-                {
-                    b.HasOne("ProjectFinal101.Core.Models.MarksCatagory", "MarksCatagory")
-                        .WithMany("SemesterCatagories")
-                        .HasForeignKey("MarksCatagoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ProjectFinal101.Core.Models.Semester", "Semester")
-                        .WithMany("SemesterCatagories")
-                        .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

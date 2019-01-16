@@ -17,10 +17,17 @@ namespace ProjectFinal101.Persistance
         {
 
             builder.ApplyConfiguration(new SemesterConfiguration());
+            builder.ApplyConfiguration(new SemesterCatagoryConfiguration());
 
             base.OnModelCreating(builder);
         }
 
         public DbSet<Semester> Semesters { get; set; }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+        public DbSet<MarksCatagory> MarksCatagories { get; set; }
+
+        public DbSet<SemesterCatagory> SemesterCatagories { get; set; }
     }
 }

@@ -12,15 +12,31 @@ namespace ProjectFinal101.Controllers.BaseController
         where TModel : class, new()
         where TRepository : IBaserepository<TModel>
     {
-        private readonly TRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        protected readonly TRepository Repository;
+        protected readonly IMapper Mapper;
+        protected readonly IUnitOfWork UnitOfWork;
+        protected bool Validation;
+        protected string Message = "";
+
+        protected readonly int ACTIVE = 1;
+        protected readonly int PENDING = 2;
+        protected readonly int DISABLED = 3;
 
         public BaseController(TRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            Repository = repository;
+            Mapper = mapper;
+            UnitOfWork = unitOfWork;
+        }
+
+        protected virtual TModel BeforeCreate(TModel model)
+        {
+            return model;
+        }
+
+        protected virtual TModel BeforeCreate(TModel model, TResource resource)
+        {
+            return model;
         }
 
 
@@ -33,13 +49,19 @@ namespace ProjectFinal101.Controllers.BaseController
 
             try
             {
-                var model = _mapper.Map<TResource, TModel>(resource);
+                var model = Mapper.Map<TResource, TModel>(resource);
 
-                var modelInDb = _repository.Add(model);
+                model = BeforeCreate(model);
+                model = BeforeCreate(model, resource);
 
-                _unitOfWork.Complete();
+                if (Validation)
+                    return BadRequest(Message);
 
-                return Ok(_mapper.Map<TModel, TResource>(modelInDb));
+                var modelInDb = Repository.Add(model);
+
+                UnitOfWork.Complete();
+
+                return Ok(Mapper.Map<TModel, TResource>(modelInDb));
             }
             catch (Exception e)
             {
@@ -54,9 +76,9 @@ namespace ProjectFinal101.Controllers.BaseController
 
             try
             {
-                var models = _repository.GetAll();
+                var models = Repository.GetAll();
 
-                return Ok(models.Select(_mapper.Map<TModel, TResource>));
+                return Ok(models.Select(Mapper.Map<TModel, TResource>));
             }
             catch (Exception e)
             {
@@ -69,9 +91,9 @@ namespace ProjectFinal101.Controllers.BaseController
         {
             try
             {
-                var model = _repository.Get(id);
+                var model = Repository.Get(id);
 
-                return Ok(_mapper.Map<TModel, TResource>(model));
+                return Ok(Mapper.Map<TModel, TResource>(model));
             }
             catch (Exception e)
             {
@@ -85,11 +107,11 @@ namespace ProjectFinal101.Controllers.BaseController
         {
             try
             {
-                var model = _repository.Get(id);
+                var model = Repository.Get(id);
 
-                _repository.Remove(model);
+                Repository.Remove(model);
 
-                _unitOfWork.Complete();
+                UnitOfWork.Complete();
 
                 return Ok(model);
             }

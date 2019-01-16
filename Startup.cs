@@ -40,6 +40,7 @@ namespace ProjectFinal101
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IWeatherRepository, WeatherRepositoryFake>();
             services.AddScoped<ISemesterRepsitory, SemesterRepository>();
+            services.AddScoped<ISemesterCatagoryRepository, SemesterCatagoryRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 

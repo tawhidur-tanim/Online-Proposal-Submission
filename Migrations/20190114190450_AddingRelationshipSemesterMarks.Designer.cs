@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectFinal101.Persistance;
 
 namespace ProjectFinal101.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190114190450_AddingRelationshipSemesterMarks")]
+    partial class AddingRelationshipSemesterMarks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,7 +194,11 @@ namespace ProjectFinal101.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("SemesterId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SemesterId");
 
                     b.ToTable("MarksCatagories");
                 });
@@ -212,19 +218,6 @@ namespace ProjectFinal101.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Semesters");
-                });
-
-            modelBuilder.Entity("ProjectFinal101.Core.Models.SemesterCatagory", b =>
-                {
-                    b.Property<int>("MarksCatagoryId");
-
-                    b.Property<int>("SemesterId");
-
-                    b.HasKey("MarksCatagoryId", "SemesterId");
-
-                    b.HasIndex("SemesterId");
-
-                    b.ToTable("SemesterCatagories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -272,15 +265,10 @@ namespace ProjectFinal101.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ProjectFinal101.Core.Models.SemesterCatagory", b =>
+            modelBuilder.Entity("ProjectFinal101.Core.Models.MarksCatagory", b =>
                 {
-                    b.HasOne("ProjectFinal101.Core.Models.MarksCatagory", "MarksCatagory")
-                        .WithMany("SemesterCatagories")
-                        .HasForeignKey("MarksCatagoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("ProjectFinal101.Core.Models.Semester", "Semester")
-                        .WithMany("SemesterCatagories")
+                        .WithMany("MarksCatagories")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

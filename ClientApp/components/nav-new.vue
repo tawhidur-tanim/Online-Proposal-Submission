@@ -4,7 +4,7 @@
     <header class="main-header">
 
       <!-- Logo -->
-      <a href="index2.html" class="logo">
+      <a href="#" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>A</b>LT</span>
         <!-- logo for regular state and mobile devices -->
@@ -205,8 +205,8 @@
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">HEADER</li>
           <!-- Optionally, you can add icons to the links -->
-          <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-          <li><a href="#"><i class="fa fa-gears"></i> <span>Another Link</span></a></li>
+          <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>-->
+          <li> <router-link :to="{name: 'semesters'}"><i class="fa fa-gears"></i> <span>Semesters</span></router-link></li>
           <li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
