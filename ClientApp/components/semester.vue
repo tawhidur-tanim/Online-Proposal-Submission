@@ -5,20 +5,88 @@
       <h2>Semester Manage</h2>
     </div>
 
-    <div class="box box-default">
+    <div class="box box-default" :class="{'collapsed-box': style.boxCollapse}">
       <div class="box-header with-border">
         <h3 class="box-title">Default Box Example</h3>
         <div class="box-tools pull-right">
           <!-- Buttons, labels, and many other things can be placed here! -->
           <!-- Here is a label for example -->
-          <span class="label label-primary">Label</span>
+          <button class="btn btn-box-tool" @click="style.boxCollapse = !style.boxCollapse">
+            <i :class="{'fa-plus': style.boxCollapse, 'fa-minus': !style.boxCollapse}" class="fa"></i>
+          </button>
         </div>
         <!-- /.box-tools -->
       </div>
       <!-- /.box-header -->
       <div class="box-body">
-        The body of the box
+        <form class="form-horizontal">
+          <div class="form-group" >
+            <label for="semester" class="col-sm-2 control-label">Semester Name</label>
+            <div class="col-sm-10">
+              <input type="text"
+                     name="semester"
+                     class="form-control w25"
+                     id="semester" placeholder="Semester Name" :class="{'error': errors.has('semester')}"
+                     v-model="semesterName" v-validate="'required'">
+            </div>
+          </div>
 
+          <div class="form-group">
+            <label for="status" class="col-sm-2 control-label">Status</label>
+            <div class="col-sm-10">
+              <select class="form-control w25" id="status" v-model="status">
+                <option value="1">Active</option>
+                <option value="2">Pending</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="category" class="col-sm-2 control-label">Marks Category</label>
+            <div class="col-sm-10">
+              <select class="form-control w25" id="category" v-model="semesterId" >
+                <option v-for="semester in semesters"  :value="semester.id">{{semester.name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div v-if="newCategory">
+            <div class="row">
+              <div class="col-md-12 col-sm-offset-2 mb10">
+                <button class="btn btn-secondary" v-on:click.prevent="addCat">Add <i class="fa fa-plus"></i> </button>
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 10px;" v-for="cat in categories" :key="cat.id">
+              <div class="col-md-3 col-sm-offset-2">
+                <label>Category Name</label>
+                <input type="text" class="form-control" v-model="cat.name" :name="'name'+cat.id" v-validate="'required'" :class="{'error': errors.has('name'+cat.id)}" />
+              </div>
+              <div class="col-md-3">
+                <label>Marks</label>
+                <input type="text" class="form-control" v-model="cat.mark" :name="'mark'+cat.id" v-validate="'required|max_value:100|min_value:1'" :class="{'error': errors.has('mark'+cat.id)}"/>
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-danger  mt25 ml25i" v-on:click.prevent="deleteCat(cat.id)"><i class="fa fa-times"></i> </button>
+              </div>
+              
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="studnets" class="col-sm-2 control-label">Student List</label>
+            <div class="col-sm-10">
+              <input type="file" class="form-control w25" id="studnets">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-info" v-on:click.prevent="submit">Create</button>
+            </div>
+          </div>
+
+
+        </form>
 
       </div>
       <!-- /.box-body -->
@@ -37,15 +105,107 @@
 
       this.$http.get("/api/semester/getall").then(response => {
 
-        console.log(response);
+        this.semesters = response.data;
 
+        this.semesters.unshift({ id: -1, name: "New" });
       })
+    },
+    data: () => ({
+
+      style: {
+        boxCollapse: true
+      },
+
+      semesterId: -1,
+      semesterName: '',
+      status: 1,
+      semesters: [],
+      categories: [
+       {name: '', mark: 0, id: 1}
+      ]
+
+    }),
+
+    methods: {
+      deleteCat(id) {
+
+        var index = this.categories.findIndex(x => x.id === id);
+        this.categories.splice(index, 1);
+
+      },
+
+      addCat() {
+
+        if (this.categories.length === 0) {
+          this.categories.push({ name: '', mark: 0, id: 1 });
+          return;
+        }
+
+        var id = this.categories[this.categories.length - 1].id;
+
+        this.categories.push({
+          name: '',
+          mark: 0,
+          id: ++id
+        });
+      },
+
+      submit() {
+
+        var sum = 0;
+
+        this.categories.forEach(function (cat) {
+          sum += parseInt(cat.mark);
+        });
+
+        if (sum !== 100 && this.semesterId === -1) {
+          this.$toastr.e('Marks total must equal to 100');
+          return;
+        }
+
+        this.$validator.validateAll().then(result => {
+
+          if (result) {
+
+            if (this.semesterId !== -1)
+              this.categories = [];
+
+            var semester = {
+              name: this.semesterName,
+              status: this.status,
+
+              semesterId: this.semesterId,
+              catagories: this.categories
+            }
+
+            this.$http.post("/api/semester/create", semester).then(response => {
+
+              this.$toastr.s(response.status);
+
+            })
+             .catch(error => {
+               this.$toastr.e(error.response.status);
+
+              });
+
+          }
+
+        })
+      }
+    },
+
+    computed: {
+
+      newCategory() {
+        return this.semesterId === -1;     
+      }
+
     }
 
   }
 </script>
 
-<style>
+<style scoped>
 
 
 </style>

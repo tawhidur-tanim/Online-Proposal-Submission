@@ -206,7 +206,7 @@
           <li class="header">HEADER</li>
           <!-- Optionally, you can add icons to the links -->
           <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>-->
-          <li> <router-link :to="{name: 'semesters'}"><i class="fa fa-gears"></i> <span>Semesters</span></router-link></li>
+           <router-link :to="{name: 'semesters'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Semesters</span></a></router-link>
           <li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>

@@ -84,3 +84,28 @@
   
 
    */
+.w25 {
+
+    width: 25%;
+}
+
+.mt25 {
+    margin-top: 25px;
+
+}
+
+.mb25 {
+    margin-bottom: 25px;
+}
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.ml25i {
+    margin-left: -25px;
+}
+
+.error {
+
+    border: 1px solid red;
+}

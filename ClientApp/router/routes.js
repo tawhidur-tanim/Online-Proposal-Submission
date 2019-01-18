@@ -36,6 +36,7 @@ export const routes = [
     }
   },
 
-  { name: 'login', path: '/login', component: Login, display: 'Fetch data', icon: 'list' }
+  { name: 'login', path: '/login', component: Login, display: 'Fetch data', icon: 'list' },
+  { path: '*', redirect: '/' }
 ]
 

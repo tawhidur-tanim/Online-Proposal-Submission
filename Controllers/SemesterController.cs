@@ -41,10 +41,17 @@ namespace ProjectFinal101.Controllers
                 }
             }
 
-            var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
+            if (resource.SemesterId == -1)
+            {
+                var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
 
-            if (sum != 100)
-                Validation = true;
+                if (sum != 100)
+                {
+                    Validation = true;
+                    Message = "Marks must be 100";
+                }
+            }
+
 
             if (resource.Status == ACTIVE)
             {
