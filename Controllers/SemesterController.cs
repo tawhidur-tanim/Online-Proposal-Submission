@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
@@ -9,7 +10,7 @@ using System.Linq;
 namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize]
+    [Authorize]
     [ApiController]
     public class SemesterController : BaseController<SemesterCreateResource, Semester, ISemesterRepsitory>
     {
@@ -62,8 +63,6 @@ namespace ProjectFinal101.Controllers
                     Message = "There is already a active semester";
                 }
             }
-
-
 
             return model;
         }

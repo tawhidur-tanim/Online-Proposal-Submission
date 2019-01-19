@@ -104,6 +104,9 @@ const actions = {
       return;
     }
 
+    this._vm.$http.defaults.headers.common['Authorization'] = "bearer " + token;
+
+
     commit('authData',{
       id: localStorage.getItem('userId'),
       token: token,

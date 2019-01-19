@@ -7,7 +7,7 @@
 
     <div class="box box-default" :class="{'collapsed-box': style.boxCollapse}">
       <div class="box-header with-border">
-        <h3 class="box-title">Default Box Example</h3>
+        <h3 class="box-title">Semester Create</h3>
         <div class="box-tools pull-right">
           <!-- Buttons, labels, and many other things can be placed here! -->
           <!-- Here is a label for example -->
@@ -94,20 +94,31 @@
         The footer of the box
       </div>
     </div>
+
+    <apptable :tableConfig="config">
+    </apptable>
+
   </div>
 
 </template>
 
 <script>
+
+  import table from '../HelperComponents/clientTable'
+  import { util } from '../mixins/util'
   export default {
 
-    created() {
+    mixins: [util],
+     created() {
 
       this.$http.get("/api/semester/getall").then(response => {
 
-        this.semesters = response.data;
+       // console.log(this.__arrayCopy([response.data]))
+        this.semesters = this.__arrayCopy(response.data)
+        this.config.data = response.data;
 
         this.semesters.unshift({ id: -1, name: "New" });
+
       })
     },
     data: () => ({
@@ -122,8 +133,35 @@
       semesters: [],
       categories: [
        {name: '', mark: 0, id: 1}
-      ]
+      ],
+      config: {
+       data: [],
+        columns: ["name", "status"],
+        actions: {
+          Edit: {
+            callBack: edit,
+            cssClass: "btn-success btn-sm"
+          },
+          Delete: {
+            callBack: function (row) {
+              console.log("Row___________", row);
+            },
+            cssClass: "btn-danger btn-sm"
+          }
+        },
 
+        templates: {
+
+          status: function (row, h) {
+
+            return row.status === 1
+              ? h('label', { 'class': 'label label-success' }, "Active")
+              : row.status === 2
+                ? h('label', { 'class': 'label label-primary' }, "Pending")
+                : h('label', { 'class': 'label label-danger' }, "Disabled");
+          }
+        }
+      },
     }),
 
     methods: {
@@ -178,19 +216,49 @@
               catagories: this.categories
             }
 
+            let loader = this.$loading.show({
+              loader: 'spinner',
+              color: '#0ACFE8'
+            })
             this.$http.post("/api/semester/create", semester).then(response => {
 
               this.$toastr.s(response.status);
 
             })
-             .catch(error => {
-               this.$toastr.e(error.response.status);
+              .catch(error => {
 
+                if (typeof error.response.data === "string") {
+
+                  this.$toastr.e(error.response.data);
+
+                } else {
+                  this.$toastr.e(error.response.status);
+
+                }
+                // console.log("error__", error.response);
+
+              })
+              .then(function () {
+
+                loader.hide();
               });
 
           }
 
         })
+      },
+
+      edit(row, root) {
+        console.log("Row___________", row);
+        let loader = this.$loading.show({
+          loader: 'spinner',
+          color: '#0ACFE8'
+        });
+
+        setTimeout(function () {
+          loader.hide();
+        }, 2000)
+        root.$toastr.s('success')
       }
     },
 
@@ -200,8 +268,26 @@
         return this.semesterId === -1;     
       }
 
+    },
+
+    components: {
+      apptable: table
     }
 
+  }
+
+
+  function edit(row, root) {
+    console.log("Row___________", row);
+    let loader = root.$loading.show({
+      loader: 'spinner',
+      color: '#0ACFE8'
+    });
+
+    setTimeout(function () {
+      loader.hide();
+    }, 2000)
+    root.$toastr.s('success')
   }
 </script>
 
