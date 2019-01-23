@@ -94,7 +94,8 @@
         The footer of the box
       </div>
     </div>
-
+    <appconfirm v-if="style.confirm" @close="style.confirm = false" :config="confirmModal"></appconfirm>
+    <button @click="style.confirm = true">Click</button>
     <apptable :tableConfig="config">
     </apptable>
 
@@ -105,64 +106,91 @@
 <script>
 
   import table from '../HelperComponents/clientTable'
+  import confirmModal from '../HelperComponents/confirmModal'
   import { util } from '../mixins/util'
+import { setTimeout } from 'core-js';
   export default {
 
     mixins: [util],
      created() {
 
-      this.$http.get("/api/semester/getall").then(response => {
+       let loader = this.$loading.show({
+         loader: 'spinner',
+         color: '#0ACFE8'
+       });
+       this.$http.get("/api/semester/getall").then(response => {
 
-       // console.log(this.__arrayCopy([response.data]))
-        this.semesters = this.__arrayCopy(response.data)
-        this.config.data = response.data;
+         // console.log(this.__arrayCopy([response.data]))
+         this.semesters = this.__arrayCopy(response.data)
+         this.config.data = response.data;
 
-        this.semesters.unshift({ id: -1, name: "New" });
+         this.semesters.unshift({ id: -1, name: "New" });
 
-      })
+       })
+         .catch(error => { })
+         .then(response => {
+
+           loader.hide();
+
+         });
     },
-    data: () => ({
+    data() {
 
-      style: {
-        boxCollapse: true
-      },
+      return {
+        style: {
+          boxCollapse: true,
+          confirm: false
+        },
 
-      semesterId: -1,
-      semesterName: '',
-      status: 1,
-      semesters: [],
-      categories: [
-       {name: '', mark: 0, id: 1}
-      ],
-      config: {
-       data: [],
-        columns: ["name", "status"],
-        actions: {
-          Edit: {
-            callBack: edit,
-            cssClass: "btn-success btn-sm"
-          },
-          Delete: {
-            callBack: function (row) {
-              console.log("Row___________", row);
+        semesterId: -1,
+        semesterName: '',
+        status: 1,
+        semesters: [],
+        categories: [
+          { name: '', mark: 0, id: 1 }
+        ],
+        config: {
+          data: [],
+          columns: ["name", "status"],
+          actions: {
+            Edit: {
+              callBack: this.edit,
+              cssClass: "btn-success btn-sm"
             },
-            cssClass: "btn-danger btn-sm"
+            Delete: {
+              callBack: function (row) {
+                console.log("Row___________", row, this);
+              },
+              cssClass: "btn-danger btn-sm"
+            }
+          },
+
+          templates: {
+
+            status: function (row, h) {
+
+              return row.status === 1
+                ? h('label', { 'class': 'label label-success' }, "Active")
+                : row.status === 2
+                  ? h('label', { 'class': 'label label-primary' }, "Pending")
+                  : h('label', { 'class': 'label label-danger' }, "Disabled");
+            }
           }
         },
 
-        templates: {
+        confirmModal: {
+          callBack: (root) => {
 
-          status: function (row, h) {
+            setTimeout(() => {
 
-            return row.status === 1
-              ? h('label', { 'class': 'label label-success' }, "Active")
-              : row.status === 2
-                ? h('label', { 'class': 'label label-primary' }, "Pending")
-                : h('label', { 'class': 'label label-danger' }, "Disabled");
+              root.$emit('close')
+
+            }, 2000)
+
           }
         }
+      }
       },
-    }),
 
     methods: {
       deleteCat(id) {
@@ -249,7 +277,7 @@
       },
 
       edit(row, root) {
-        console.log("Row___________", row);
+        console.log("Row___________", row,this);
         let loader = this.$loading.show({
           loader: 'spinner',
           color: '#0ACFE8'
@@ -260,6 +288,7 @@
         }, 2000)
         root.$toastr.s('success')
       }
+
     },
 
     computed: {
@@ -271,14 +300,15 @@
     },
 
     components: {
-      apptable: table
+      apptable: table,
+      appconfirm: confirmModal
     }
+
 
   }
 
-
   function edit(row, root) {
-    console.log("Row___________", row);
+    console.log("Row___________", row, this);
     let loader = root.$loading.show({
       loader: 'spinner',
       color: '#0ACFE8'
@@ -289,6 +319,7 @@
     }, 2000)
     root.$toastr.s('success')
   }
+
 </script>
 
 <style scoped>

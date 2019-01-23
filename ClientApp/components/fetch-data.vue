@@ -87,7 +87,7 @@ export default {
           },
           Delete: {
             callBack: function(row){
-                console.log("Row___________",row,);
+                console.log("Row___________",row,this);
             },
             cssClass: "btn-danger"
           }
