@@ -12,6 +12,7 @@ namespace ProjectFinal101.Core
             // resource to domain
             CreateMap<SemesterCreateResource, Semester>()
                 .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.Parent, opt => opt.MapFrom(sr => sr.SemesterId))
                 .ForMember(x => x.SemesterCatagories, opt => opt.MapFrom(sr =>
                         sr.Catagories
                             .Select(c =>
@@ -34,6 +35,7 @@ namespace ProjectFinal101.Core
             // domain to resource
             CreateMap<Semester, SemesterCreateResource>()
                 .ForMember(x => x.Catagories, op => op.Ignore())
+                .ForMember(x => x.SemesterId, opt => opt.MapFrom(s => s.Parent))
                 .AfterMap(((semester, resource) =>
                 {
 

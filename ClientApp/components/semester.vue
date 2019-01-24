@@ -7,7 +7,7 @@
 
     <div class="box box-default" :class="{'collapsed-box': style.boxCollapse}">
       <div class="box-header with-border">
-        <h3 class="box-title">Semester Create</h3>
+        <h3 class="box-title">{{  isEdit ? " Semester Edit" : "Semester Create"   }}</h3>
         <div class="box-tools pull-right">
           <!-- Buttons, labels, and many other things can be placed here! -->
           <!-- Here is a label for example -->
@@ -27,7 +27,7 @@
                      name="semester"
                      class="form-control w25"
                      id="semester" placeholder="Semester Name" :class="{'error': errors.has('semester')}"
-                     v-model="semesterName" v-validate="'required'">
+                     v-model="semesterName" v-validate.disable="'required'">
             </div>
           </div>
 
@@ -82,6 +82,7 @@
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <button type="submit" class="btn btn-info" v-on:click.prevent="submit">Create</button>
+              <button type="submit" class="btn btn-default" v-on:click.prevent="reset"  v-if="isEdit">Reset</button>
             </div>
           </div>
 
@@ -95,7 +96,7 @@
       </div>
     </div>
     <appconfirm v-if="style.confirm" @close="style.confirm = false" :config="confirmModal"></appconfirm>
-    <button @click="style.confirm = true">Click</button>
+    <!--<button @click="style.confirm = true">Click</button>-->
     <apptable :tableConfig="config">
     </apptable>
 
@@ -108,7 +109,8 @@
   import table from '../HelperComponents/clientTable'
   import confirmModal from '../HelperComponents/confirmModal'
   import { util } from '../mixins/util'
-import { setTimeout } from 'core-js';
+  import { setTimeout } from 'core-js';
+
   export default {
 
     mixins: [util],
@@ -118,7 +120,7 @@ import { setTimeout } from 'core-js';
          loader: 'spinner',
          color: '#0ACFE8'
        });
-       this.$http.get("/api/semester/getall").then(response => {
+       this.$http.get("/api/semester/semesters").then(response => {
 
          // console.log(this.__arrayCopy([response.data]))
          this.semesters = this.__arrayCopy(response.data)
@@ -126,12 +128,11 @@ import { setTimeout } from 'core-js';
 
          this.semesters.unshift({ id: -1, name: "New" });
 
+        // console.log("Semesters_Copy", this.semesters);
        })
          .catch(error => { })
          .then(response => {
-
            loader.hide();
-
          });
     },
     data() {
@@ -142,6 +143,7 @@ import { setTimeout } from 'core-js';
           confirm: false
         },
 
+        isEdit: false,
         semesterId: -1,
         semesterName: '',
         status: 1,
@@ -158,9 +160,7 @@ import { setTimeout } from 'core-js';
               cssClass: "btn-success btn-sm"
             },
             Delete: {
-              callBack: function (row) {
-                console.log("Row___________", row, this);
-              },
+              callBack: this.del,
               cssClass: "btn-danger btn-sm"
             }
           },
@@ -169,11 +169,11 @@ import { setTimeout } from 'core-js';
 
             status: function (row, h) {
 
-              return row.status === 1
+              return row.status == 1
                 ? h('label', { 'class': 'label label-success' }, "Active")
-                : row.status === 2
+                : row.status == 2
                   ? h('label', { 'class': 'label label-primary' }, "Pending")
-                  : h('label', { 'class': 'label label-danger' }, "Disabled");
+                  : h('label', { 'class': 'label label-danger' }, "error");
             }
           }
         },
@@ -216,6 +216,19 @@ import { setTimeout } from 'core-js';
         });
       },
 
+      reset() {
+
+        this.isEdit = false;
+
+        this.categories = [
+          { name: '', mark: 0, id: 1 }
+        ];
+        this.semesterId = -1;
+        this.status = 1;
+        this.semesterName = '';
+      },
+
+
       submit() {
 
         var sum = 0;
@@ -252,6 +265,12 @@ import { setTimeout } from 'core-js';
 
               this.$toastr.s(response.status);
 
+              this.config.data.push(response.data);
+
+              this.semesters.push(response.data);
+
+              console.log("submit response__", response);
+
             })
               .catch(error => {
 
@@ -278,15 +297,78 @@ import { setTimeout } from 'core-js';
 
       edit(row, root) {
         console.log("Row___________", row,this);
-        let loader = this.$loading.show({
-          loader: 'spinner',
-          color: '#0ACFE8'
-        });
+        //let loader = this.$loading.show({
+        //  loader: 'spinner',
+        //  color: '#0ACFE8'
+        //});
 
-        setTimeout(function () {
-          loader.hide();
-        }, 2000)
-        root.$toastr.s('success')
+        //setTimeout(function () {
+        //  loader.hide();
+        //}, 2000)
+
+       // root.$toastr.s('success')
+
+        this.style.boxCollapse = false;
+        this.isEdit = true;
+        this.semesterName = row.name;
+        this.status = row.status;
+        this.semesterId = row.semesterId;
+
+        if (row.semesterId == -1) {
+
+          this.categories = [];
+
+          row.catagories.forEach((item) => {
+
+            this.categories.push(item);
+          })
+        }
+
+      },
+
+      del(row) {
+
+        var self = this;
+        console.log("Row___________", row, this);
+
+        this.style.confirm = true;
+
+        this.confirmModal.callBack = function (root) {
+
+          var index = self.config.data.findIndex((item) => {
+            return row.id == item.id;
+          })
+
+          let loader = self.$loading.show({
+            loader: 'spinner',
+            color: '#0ACFE8'
+          });
+
+          self.$http.delete("/api/semester/delete/" + row.id)
+            .then(function (response) {
+
+            self.config.data.splice(index, 1);
+
+            index = self.semesters.findIndex((item) => {
+              return row.id == item.id;
+            });
+
+              self.semesters.splice(index, 1);
+
+          })
+            .catch(function () {
+
+              root.$toastr.s('success')
+            })
+            .then(function () {
+              loader.hide();
+            });
+
+          root.$emit('close');
+
+
+        }
+
       }
 
     },

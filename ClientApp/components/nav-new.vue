@@ -4,12 +4,12 @@
     <header class="main-header">
 
       <!-- Logo -->
-      <a href="#" class="logo">
+      <router-link :to="{name: 'home'}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>A</b>LT</span>
+        <span class="logo-mini"><b>O</b>PS</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Admin</b>LTE</span>
-      </a>
+        <span class="logo-lg"><b>Proposal</b>Submission</span>
+      </router-link>
 
       <!-- Header Navbar -->
       <nav class="navbar navbar-static-top" >

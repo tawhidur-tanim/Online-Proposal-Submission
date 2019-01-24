@@ -10,6 +10,8 @@ namespace ProjectFinal101.Core.Models
 
         public byte Status { get; set; }
 
+        public int? Parent { get; set; }
+
         public IList<SemesterCatagory> SemesterCatagories { get; set; }
 
         public Semester()

@@ -1,16 +1,16 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
+using System;
 using System.Linq;
 
 namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     [ApiController]
     public class SemesterController : BaseController<SemesterCreateResource, Semester, ISemesterRepsitory>
     {
@@ -65,6 +65,20 @@ namespace ProjectFinal101.Controllers
             }
 
             return model;
+        }
+
+
+        [HttpGet("Semesters")]
+        public IActionResult GetSemesters()
+        {
+            try
+            {
+                return Ok(Repository.GetWithCategories().Select(Mapper.Map<Semester, SemesterCreateResource>));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Somwthing Gone Wrong");
+            }
         }
     }
 }
