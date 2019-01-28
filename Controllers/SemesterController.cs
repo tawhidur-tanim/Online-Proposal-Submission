@@ -81,59 +81,75 @@ namespace ProjectFinal101.Controllers
             }
         }
 
-        // [HttpPost("update")]
-        //public IActionResult UpdateSemester(SemesterCreateResource resource)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest("Fields Required");
-        //    }
+        [HttpPost("update")]
+        public IActionResult UpdateSemester(SemesterCreateResource resource)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Fields Required");
+                }
 
-        //    if (resource.SemesterId == -1)
-        //    {
-        //        var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
+                var semester = Repository.GetWithCategory(resource.Id);
+                if (semester == null)
+                {
+                    return BadRequest("No Semester Found");
+                }
 
-        //        if (sum != 100)
-        //        {
-        //            ModelState.AddModelError("", "Marsk Must be 100");
+                if (resource.SemesterId == -1)
+                {
+                    var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
 
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
+                    if (sum != 100)
+                    {
+                        ModelState.AddModelError("", "Marsk Must be 100");
 
-        //    if (resource.Status == ACTIVE)
-        //    {
-        //        var activeSemester = Repository.FirstOrDefault(s => s.Status == ACTIVE);
-        //        if (activeSemester != null)
-        //        {
-        //            ModelState.AddModelError("", "There is already a active semester");
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
+                        return BadRequest(ModelState);
+                    }
 
-        //    var semester = Repository.Get(resource.Id);
+                    _catagoryRepository.RemoveRange(semester.SemesterCatagories);
+                }
 
-        //    if (semester == null)
-        //    {
-        //        return BadRequest("No Semester Found");
-        //    }
+                if (resource.Status == ACTIVE)
+                {
+                    var activeSemester = Repository.FirstOrDefault(s => s.Status == ACTIVE);
+                    if (activeSemester != null)
+                    {
+                        ModelState.AddModelError("", "There is already a active semester");
+                        return BadRequest(ModelState);
+                    }
+                }
 
-        //    if (resource.SemesterId > 0 && resource.SemesterId != semester.Parent)
-        //    {
+                if (resource.SemesterId > 0 && resource.SemesterId != semester.Parent)
+                {
+                    _catagoryRepository.RemoveRange(semester.SemesterCatagories);
+                    var catagories = _catagoryRepository.GetBySemesterId(resource.SemesterId);
 
-        //        var semesterCategories = _catagoryRepository.GetBySemesterId(semester.Id);
-        //        _catagoryRepository.RemoveRange(semesterCategories);
+                    foreach (var catagory in catagories)
+                    {
+                        semester.SemesterCatagories.Add(new SemesterCatagory
+                        {
+                            MarksCatagoryId = catagory.MarksCatagoryId
+                        });
+                    }
+                }
 
-        //        var catagories = _catagoryRepository.GetBySemesterId(resource.SemesterId);
+                Mapper.Map(resource, semester);
 
-        //        foreach (var catagory in catagories)
-        //        {
-        //            semester.SemesterCatagories.Add(new SemesterCatagory
-        //            {
-        //                MarksCatagoryId = catagory.MarksCatagoryId
-        //            });
-        //        }
-        //    }
-        //}
+                UnitOfWork.Complete();
+
+                if (resource.SemesterId > 0)
+                {
+                    Mapper.Map(semester, resource);
+                }
+
+                return Ok(resource);
+            }
+            catch
+            {
+                return BadRequest("Something Gone Wrong");
+            }
+        }
     }
 }

@@ -20,5 +20,12 @@ namespace ProjectFinal101.Persistance.Repositories
                  Include(x => x.SemesterCatagories)
                 .ThenInclude(m => m.MarksCatagory).ToList();
         }
+
+        public Semester GetWithCategory(int id)
+        {
+            return Entities.Include(x => x.SemesterCatagories)
+                .ThenInclude(s => s.MarksCatagory)
+                .FirstOrDefault(x => x.Id == id);
+        }
     }
 }

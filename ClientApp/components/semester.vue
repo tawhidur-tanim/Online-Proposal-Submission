@@ -81,10 +81,10 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="btn btn-success" v-on:click.prevent="submit" v-if="!isEdit">Create</button>
+              <button type="submit" class="btn btn-success" v-on:click.prevent="submit(createUrl,addRow)" v-if="!isEdit">Create</button>
 
               <template v-if="isEdit">
-                <button type="submit" class="btn btn-primary" v-on:click.prevent="submit">Update</button>
+                <button type="submit" class="btn btn-primary" v-on:click.prevent="submit(editUrl,updateRow)" >Update</button>
                 <button type="submit" class="btn btn-default" v-on:click.prevent="reset">Reset</button>
               </template>
 
@@ -148,6 +148,7 @@
           confirm: false
         },
 
+        id: 0,
         isEdit: false,
         semesterId: -1,
         semesterName: '',
@@ -193,7 +194,10 @@
             }, 2000)
 
           }
-        }
+        },
+
+        createUrl: "/api/semester/create",
+        editUrl: "/api/semester/update"
       }
       },
 
@@ -234,7 +238,7 @@
       },
 
 
-      submit() {
+      submit(url,action) {
 
         var sum = 0;
 
@@ -255,6 +259,7 @@
               this.categories = [];
 
             var semester = {
+              id: this.id,
               name: this.semesterName,
               status: this.status,
 
@@ -266,18 +271,21 @@
               loader: 'spinner',
               color: '#0ACFE8'
             })
-            this.$http.post("/api/semester/create", semester).then(response => {
+            this.$http.post(url, semester).then(response => {
 
               this.$toastr.s(response.status);
 
-              this.config.data.push(response.data);
+              action(response);
 
-              this.semesters.push(response.data);
+              //this.config.data.push(response.data);
+
+              //this.semesters.push(response.data);
 
               console.log("submit response__", response);
 
             })
               .catch(error => {
+                console.log("error__", error.response);
 
                 if (typeof error.response.data === "string") {
 
@@ -287,7 +295,6 @@
                   this.$toastr.e(error.response.status);
 
                 }
-                // console.log("error__", error.response);
 
               })
               .then(function () {
@@ -318,17 +325,16 @@
         this.semesterName = row.name;
         this.status = row.status;
         this.semesterId = row.semesterId;
+        this.id = row.id;
 
         if (row.semesterId == -1) {
-
           this.categories = [];
-
           row.catagories.forEach((item) => {
 
             this.categories.push(item);
           })
         }
-
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
 
       del(row) {
@@ -374,8 +380,34 @@
 
         }
 
-      }
+      },
 
+      updateRow({ data}) {
+
+        var semester = this.semesters.find(el => el.id == data.id);
+        console.log("Semester__", semester)
+
+        if (semester) {
+          semester.name = data.name;
+          semester.status = data.status;
+          semester.semesterId = data.semesterId;
+          semester.catagories = data.catagories;
+        }
+
+        semester = this.config.data.find(el => el.id == data.id)
+
+        if (semester) {
+          semester.name = data.name;
+          semester.status = data.status;
+          semester.semesterId = data.semesterId;
+          semester.catagories = data.catagories;
+        }
+      },
+
+      addRow(response) {
+        this.config.data.push(response.data);
+        this.semesters.push(response.data);
+      }
     },
 
     computed: {

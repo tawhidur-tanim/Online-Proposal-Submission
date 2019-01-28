@@ -1,7 +1,6 @@
 using AutoMapper;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Resources;
-using System.Linq;
 
 namespace ProjectFinal101.Core
 {
@@ -13,20 +12,24 @@ namespace ProjectFinal101.Core
             CreateMap<SemesterCreateResource, Semester>()
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.Parent, opt => opt.MapFrom(sr => sr.SemesterId))
-                .ForMember(x => x.SemesterCatagories, opt => opt.MapFrom(sr =>
-                        sr.Catagories
-                            .Select(c =>
-                                new SemesterCatagory
-                                {
-                                    MarksCatagory = new MarksCatagory
-                                    {
-                                        Name = c.Name,
-                                        Mark = c.Mark
-                                    }
-                                }
-                            )
-                    )
-                );
+                .ForMember(x => x.SemesterCatagories, opt => opt.Ignore())
+                .AfterMap((semesterResource, semester) =>
+                {
+                    if (semesterResource.SemesterId >= 0) return;
+
+                    foreach (var catagory in semesterResource.Catagories)
+                    {
+                        semester.SemesterCatagories.Add(new SemesterCatagory
+                        {
+                            MarksCatagory = new MarksCatagory
+                            {
+                                Name = catagory.Name,
+                                Mark = catagory.Mark
+                            }
+                        });
+                    }
+
+                });
 
 
             CreateMap<MarksCatagoryResource, MarksCatagory>();
