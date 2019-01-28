@@ -80,5 +80,60 @@ namespace ProjectFinal101.Controllers
                 return BadRequest("Somwthing Gone Wrong");
             }
         }
+
+        // [HttpPost("update")]
+        //public IActionResult UpdateSemester(SemesterCreateResource resource)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest("Fields Required");
+        //    }
+
+        //    if (resource.SemesterId == -1)
+        //    {
+        //        var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
+
+        //        if (sum != 100)
+        //        {
+        //            ModelState.AddModelError("", "Marsk Must be 100");
+
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+
+        //    if (resource.Status == ACTIVE)
+        //    {
+        //        var activeSemester = Repository.FirstOrDefault(s => s.Status == ACTIVE);
+        //        if (activeSemester != null)
+        //        {
+        //            ModelState.AddModelError("", "There is already a active semester");
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+
+        //    var semester = Repository.Get(resource.Id);
+
+        //    if (semester == null)
+        //    {
+        //        return BadRequest("No Semester Found");
+        //    }
+
+        //    if (resource.SemesterId > 0 && resource.SemesterId != semester.Parent)
+        //    {
+
+        //        var semesterCategories = _catagoryRepository.GetBySemesterId(semester.Id);
+        //        _catagoryRepository.RemoveRange(semesterCategories);
+
+        //        var catagories = _catagoryRepository.GetBySemesterId(resource.SemesterId);
+
+        //        foreach (var catagory in catagories)
+        //        {
+        //            semester.SemesterCatagories.Add(new SemesterCatagory
+        //            {
+        //                MarksCatagoryId = catagory.MarksCatagoryId
+        //            });
+        //        }
+        //    }
+        //}
     }
 }

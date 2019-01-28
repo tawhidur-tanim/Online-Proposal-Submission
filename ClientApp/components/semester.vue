@@ -81,8 +81,13 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="btn btn-info" v-on:click.prevent="submit">Create</button>
-              <button type="submit" class="btn btn-default" v-on:click.prevent="reset"  v-if="isEdit">Reset</button>
+              <button type="submit" class="btn btn-success" v-on:click.prevent="submit" v-if="!isEdit">Create</button>
+
+              <template v-if="isEdit">
+                <button type="submit" class="btn btn-primary" v-on:click.prevent="submit">Update</button>
+                <button type="submit" class="btn btn-default" v-on:click.prevent="reset">Reset</button>
+              </template>
+
             </div>
           </div>
 
