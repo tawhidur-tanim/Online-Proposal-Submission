@@ -9,7 +9,7 @@ namespace ProjectFinal101.Core.Resources
         public string UserName { get; set; }
 
         [Required]
-        [StringLength(6, ErrorMessage = "MIN_PASSWORD_LENGTH")]
+        [MinLength(6, ErrorMessage = "MIN_PASSWORD_LENGTH")]
         public string Password { get; set; }
     }
 
@@ -20,7 +20,7 @@ namespace ProjectFinal101.Core.Resources
         public string UserName { get; set; }
 
         [Required]
-        [StringLength(6, ErrorMessage = "MIN_PASSWORD_LENGTH")]
+        [MinLength(6, ErrorMessage = "MIN_PASSWORD_LENGTH")]
         public string Password { get; set; }
     }
 

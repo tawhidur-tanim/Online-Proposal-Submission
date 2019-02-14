@@ -1,3 +1,4 @@
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
@@ -26,6 +27,17 @@ namespace ProjectFinal101.Persistance.Repositories
             return Entities.Include(x => x.SemesterCatagories)
                 .ThenInclude(s => s.MarksCatagory)
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+        public void RemoveBulk(IList<ApplicationUser> students)
+        {
+            //Context.BulkDelete(students);
+
+            var ids = students.Select(x => x.UserName);
+
+            var removeList = Context.ApplicationUsers.Where(x => ids.Contains(x.UserName)).ToList();
+
+            Context.BulkDelete(removeList);
         }
     }
 }

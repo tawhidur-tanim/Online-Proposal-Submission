@@ -164,6 +164,8 @@ namespace ProjectFinal101.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<int?>("SemesterId");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -178,6 +180,8 @@ namespace ProjectFinal101.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SemesterId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -271,6 +275,14 @@ namespace ProjectFinal101.Migrations
                     b.HasOne("ProjectFinal101.Core.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ProjectFinal101.Core.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ProjectFinal101.Core.Models.Semester", "Semester")
+                        .WithMany("Users")
+                        .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,28 +1,41 @@
 using AutoMapper;
+using ClosedXML.Excel;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize]
+    //[Authorize(Roles = "Admin")]
     [ApiController]
     public class SemesterController : BaseController<SemesterCreateResource, Semester, ISemesterRepsitory>
     {
         private readonly ISemesterCatagoryRepository _catagoryRepository;
+        private readonly IHostingEnvironment _host;
+
+        private readonly IUserRepository _userRepository;
 
         public SemesterController(ISemesterRepsitory repsitory,
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ISemesterCatagoryRepository catagoryRepository)
+            ISemesterCatagoryRepository catagoryRepository,
+            IHostingEnvironment host,
+            IUserRepository userRepository)
             : base(repsitory, mapper, unitOfWork)
         {
             _catagoryRepository = catagoryRepository;
+            _host = host;
+
+            _userRepository = userRepository;
         }
 
 
@@ -33,20 +46,12 @@ namespace ProjectFinal101.Controllers
             {
                 var catagories = _catagoryRepository.GetBySemesterId(resource.SemesterId);
 
-                foreach (var catagory in catagories)
-                {
-                    model.SemesterCatagories.Add(new SemesterCatagory
-                    {
-                        MarksCatagoryId = catagory.MarksCatagoryId
-                    });
-                }
+                model.AddMarksCategory(catagories);
             }
 
             if (resource.SemesterId == -1)
             {
-                var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
-
-                if (sum != 100)
+                if (resource.TotalMarks() != 100)
                 {
                     Validation = true;
                     Message = "Marks must be 100";
@@ -66,7 +71,6 @@ namespace ProjectFinal101.Controllers
 
             return model;
         }
-
 
         [HttpGet("Semesters")]
         public IActionResult GetSemesters()
@@ -90,8 +94,8 @@ namespace ProjectFinal101.Controllers
                 {
                     return BadRequest("Fields Required");
                 }
-
                 var semester = Repository.GetWithCategory(resource.Id);
+
                 if (semester == null)
                 {
                     return BadRequest("No Semester Found");
@@ -99,15 +103,10 @@ namespace ProjectFinal101.Controllers
 
                 if (resource.SemesterId == -1)
                 {
-                    var sum = resource.Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
-
-                    if (sum != 100)
+                    if (resource.TotalMarks() != 100)
                     {
-                        ModelState.AddModelError("", "Marsk Must be 100");
-
-                        return BadRequest(ModelState);
+                        return BadRequest("Marsk Must be 100");
                     }
-
                     _catagoryRepository.RemoveRange(semester.SemesterCatagories);
                 }
 
@@ -116,8 +115,7 @@ namespace ProjectFinal101.Controllers
                     var activeSemester = Repository.FirstOrDefault(s => s.Status == ACTIVE);
                     if (activeSemester != null)
                     {
-                        ModelState.AddModelError("", "There is already a active semester");
-                        return BadRequest(ModelState);
+                        return BadRequest("There is already a active semester");
                     }
                 }
 
@@ -126,13 +124,7 @@ namespace ProjectFinal101.Controllers
                     _catagoryRepository.RemoveRange(semester.SemesterCatagories);
                     var catagories = _catagoryRepository.GetBySemesterId(resource.SemesterId);
 
-                    foreach (var catagory in catagories)
-                    {
-                        semester.SemesterCatagories.Add(new SemesterCatagory
-                        {
-                            MarksCatagoryId = catagory.MarksCatagoryId
-                        });
-                    }
+                    semester.AddMarksCategory(catagories);
                 }
 
                 Mapper.Map(resource, semester);
@@ -151,5 +143,125 @@ namespace ProjectFinal101.Controllers
                 return BadRequest("Something Gone Wrong");
             }
         }
+
+
+        [HttpPost("students")]
+        public async Task<IActionResult> UploadStudents([FromForm]StudentsFileResource fileResource)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Not all fields are given");
+                }
+
+                var filePath = await SaveFile(fileResource);
+
+                var students = GetStudents(filePath).ToList();
+
+                var userNames = students.Select(x => x.UserName);
+
+                var studentsInDb = _userRepository.Find(x => userNames.Contains(x.UserName)).Select(x => x.UserName);
+
+                students = students.Where(x => !studentsInDb.Contains(x.UserName)).ToList();
+
+                students.ForEach(x => x.SemesterId = fileResource.SemesterId);
+
+                await _userRepository.InsertBulk(students);
+                await _userRepository.AssignRoles(students);
+
+                return Ok(new
+                {
+                    students,
+                    count = students.Count
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+
+
+        //[HttpGet("compare")]
+        //public IActionResult Compare()
+        //{
+        //    var studentsInDb = _userManager.Users.ToList().Select(x => x.UserName);
+
+        //    var path = Path.Combine(Path.Combine(_host.ContentRootPath, "uploads"), "0bfd2d33-07dc-4397-9d0a-3f96400a1d7a.xlsx");
+
+        //    var students = GetStudents(path);
+
+        //    var except = students.Where(x => !studentsInDb.Contains(x.UserName));
+
+        //    return Ok(except);
+        //}
+
+
+        private async Task<string> SaveFile(StudentsFileResource fileResource)
+        {
+            var uploadPath = Path.Combine(_host.ContentRootPath, "uploads");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(fileResource.File.FileName);
+
+            var filePath = Path.Combine(uploadPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileResource.File.CopyToAsync(stream);
+            }
+
+            return filePath;
+        }
+
+
+        private IList<ApplicationUser> GetStudents(string filePath)
+        {
+            var workBook = new XLWorkbook(filePath);
+
+            var students = new List<ApplicationUser>();
+
+            foreach (var worksheet in workBook.Worksheets)
+            {
+                var row = worksheet
+                    .FirstRowUsed()
+                    .RowUsed();
+
+                row = row.RowBelow();
+
+                while (!row.Cell(1).IsEmpty())
+                {
+                    var userName = row.Cell(1).GetString();
+                    var name = row.Cell(2).GetString();
+
+                    if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(name))
+                    {
+
+                        if (students.All(x => x.UserName != userName))
+                        {
+                            var student = new ApplicationUser
+                            {
+                                UserName = row.Cell(2).GetString().Trim(),
+                                FullName = row.Cell(3).GetString().Trim()
+                            };
+
+                            students.Add(student);
+                        }
+                    }
+
+
+                    row = row.RowBelow();
+                }
+            }
+
+            return students;
+        }
+
     }
 }

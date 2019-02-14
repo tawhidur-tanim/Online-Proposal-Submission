@@ -14,9 +14,23 @@ namespace ProjectFinal101.Core.Models
 
         public IList<SemesterCatagory> SemesterCatagories { get; set; }
 
+        public IList<ApplicationUser> Users { get; set; }
+
         public Semester()
         {
             SemesterCatagories = new List<SemesterCatagory>();
         }
+
+        public void AddMarksCategory(List<SemesterCatagory> catagories)
+        {
+            foreach (var catagory in catagories)
+            {
+                SemesterCatagories.Add(new SemesterCatagory
+                {
+                    MarksCatagoryId = catagory.MarksCatagoryId
+                });
+            }
+        }
+
     }
 }

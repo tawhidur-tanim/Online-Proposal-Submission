@@ -1,5 +1,17 @@
-export const  util = {
+export const util = {
 
+  data() {
+
+    return {
+
+      loadConfig: {
+        loader: 'spinner',
+        color: '#0ACFE8'
+      },
+
+      loader: {}
+    }
+  },
 
   methods: {
 
@@ -37,6 +49,19 @@ export const  util = {
 
 
       return ara;
+    },
+
+    loadShow() {
+
+       this.loader = this.$loading.show({
+        loader: 'spinner',
+        color: '#0ACFE8'
+      });
+
+    },
+
+    loadHide() {
+      this.loader.hide();
     }
 
   }

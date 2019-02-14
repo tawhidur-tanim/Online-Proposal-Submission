@@ -18,6 +18,7 @@ namespace ProjectFinal101.Persistance
 
             builder.ApplyConfiguration(new SemesterConfiguration());
             builder.ApplyConfiguration(new SemesterCatagoryConfiguration());
+            builder.ApplyConfiguration(new ApplicationUserConfiguration());
 
             base.OnModelCreating(builder);
         }

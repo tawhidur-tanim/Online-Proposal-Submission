@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Resources;
+using ProjectFinal101.Persistance;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,17 +24,88 @@ namespace ProjectFinal101.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _context = context;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Bulk()
+        {
+            var hasher = new PasswordHasher<string>();
+
+            var list = new List<ApplicationUser>();
+
+            //  var background = new Thread(InsertUser);
+
+            //   background.Start();
+            for (var i = 0; i < 500; i++)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "j-" + i,
+                    FullName = "Jonny Test",
+                    //ConcurrencyStamp = Guid.NewGuid().ToString(),
+                    //SecurityStamp = Guid.NewGuid().ToString(),
+                    //PasswordHash = hasher.HashPassword("Jonny Test", "tanim123")
+                };
+                //list.Add(user);
+                await _userManager.CreateAsync(user, "tanim123");
+
+                await _userManager.AddToRoleAsync(user, "Student");
+            }
+
+            //_context.BulkInsert(list);
+
+            return Ok();
+        }
+
+
+        private void InsertUser()
+        {
+            for (var i = 0; i < 1000; i++)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "j-" + i,
+                    FullName = "Jonny Test",
+                    //ConcurrencyStamp = Guid.NewGuid().ToString(),
+                    //SecurityStamp = Guid.NewGuid().ToString(),
+                    //PasswordHash = hasher.HashPassword("Jonny Test", "tanim123")
+                };
+                //list.Add(user);
+                _userManager.CreateAsync(user, "tanim123");
+
+                _userManager.AddToRoleAsync(user, "Student");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RoleSeed()
+        {
+            var admin = await _roleManager.FindByNameAsync("Admin");
+
+            if (admin == null)
+                await _roleManager.CreateAsync(new IdentityRole { Name = "Admin" });
+
+            var student = await _roleManager.FindByNameAsync("Student");
+
+            if (student == null)
+                await _roleManager.CreateAsync(new IdentityRole { Name = "Student" });
+
+            return Ok();
         }
 
 
@@ -57,6 +129,7 @@ namespace ProjectFinal101.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
+                    await _userManager.AddToRoleAsync(user, "Admin");
                     return Ok();
                 }
                 AddErrors(result);

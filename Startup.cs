@@ -37,10 +37,6 @@ namespace ProjectFinal101
                 .AddJsonOptions(mvcJsonOptions =>
                     mvcJsonOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IWeatherRepository, WeatherRepositoryFake>();
-            services.AddScoped<ISemesterRepsitory, SemesterRepository>();
-            services.AddScoped<ISemesterCatagoryRepository, SemesterCatagoryRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
@@ -54,6 +50,13 @@ namespace ProjectFinal101
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IWeatherRepository, WeatherRepositoryFake>();
+            services.AddScoped<ISemesterRepsitory, SemesterRepository>();
+            services.AddScoped<ISemesterCatagoryRepository, SemesterCatagoryRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services

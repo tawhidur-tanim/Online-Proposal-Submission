@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="ClosedXML" Version="0.94.2" />
+    <PackageReference Include="EFCore.BulkExtensions" Version="2.3.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
 
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Analyzers" Version="2.2.0" />
@@ -33,6 +35,10 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190107193413_IdentityModels.cs" />
     <Compile Remove="Migrations\20190107193413_IdentityModels.Designer.cs" />
+    <Compile Remove="Migrations\20190214121521_SetDeleteBehaviorForSemesters.cs" />
+    <Compile Remove="Migrations\20190214121521_SetDeleteBehaviorForSemesters.Designer.cs" />
+    <Compile Remove="Migrations\20190214123341_SetDeleteBehaviorForSemesters.cs" />
+    <Compile Remove="Migrations\20190214123341_SetDeleteBehaviorForSemesters.Designer.cs" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->

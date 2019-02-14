@@ -72,7 +72,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" v-if="!isEdit">
             <label for="studnets" class="col-sm-2 control-label">Student List</label>
             <div class="col-sm-10">
               <input type="file" class="form-control w25" id="studnets">
@@ -267,21 +267,15 @@
               catagories: this.categories
             }
 
-            let loader = this.$loading.show({
-              loader: 'spinner',
-              color: '#0ACFE8'
-            })
+            this.loadShow();
+
             this.$http.post(url, semester).then(response => {
 
               this.$toastr.s(response.status);
 
               action(response);
 
-              //this.config.data.push(response.data);
-
-              //this.semesters.push(response.data);
-
-              console.log("submit response__", response);
+              console.log("submit response__", response, this.loader);
 
             })
               .catch(error => {
@@ -297,9 +291,11 @@
                 }
 
               })
-              .then(function () {
+              .then(() => {
 
-                loader.hide();
+                console.log("Entered in then");
+                setTimeout(() => this.loadHide(), 0);
+                
               });
 
           }
@@ -334,7 +330,7 @@
             this.categories.push(item);
           })
         }
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+       // document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
 
       del(row) {
@@ -369,7 +365,7 @@
           })
             .catch(function () {
 
-              root.$toastr.s('success')
+              root.$toastr.e('error')
             })
             .then(function () {
               loader.hide();

@@ -40,6 +40,10 @@ namespace ProjectFinal101.Controllers.BaseController
         }
 
 
+        protected virtual void BeforeDelete(int semesterId)
+        {
+        }
+
         // [Authorize]
         [HttpPost("Create")]
         public IActionResult Create(TResource resource)
@@ -107,8 +111,9 @@ namespace ProjectFinal101.Controllers.BaseController
         {
             try
             {
-                var model = Repository.Get(id);
+                //BeforeDelete(id);
 
+                var model = Repository.Get(id);
                 Repository.Remove(model);
 
                 UnitOfWork.Complete();

@@ -8,5 +8,7 @@ namespace ProjectFinal101.Core.Repositories
         IList<Semester> GetWithCategories();
 
         Semester GetWithCategory(int id);
+
+        void RemoveBulk(IList<ApplicationUser> students);
     }
 }

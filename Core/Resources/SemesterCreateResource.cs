@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace ProjectFinal101.Core.Resources
 {
@@ -20,6 +21,12 @@ namespace ProjectFinal101.Core.Resources
         public SemesterCreateResource()
         {
             Catagories = new List<MarksCatagoryResource>();
+        }
+
+
+        public int TotalMarks()
+        {
+            return Catagories.Aggregate(0, (current, catagory) => current + catagory.Mark);
         }
     }
 }
