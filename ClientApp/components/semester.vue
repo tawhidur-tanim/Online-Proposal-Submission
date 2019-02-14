@@ -75,7 +75,7 @@
           <div class="form-group" v-if="!isEdit">
             <label for="studnets" class="col-sm-2 control-label">Student List</label>
             <div class="col-sm-10">
-              <input type="file" class="form-control w25" id="studnets">
+              <input type="file" class="form-control w25" id="studnets" ref="file">
             </div>
           </div>
 
@@ -304,18 +304,6 @@
       },
 
       edit(row, root) {
-        console.log("Row___________", row,this);
-        //let loader = this.$loading.show({
-        //  loader: 'spinner',
-        //  color: '#0ACFE8'
-        //});
-
-        //setTimeout(function () {
-        //  loader.hide();
-        //}, 2000)
-
-       // root.$toastr.s('success')
-
         this.style.boxCollapse = false;
         this.isEdit = true;
         this.semesterName = row.name;
@@ -336,7 +324,6 @@
       del(row) {
 
         var self = this;
-        console.log("Row___________", row, this);
 
         this.style.confirm = true;
 
@@ -346,10 +333,8 @@
             return row.id == item.id;
           })
 
-          let loader = self.$loading.show({
-            loader: 'spinner',
-            color: '#0ACFE8'
-          });
+          root.loadShow();
+
 
           self.$http.delete("/api/semester/delete/" + row.id)
             .then(function (response) {
@@ -361,18 +346,17 @@
             });
 
               self.semesters.splice(index, 1);
-
           })
             .catch(function () {
 
               root.$toastr.e('error')
             })
             .then(function () {
-              loader.hide();
+              root.loadHide();
+
             });
 
           root.$emit('close');
-
 
         }
 
@@ -403,6 +387,30 @@
       addRow(response) {
         this.config.data.push(response.data);
         this.semesters.push(response.data);
+
+        this.loadShow();
+
+        var form = new FormData();
+
+        form.append("file", this.$refs.file.files[0])
+        form.append("semesterId", response.data.id);
+
+        this.$http.post("/api/semester/students", form,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then(() => {
+            this.loadHide();
+          })
+          .catch(() => {
+
+            this.loadHide();
+
+            this.$toastr.e('Could not upload file');
+          });
+
       }
     },
 

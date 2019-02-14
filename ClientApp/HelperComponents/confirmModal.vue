@@ -5,8 +5,6 @@
         <div class="modal-wrapper">
           <div class="modal-container">
 
-
-
             <div class="modal-body">
               <slot name="body">
                 <h2>Are You sure ?</h2>
@@ -32,8 +30,9 @@
 
 <script>
 
+  import { util } from '../mixins/util'
   export default {
-
+    mixins: [util],
     props: {
 
       config: {
