@@ -19,10 +19,12 @@
     "@deveodk/vue-toastr": "^1.0.4",
     "axios": "^0.15.3",
     "core-js": "^2.5.3",
+    "epic-spinners": "^1.0.4",
     "requirejs": "^2.3.6",
     "vee-validate": "^2.1.5",
     "vue": "^2.5.16",
     "vue-loading-overlay": "^3.1.1",
+    "vue-loading-spinner": "^1.0.11",
     "vue-moment": "^4.0.0",
     "vue-router": "^2.8.1",
     "vue-server-renderer": "^2.5.16",
@@ -67,7 +69,7 @@
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.2",
     "url-loader": "^0.5.9",
-    "vue-loader": "^14.2.2",
+    "vue-loader": "^14.2.4",
     "webpack": "^2.7.0",
     "webpack-hot-middleware": "^2.21.2"
   }

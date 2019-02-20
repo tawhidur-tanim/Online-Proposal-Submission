@@ -3,6 +3,8 @@
     <!--<NavNew></NavNew>-->
     <router-view name="nav"></router-view>
     <div :class="contentWrapper">
+      <appLoader v-if="isSpin"></appLoader>
+
       <router-view></router-view>
     </div>
     <div class="content-wrapper"></div>
@@ -11,12 +13,14 @@
 
 <script>
     import NavMenu from './nav-menu'
-    import NavNew from './nav-new.vue'
+  import NavNew from './nav-new.vue'
+  import spin from '../HelperComponents/spinner'
  // wrapper
     export default {
       components: {
         'nav-menu': NavMenu,
-        NavNew : NavNew 
+        NavNew: NavNew,
+        appLoader: spin
       },
 
       data () {
@@ -44,6 +48,11 @@
         return {
           'content-wrapper': this.$route.name !== "login"
         }
+      },
+
+      isSpin() {
+
+        return this.$store.getters.isSpin;
       }
     }
     }

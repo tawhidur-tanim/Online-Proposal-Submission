@@ -9,7 +9,7 @@ export const util = {
         color: '#0ACFE8'
       },
 
-      loader: {}
+      loader: null
     }
   },
 
@@ -53,15 +53,13 @@ export const util = {
 
     loadShow() {
 
-       this.loader = this.$loading.show({
-        loader: 'spinner',
-        color: '#0ACFE8'
-      });
-
+      this.$store.commit('showLoader');
     },
 
     loadHide() {
-      this.loader.hide();
+
+      this.$store.commit('hideLoader');
+
     }
 
   }

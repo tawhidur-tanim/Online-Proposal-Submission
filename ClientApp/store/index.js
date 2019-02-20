@@ -13,14 +13,35 @@ const state = {
   toast: {
     success: false,
     error: false
-  }
+  },
+
+  isSpin: false
 }
 
 // MUTATIONS
 const mutations = {
   [MAIN_SET_COUNTER] (state, obj) {
     state.counter = obj.counter
+  },
+
+  'showLoader'(state) {
+
+    state.isSpin = true;
+  },
+
+  'hideLoader'(state) {
+
+    state.isSpin = false;
   }
+}
+
+const getters = {
+
+  isSpin(state) {
+
+    return state.isSpin;
+  }
+
 }
 
 // ACTIONS
@@ -32,6 +53,7 @@ const actions = ({
 
 export default new Vuex.Store({
   state,
+  getters,
   mutations,
   actions,
 

@@ -20,7 +20,7 @@
       <!-- /.box-header -->
       <div class="box-body">
         <form class="form-horizontal">
-          <div class="form-group" >
+          <div class="form-group">
             <label for="semester" class="col-sm-2 control-label">Semester Name</label>
             <div class="col-sm-10">
               <input type="text"
@@ -44,8 +44,8 @@
           <div class="form-group">
             <label for="category" class="col-sm-2 control-label">Marks Category</label>
             <div class="col-sm-10">
-              <select class="form-control w25" id="category" v-model="semesterId" >
-                <option v-for="semester in semesters"  :value="semester.id">{{semester.name}}</option>
+              <select class="form-control w25" id="category" v-model="semesterId">
+                <option v-for="semester in semesters" :value="semester.id">{{semester.name}}</option>
               </select>
             </div>
           </div>
@@ -63,12 +63,12 @@
               </div>
               <div class="col-md-3">
                 <label>Marks</label>
-                <input type="text" class="form-control" v-model="cat.mark" :name="'mark'+cat.id" v-validate="'required|max_value:100|min_value:1'" :class="{'error': errors.has('mark'+cat.id)}"/>
+                <input type="text" class="form-control" v-model="cat.mark" :name="'mark'+cat.id" v-validate="'required|max_value:100|min_value:1'" :class="{'error': errors.has('mark'+cat.id)}" />
               </div>
               <div class="col-md-3">
                 <button class="btn btn-danger  mt25 ml25i" v-on:click.prevent="deleteCat(cat.id)"><i class="fa fa-times"></i> </button>
               </div>
-              
+
             </div>
           </div>
 
@@ -84,7 +84,7 @@
               <button type="submit" class="btn btn-success" v-on:click.prevent="submit(createUrl,addRow)" v-if="!isEdit">Create</button>
 
               <template v-if="isEdit">
-                <button type="submit" class="btn btn-primary" v-on:click.prevent="submit(editUrl,updateRow)" >Update</button>
+                <button type="submit" class="btn btn-primary" v-on:click.prevent="submit(editUrl,updateRow)">Update</button>
                 <button type="submit" class="btn btn-default" v-on:click.prevent="reset">Reset</button>
               </template>
 
@@ -116,15 +116,15 @@
   import { util } from '../mixins/util'
   import { setTimeout } from 'core-js';
 
+
+
   export default {
 
     mixins: [util],
      created() {
 
-       let loader = this.$loading.show({
-         loader: 'spinner',
-         color: '#0ACFE8'
-       });
+       this.loadShow();
+
        this.$http.get("/api/semester/semesters").then(response => {
 
          // console.log(this.__arrayCopy([response.data]))
@@ -137,7 +137,7 @@
        })
          .catch(error => { })
          .then(response => {
-           loader.hide();
+           this.loadHide();
          });
     },
     data() {
@@ -275,11 +275,8 @@
 
               action(response);
 
-              console.log("submit response__", response, this.loader);
-
             })
               .catch(error => {
-                console.log("error__", error.response);
 
                 if (typeof error.response.data === "string") {
 
@@ -292,9 +289,8 @@
 
               })
               .then(() => {
-
                 console.log("Entered in then");
-                setTimeout(() => this.loadHide(), 0);
+                this.loadHide()
                 
               });
 
@@ -365,7 +361,6 @@
       updateRow({ data}) {
 
         var semester = this.semesters.find(el => el.id == data.id);
-        console.log("Semester__", semester)
 
         if (semester) {
           semester.name = data.name;
@@ -402,13 +397,16 @@
             }
           })
           .then(() => {
-            this.loadHide();
           })
-          .catch(() => {
-
-            this.loadHide();
+          .catch((error) => {
+            console.log("File Error", error);
 
             this.$toastr.e('Could not upload file');
+          })
+          .then(() => {
+            console.log("Entered in then 2");
+            this.loader.hide()
+
           });
 
       }
@@ -424,7 +422,7 @@
 
     components: {
       apptable: table,
-      appconfirm: confirmModal
+      appconfirm: confirmModal,
     }
 
 

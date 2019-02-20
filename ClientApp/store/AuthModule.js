@@ -51,10 +51,8 @@ const actions = {
 
   'logIn'({commit, dispatch},authData) {
 
-    let loader = this._vm.$loading.show({
-      loader: 'spinner',
-      color: '#0ACFE8'
-    })
+
+    commit('showLoader');
     axios.post('/api/account/login', authData)
       .then(({ data }) => {
 
@@ -68,7 +66,8 @@ const actions = {
         this._vm.$http.defaults.headers.common['Authorization'] = "bearer "+data.token;
 
         router.push('/');
-        loader.hide()
+        commit('hideLoader');
+
       })
       .catch(() => {
         this._vm.$toastr.e('Wrong username or password');

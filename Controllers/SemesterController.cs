@@ -112,7 +112,7 @@ namespace ProjectFinal101.Controllers
 
                 if (resource.Status == ACTIVE)
                 {
-                    var activeSemester = Repository.FirstOrDefault(s => s.Status == ACTIVE);
+                    var activeSemester = Repository.FirstOrDefault(s => s.Status == ACTIVE && s.Id != resource.Id);
                     if (activeSemester != null)
                     {
                         return BadRequest("There is already a active semester");

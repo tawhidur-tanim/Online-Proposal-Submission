@@ -147,7 +147,18 @@ export default {
 
       setTimeout(function () {
         loader.hide();
-      },2000)
+
+        let loader1 = this.$loading.show({
+          loader: 'spinner',
+          color: '#0ACFE8'
+        });
+
+        loader1.hide();
+
+
+      }, 2000)
+
+
       root.$toastr.s('success')
     }
    
