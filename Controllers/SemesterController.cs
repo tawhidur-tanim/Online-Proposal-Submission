@@ -1,7 +1,9 @@
 using AutoMapper;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleReference.Admin)]
     [ApiController]
     public class SemesterController : BaseController<SemesterCreateResource, Semester, ISemesterRepsitory>
     {
@@ -23,18 +25,19 @@ namespace ProjectFinal101.Controllers
         private readonly IHostingEnvironment _host;
 
         private readonly IUserRepository _userRepository;
-
+        private readonly SemesterFile _file;
         public SemesterController(ISemesterRepsitory repsitory,
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ISemesterCatagoryRepository catagoryRepository,
             IHostingEnvironment host,
-            IUserRepository userRepository)
+            IUserRepository userRepository, IOptionsSnapshot<SemesterFile> options)
             : base(repsitory, mapper, unitOfWork)
         {
             _catagoryRepository = catagoryRepository;
             _host = host;
 
+            _file = options.Value;
             _userRepository = userRepository;
         }
 
@@ -154,6 +157,13 @@ namespace ProjectFinal101.Controllers
                 {
                     return BadRequest("Not all fields are given");
                 }
+
+                var semesterInDb = Repository.Get(fileResource.SemesterId);
+                if (semesterInDb == null)
+                    return NotFound();
+
+                if (!_file.IsValidFile(fileResource.File))
+                    return BadRequest();
 
                 var filePath = await SaveFile(fileResource);
 

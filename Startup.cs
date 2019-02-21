@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
+using ProjectFinal101.Core.Resources;
 using ProjectFinal101.Persistance;
 using ProjectFinal101.Persistance.Repositories;
 using System;
@@ -57,6 +58,7 @@ namespace ProjectFinal101
             services.AddScoped<ISemesterCatagoryRepository, SemesterCatagoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
+            services.Configure<SemesterFile>(Configuration.GetSection("SemesterFile"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services

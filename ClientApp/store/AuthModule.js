@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router/index'
+import account from '../Repositories/account'
 
 const state = {
 
@@ -7,7 +8,9 @@ const state = {
 
   userId: null,
 
-  expireDate: null
+  expireDate: null,
+
+  roles: []
 }
 
 const getters = {
@@ -25,6 +28,11 @@ const getters = {
   getState(state) {
 
     return state;
+  },
+
+  role(state) {
+
+    return state.roles[0];
   }
 
 }
@@ -36,6 +44,7 @@ const mutations = {
     state.token = authData.token;
     state.userId = authData.id;
     state.expireDate = authData.expireTime;
+    state.roles = authData.roles;
   },
 
   'clearAuth'(state) {
@@ -43,6 +52,7 @@ const mutations = {
     state.token = null;
     state.userId = null;
     state.expireDate = null;
+    state.roles = null;
   }
 
 }
@@ -51,19 +61,22 @@ const actions = {
 
   'logIn'({commit, dispatch},authData) {
 
-
     commit('showLoader');
-    axios.post('/api/account/login', authData)
-      .then(({ data }) => {
+
+    account.sendAuth(authData)
+      .then(( data ) => {
 
         localStorage.setItem('token',data.token);
         localStorage.setItem('expireTime', data.expireTime);
         localStorage.setItem('userId', data.id);
+        localStorage.setItem('roles', JSON.stringify(data.roles));
 
-        commit('authData', data)
+        commit('authData', data);
+
         dispatch('tryLogout');
 
         this._vm.$http.defaults.headers.common['Authorization'] = "bearer "+data.token;
+        axios.defaults.headers.common['Authorization'] = "bearer "+data.token;
 
         router.push('/');
         commit('hideLoader');
@@ -81,9 +94,11 @@ const actions = {
     localStorage.removeItem('token');
     localStorage.removeItem('expireTime');
     localStorage.removeItem('userId');
+    localStorage.removeItem('roles');
 
     commit('clearAuth');
     delete this._vm.$http.defaults.headers.common['Authorization'];
+    delete axios.defaults.headers.common['Authorization'];
     router.replace('/login')
   },
 
@@ -109,7 +124,8 @@ const actions = {
     commit('authData',{
       id: localStorage.getItem('userId'),
       token: token,
-      expireTime: expireIn
+      expireTime: expireIn,
+      roles: JSON.parse(localStorage.getItem('roles'))
     })
 
     dispatch('tryLogout');

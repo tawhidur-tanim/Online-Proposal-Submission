@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectFinal101.Core.Resources
 {
-    public class LoginResource
+    public class RegisterResource
     {
         [Required]
         public string UserName { get; set; }

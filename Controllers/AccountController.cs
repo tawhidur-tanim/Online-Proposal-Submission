@@ -159,12 +159,13 @@ namespace ProjectFinal101.Controllers
                 if (!result.Succeeded) return BadRequest("Wrong username or password");
 
                 var user = _userManager.Users.SingleOrDefault(x => x.UserName == model.UserName);
-
+                var roles = await _userManager.GetRolesAsync(user);
                 var authData = new AuthDataResource
                 {
-                    Token = await GenerateJwtToken(user),
+                    Token = GenerateJwtToken(user, roles),
                     Id = user.Id,
-                    ExpireTime = DateTime.Now.AddHours(Convert.ToDouble(_configuration["JwtExpireDays"]))
+                    ExpireTime = DateTime.Now.AddHours(Convert.ToDouble(_configuration["JwtExpireDays"])),
+                    Roles = roles
                 };
 
                 return Ok(authData);
@@ -174,11 +175,11 @@ namespace ProjectFinal101.Controllers
                 // ignored
             }
 
-            return BadRequest("Somthing gone wrong");
+            return BadRequest("Something gone wrong");
         }
 
 
-        private async Task<string> GenerateJwtToken(ApplicationUser user)
+        private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -188,7 +189,7 @@ namespace ProjectFinal101.Controllers
                 new Claim(ClaimTypes.Name, user.FullName ?? "")
             };
 
-            var roles = await _userManager.GetRolesAsync(user);
+            // var roles = await _userManager.GetRolesAsync(user);
 
             if (roles.Any())
                 claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

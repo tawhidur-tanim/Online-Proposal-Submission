@@ -1,5 +1,4 @@
 <template>
-
   <div class="content">
     <div class="content-header">
       <h2>Semester Manage</h2>
@@ -75,7 +74,9 @@
           <div class="form-group" v-if="!isEdit">
             <label for="studnets" class="col-sm-2 control-label">Student List</label>
             <div class="col-sm-10">
-              <input type="file" class="form-control w25" id="studnets" ref="file">
+              <input type="file" class="form-control w25" id="studnets" ref="file" v-validate="'ext:xlsx|required'" name="studentList"
+                     data-vv-as="Student List">
+              <span style="color:red">{{ errors.first('studentList') }}</span>
             </div>
           </div>
 
@@ -106,39 +107,34 @@
     </apptable>
 
   </div>
-
 </template>
-
 <script>
 
   import table from '../HelperComponents/clientTable'
   import confirmModal from '../HelperComponents/confirmModal'
   import { util } from '../mixins/util'
-  import { setTimeout } from 'core-js';
+  import roles from '../rolesConstant'
 
 
 
   export default {
 
     mixins: [util],
-     created() {
+    created() {
 
-       this.loadShow();
+      this.loadShow();
 
-       this.$http.get("/api/semester/semesters").then(response => {
+      this.$http.get("/api/semester/semesters").then(response => {
+        this.semesters = this.__arrayCopy(response.data)
+        this.config.data = response.data;
 
-         // console.log(this.__arrayCopy([response.data]))
-         this.semesters = this.__arrayCopy(response.data)
-         this.config.data = response.data;
+        this.semesters.unshift({ id: -1, name: "New" });
 
-         this.semesters.unshift({ id: -1, name: "New" });
-
-        // console.log("Semesters_Copy", this.semesters);
-       })
-         .catch(error => { })
-         .then(response => {
-           this.loadHide();
-         });
+      })
+        .catch(error => { })
+        .then(response => {
+          this.loadHide();
+        });
     },
     data() {
 
@@ -199,7 +195,7 @@
         createUrl: "/api/semester/create",
         editUrl: "/api/semester/update"
       }
-      },
+    },
 
     methods: {
       deleteCat(id) {
@@ -238,7 +234,7 @@
       },
 
 
-      submit(url,action) {
+      submit(url, action) {
 
         var sum = 0;
 
@@ -291,7 +287,7 @@
               .then(() => {
                 console.log("Entered in then");
                 this.loadHide()
-                
+
               });
 
           }
@@ -314,7 +310,7 @@
             this.categories.push(item);
           })
         }
-       // document.body.scrollTop = document.documentElement.scrollTop = 0;
+        // document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
 
       del(row) {
@@ -335,14 +331,14 @@
           self.$http.delete("/api/semester/delete/" + row.id)
             .then(function (response) {
 
-            self.config.data.splice(index, 1);
+              self.config.data.splice(index, 1);
 
-            index = self.semesters.findIndex((item) => {
-              return row.id == item.id;
-            });
+              index = self.semesters.findIndex((item) => {
+                return row.id == item.id;
+              });
 
               self.semesters.splice(index, 1);
-          })
+            })
             .catch(function () {
 
               root.$toastr.e('error')
@@ -358,7 +354,7 @@
 
       },
 
-      updateRow({ data}) {
+      updateRow({ data }) {
 
         var semester = this.semesters.find(el => el.id == data.id);
 
@@ -415,7 +411,7 @@
     computed: {
 
       newCategory() {
-        return this.semesterId === -1;     
+        return this.semesterId === -1;
       }
 
     },
@@ -423,9 +419,24 @@
     components: {
       apptable: table,
       appconfirm: confirmModal,
-    }
+    },
 
+    beforeRouteEnter(to, from, next) {
 
+      next(vm => {
+
+        // console.log(vm.$store.getters.isAuthenticated, vm.$store.getters.state, vm.$store.getters.token, vm.$store.state.Auth.token, to)
+
+        if (vm.$store.getters.isAuthenticated && vm.$store.getters.role == roles.admin) {
+
+          return vm.$router.push({ name: to.name })
+        }
+        else {
+          return vm.$router.push('/login')
+        }
+
+      })
+    },
   }
 
   function edit(row, root) {
@@ -442,8 +453,5 @@
   }
 
 </script>
-
 <style scoped>
-
-
 </style>
