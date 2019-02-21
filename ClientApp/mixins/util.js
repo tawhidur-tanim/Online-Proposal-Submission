@@ -51,16 +51,11 @@ export const util = {
       return ara;
     },
 
-    loadShow() {
+    toggleLoader() {
 
-      this.$store.commit('showLoader');
+      this.$store.commit('toggleLoader');
+
     },
-
-    loadHide() {
-
-      this.$store.commit('hideLoader');
-
-    }
 
   }
 

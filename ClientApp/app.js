@@ -5,7 +5,7 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from 'components/app-root'
 import { FontAwesomeIcon } from './icons'
-import { ClientTable } from 'vue-tables-2'
+import { ClientTable, ServerTable, Event } from 'vue-tables-2'
 import Toastr from 'vue-toastr'
 import VueLoader from 'vue-loading-overlay'
 import VeeValidate from 'vee-validate';
@@ -19,6 +19,7 @@ let template = "default";
 Vue.use(VeeValidate)
 Vue.use(VueLoader);
 Vue.use(ClientTable, options, useVuex, theme, template)
+Vue.use(ServerTable, [options = {}], [useVuex = false], [theme = 'bootstrap3'], [template = 'default']);
 Vue.use(require('vue-moment'))
 Vue.component('icon', FontAwesomeIcon)
 Vue.directive('click-outside', {

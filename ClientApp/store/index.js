@@ -24,14 +24,9 @@ const mutations = {
     state.counter = obj.counter
   },
 
-  'showLoader'(state) {
+  'toggleLoader'(state) {
 
-    state.isSpin = true;
-  },
-
-  'hideLoader'(state) {
-
-    state.isSpin = false;
+    state.isSpin = !state.isSpin;
   }
 }
 

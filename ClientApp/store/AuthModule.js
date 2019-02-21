@@ -61,12 +61,12 @@ const actions = {
 
   'logIn'({commit, dispatch},authData) {
 
-    commit('showLoader');
+    commit('toggleLoader');
 
     account.sendAuth(authData)
       .then(( data ) => {
 
-        localStorage.setItem('token',data.token);
+        localStorage.setItem('token', data.token);
         localStorage.setItem('expireTime', data.expireTime);
         localStorage.setItem('userId', data.id);
         localStorage.setItem('roles', JSON.stringify(data.roles));
@@ -75,17 +75,18 @@ const actions = {
 
         dispatch('tryLogout');
 
-        this._vm.$http.defaults.headers.common['Authorization'] = "bearer "+data.token;
-        axios.defaults.headers.common['Authorization'] = "bearer "+data.token;
+        this._vm.$http.defaults.headers.common['Authorization'] = "bearer " + data.token;
+        axios.defaults.headers.common['Authorization'] = "bearer " + data.token;
 
         router.push('/');
-        commit('hideLoader');
-
       })
       .catch(() => {
         this._vm.$toastr.e('Wrong username or password');
-        loader.hide()
       })
+      .then(() => {
+
+        commit('toggleLoader');
+      });
 
   },
 

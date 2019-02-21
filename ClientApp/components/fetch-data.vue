@@ -4,8 +4,10 @@
       <h1>Weather forecast</h1>
     </div>
 
-    <appTable :tableConfig="config">
-    </appTable>
+    <!--<appTable :tableConfig="config">
+    </appTable>-->
+
+    <v-server-table url="/home/get" :columns="config.columns" :options="options" ></v-server-table>
 
   </div>
 </template>
@@ -105,7 +107,7 @@
         },
 
 
-
+        options: {}
       }
     },
 

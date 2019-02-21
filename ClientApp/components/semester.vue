@@ -199,10 +199,8 @@
 
     methods: {
       deleteCat(id) {
-
         var index = this.categories.findIndex(x => x.id === id);
         this.categories.splice(index, 1);
-
       },
 
       addCat() {
@@ -263,7 +261,7 @@
               catagories: this.categories
             }
 
-            this.loadShow();
+            this.toggleLoader();
 
             this.$http.post(url, semester).then(response => {
 
@@ -286,7 +284,7 @@
               })
               .then(() => {
                 console.log("Entered in then");
-                this.loadHide()
+                this.toggleLoader()
 
               });
 
@@ -325,8 +323,7 @@
             return row.id == item.id;
           })
 
-          root.loadShow();
-
+          root.toggleLoader();
 
           self.$http.delete("/api/semester/delete/" + row.id)
             .then(function (response) {
@@ -344,7 +341,7 @@
               root.$toastr.e('error')
             })
             .then(function () {
-              root.loadHide();
+              root.toggleLoader();
 
             });
 
