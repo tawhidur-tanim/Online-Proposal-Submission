@@ -39,6 +39,8 @@
     <Compile Remove="Migrations\20190214121521_SetDeleteBehaviorForSemesters.Designer.cs" />
     <Compile Remove="Migrations\20190214123341_SetDeleteBehaviorForSemesters.cs" />
     <Compile Remove="Migrations\20190214123341_SetDeleteBehaviorForSemesters.Designer.cs" />
+    <Compile Remove="Migrations\20190224052251_ProposalModel.cs" />
+    <Compile Remove="Migrations\20190224052251_ProposalModel.Designer.cs" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->

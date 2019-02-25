@@ -19,6 +19,8 @@ namespace ProjectFinal101.Persistance
             builder.ApplyConfiguration(new SemesterConfiguration());
             builder.ApplyConfiguration(new SemesterCatagoryConfiguration());
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new ProposalConfiguration());
+            builder.ApplyConfiguration(new ProposalTypeConfiguration());
 
             base.OnModelCreating(builder);
         }
@@ -30,5 +32,7 @@ namespace ProjectFinal101.Persistance
         public DbSet<MarksCatagory> MarksCatagories { get; set; }
 
         public DbSet<SemesterCatagory> SemesterCatagories { get; set; }
+
+        public DbSet<Proposal> Proposals { get; set; }
     }
 }

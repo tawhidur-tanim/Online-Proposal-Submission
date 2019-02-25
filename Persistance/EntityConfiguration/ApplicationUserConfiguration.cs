@@ -14,6 +14,11 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
 
+            builder.HasMany(x => x.Proposals)
+                .WithOne(x => x.Student)
+                .HasForeignKey(x => x.StudentId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

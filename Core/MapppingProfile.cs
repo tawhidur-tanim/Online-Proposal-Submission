@@ -34,6 +34,7 @@ namespace ProjectFinal101.Core
 
             CreateMap<MarksCatagoryResource, MarksCatagory>();
 
+            CreateMap<ProposalResource, Proposal>();
 
             // domain to resource
             CreateMap<Semester, SemesterCreateResource>()
@@ -56,6 +57,8 @@ namespace ProjectFinal101.Core
                     }
 
                 }));
+
+            CreateMap<Proposal, ProposalResource>();
 
         }
     }

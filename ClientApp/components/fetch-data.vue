@@ -7,8 +7,13 @@
     <!--<appTable :tableConfig="config">
     </appTable>-->
 
-    <v-server-table url="/home/get" :columns="config.columns" :options="options" ></v-server-table>
+    <!--<v-server-table url="/home/get" :columns="config.columns" :options="options" ></v-server-table>-->
 
+    <appTab :tabs="['Project','Thesis','Internship']">
+      <div slot="Project">1</div>
+      <div slot="Thesis">2</div>
+      <div slot="Internship">3</div>
+    </appTab>
   </div>
 </template>
 
@@ -16,6 +21,7 @@
 
   import table from '../HelperComponents/clientTable'
   import repo from '../Repositories/Proposals'
+  import tab from '../HelperComponents/Tab'
 
   export default {
     computed: {
@@ -184,7 +190,8 @@
       })
     },
     components: {
-      appTable: table
+      appTable: table,
+      appTab: tab
     }
 
   }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectFinal101.Persistance;
 
 namespace ProjectFinal101.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190224054416_proposalTypeRelationship")]
+    partial class proposalTypeRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,15 +245,11 @@ namespace ProjectFinal101.Migrations
 
                     b.Property<byte>("Status");
 
-                    b.Property<string>("StudentId");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProposalTypeId");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Proposals");
                 });
@@ -360,11 +358,6 @@ namespace ProjectFinal101.Migrations
                     b.HasOne("ProjectFinal101.Core.Models.ProposalType", "ProposalType")
                         .WithMany("Proposals")
                         .HasForeignKey("ProposalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ProjectFinal101.Core.Models.ApplicationUser", "Student")
-                        .WithMany("Proposals")
-                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

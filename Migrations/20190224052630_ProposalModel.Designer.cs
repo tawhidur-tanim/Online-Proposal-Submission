@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectFinal101.Persistance;
 
 namespace ProjectFinal101.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190224052630_ProposalModel")]
+    partial class ProposalModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,35 +241,15 @@ namespace ProjectFinal101.Migrations
                     b.Property<string>("Language")
                         .HasMaxLength(100);
 
-                    b.Property<byte>("ProposalTypeId");
-
                     b.Property<byte>("Status");
-
-                    b.Property<string>("StudentId");
 
                     b.Property<string>("Title");
 
+                    b.Property<byte>("Type");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("ProposalTypeId");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Proposals");
-                });
-
-            modelBuilder.Entity("ProjectFinal101.Core.Models.ProposalType", b =>
-                {
-                    b.Property<byte>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProposalType");
                 });
 
             modelBuilder.Entity("ProjectFinal101.Core.Models.Semester", b =>
@@ -352,19 +334,6 @@ namespace ProjectFinal101.Migrations
                     b.HasOne("ProjectFinal101.Core.Models.Semester", "Semester")
                         .WithMany("Users")
                         .HasForeignKey("SemesterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ProjectFinal101.Core.Models.Proposal", b =>
-                {
-                    b.HasOne("ProjectFinal101.Core.Models.ProposalType", "ProposalType")
-                        .WithMany("Proposals")
-                        .HasForeignKey("ProposalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ProjectFinal101.Core.Models.ApplicationUser", "Student")
-                        .WithMany("Proposals")
-                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

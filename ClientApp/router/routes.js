@@ -4,6 +4,7 @@ import HomePage from 'components/home-page'
 import Login from 'components/login'
 import NavBar from 'components/nav-new'
 import semester from 'components/semester'
+import proposal from 'components/proposal'
 
 export const routes = [
 
@@ -32,6 +33,12 @@ export const routes = [
   {
     name: 'semesters', path: '/semesters', components: {
       default: semester,
+      nav: NavBar
+    }
+  },
+  {
+    name: 'proposals', path: '/proposals', components: {
+      default: proposal,
       nav: NavBar
     }
   },

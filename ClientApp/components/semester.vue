@@ -122,7 +122,7 @@
     mixins: [util],
     created() {
 
-      this.loadShow();
+      this.toggleLoader();
 
       this.$http.get("/api/semester/semesters").then(response => {
         this.semesters = this.__arrayCopy(response.data)
@@ -133,7 +133,7 @@
       })
         .catch(error => { })
         .then(response => {
-          this.loadHide();
+          this.toggleLoader();
         });
     },
     data() {
@@ -376,7 +376,7 @@
         this.config.data.push(response.data);
         this.semesters.push(response.data);
 
-        this.loadShow();
+        this.toggleLoader();
 
         var form = new FormData();
 
