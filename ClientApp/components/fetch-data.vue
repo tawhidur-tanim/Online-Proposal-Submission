@@ -14,6 +14,9 @@
       <div slot="Thesis">2</div>
       <div slot="Internship">3</div>
     </appTab>
+
+    <box></box>
+    
   </div>
 </template>
 
@@ -22,6 +25,7 @@
   import table from '../HelperComponents/clientTable'
   import repo from '../Repositories/Proposals'
   import tab from '../HelperComponents/Tab'
+  import box from '../HelperComponents/Box'
 
   export default {
     computed: {
@@ -191,7 +195,8 @@
     },
     components: {
       appTable: table,
-      appTab: tab
+      appTab: tab,
+      box
     }
 
   }

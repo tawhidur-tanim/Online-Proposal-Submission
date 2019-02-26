@@ -109,3 +109,7 @@
 
     border: 1px solid red;
 }
+
+.error-font {
+    color: red;
+}

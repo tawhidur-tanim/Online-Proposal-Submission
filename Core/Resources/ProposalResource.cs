@@ -6,7 +6,7 @@ namespace ProjectFinal101.Core.Resources
 
         public byte Status { get; set; }
 
-        public byte ProposalTypeId { get; set; }
+        public byte Type { get; set; }
 
         public string StudentId { get; set; }
 

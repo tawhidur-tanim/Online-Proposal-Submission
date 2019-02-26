@@ -4,6 +4,8 @@ using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ProjectFinal101.Controllers
 {
@@ -17,6 +19,12 @@ namespace ProjectFinal101.Controllers
 
         }
 
+        protected override Proposal BeforeCreate(Proposal model, ProposalResource resource)
+        {
+            model.StudentId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
+            model.Status = ProposalStstus.Pending;
+            return model;
+        }
     }
 }

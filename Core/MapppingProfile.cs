@@ -34,7 +34,8 @@ namespace ProjectFinal101.Core
 
             CreateMap<MarksCatagoryResource, MarksCatagory>();
 
-            CreateMap<ProposalResource, Proposal>();
+            CreateMap<ProposalResource, Proposal>()
+                .ForMember(x => x.ProposalTypeId, opt => opt.MapFrom(p => p.Type));
 
             // domain to resource
             CreateMap<Semester, SemesterCreateResource>()
