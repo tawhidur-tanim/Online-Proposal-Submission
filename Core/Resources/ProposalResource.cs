@@ -1,13 +1,20 @@
+using ProjectFinal101.Core.Validators;
+using System.ComponentModel.DataAnnotations;
+
 namespace ProjectFinal101.Core.Resources
 {
     public class ProposalResource
     {
         public long Id { get; set; }
 
+        [Required]
+        [Range(1, 3)]
         public byte Status { get; set; }
 
+        [RequiredProposal]
         public byte Type { get; set; }
 
+        [Required]
         public string StudentId { get; set; }
 
         public string Title { get; set; }

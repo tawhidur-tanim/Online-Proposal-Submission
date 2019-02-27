@@ -4,20 +4,12 @@
       <h2>Semester Manage</h2>
     </div>
 
-    <div class="box box-default" :class="{'collapsed-box': style.boxCollapse}">
-      <div class="box-header with-border">
-        <h3 class="box-title">{{  isEdit ? " Semester Edit" : "Semester Create"   }}</h3>
-        <div class="box-tools pull-right">
-          <!-- Buttons, labels, and many other things can be placed here! -->
-          <!-- Here is a label for example -->
-          <button class="btn btn-box-tool" @click="style.boxCollapse = !style.boxCollapse">
-            <i :class="{'fa-plus': style.boxCollapse, 'fa-minus': !style.boxCollapse}" class="fa"></i>
-          </button>
-        </div>
-        <!-- /.box-tools -->
-      </div>
-      <!-- /.box-header -->
-      <div class="box-body">
+    <box>
+      <template slot="title">
+        {{  isEdit ? "Semester Edit" : "Semester Create"   }}
+      </template>
+
+      <template slot="body">
         <form class="form-horizontal">
           <div class="form-group">
             <label for="semester" class="col-sm-2 control-label">Semester Name</label>
@@ -94,15 +86,11 @@
 
 
         </form>
+      </template>
+    </box>
 
-      </div>
-      <!-- /.box-body -->
-      <div class="box-footer">
-        The footer of the box
-      </div>
-    </div>
     <appconfirm v-if="style.confirm" @close="style.confirm = false" :config="confirmModal"></appconfirm>
-    <!--<button @click="style.confirm = true">Click</button>-->
+
     <apptable :tableConfig="config">
     </apptable>
 
@@ -114,8 +102,8 @@
   import confirmModal from '../HelperComponents/confirmModal'
   import { util } from '../mixins/util'
   import roles from '../rolesConstant'
-
-
+  import box from '../HelperComponents/box'
+  import Bus from '../HelperComponents/Bus'
 
   export default {
 
@@ -294,7 +282,9 @@
       },
 
       edit(row, root) {
-        this.style.boxCollapse = false;
+
+        Bus.collapseBox();
+
         this.isEdit = true;
         this.semesterName = row.name;
         this.status = row.status;
@@ -416,6 +406,7 @@
     components: {
       apptable: table,
       appconfirm: confirmModal,
+      box
     },
 
     beforeRouteEnter(to, from, next) {

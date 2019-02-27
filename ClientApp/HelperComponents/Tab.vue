@@ -3,7 +3,7 @@
     
     <div class="nav-tabs-custom">
       <ul class="nav nav-tabs">
-        <li   v-for="name in tabs"  :class="{active: tab[name]}" @click="change(name)"><a >{{ name }}</a></li>    
+        <li   v-for="name in tabs"  :class="[{active: tab[name]},'point']" @click="change(name)"><a >{{ name }}</a></li>    
       </ul>
       <div class="tab-content">
         <div class="tab-pane" v-for="name in tabs" :class="{active: tab[name]}">
@@ -64,5 +64,12 @@
 
   }
 </script>
+
 <style scoped>
+
+  .point:hover {
+    cursor: pointer;
+  }
+
+
 </style>

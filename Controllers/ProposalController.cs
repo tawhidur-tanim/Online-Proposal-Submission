@@ -24,6 +24,17 @@ namespace ProjectFinal101.Controllers
             model.StudentId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
             model.Status = ProposalStstus.Pending;
+
+
+            var proposal =
+                Repository.Find(x => x.Status == ProposalStstus.Accepted || x.Status == ProposalStstus.Pending);
+
+            if (proposal.Any())
+            {
+                Validation = true;
+                Message = "Already active or pending proposals remains";
+            }
+
             return model;
         }
     }

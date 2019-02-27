@@ -17,16 +17,14 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body">
-        <slot name="box-body"></slot>
+        <slot name="body"></slot>
       </div>
       <!-- /.box-body -->
       <div class="box-footer">
-       <slot name="box-footer"></slot>
+       <slot name="footer"></slot>
       </div>
     </div>
   </div>
-
-
 
 
 </template>
@@ -36,7 +34,18 @@
 
 <script>
 
+  import Bus from './Bus'
   export default {
+
+    created() {
+
+      Bus.$on('collapseBox', () => {
+
+        this.boxCollapse = false;
+
+      });
+
+    },
 
     data() {
 
