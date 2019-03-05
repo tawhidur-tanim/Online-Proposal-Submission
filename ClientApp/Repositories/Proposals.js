@@ -16,7 +16,7 @@ export default {
 
   saveProposal(proposal) {
 
-    return axios.post("/api/proposal/create", proposal).then(({ data }) => data);
+    return axios.post("/api/proposal/create", proposal)//.then(({ data }) => data);
   }
 
 

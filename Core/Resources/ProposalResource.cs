@@ -14,7 +14,6 @@ namespace ProjectFinal101.Core.Resources
         [RequiredProposal]
         public byte Type { get; set; }
 
-        [Required]
         public string StudentId { get; set; }
 
         public string Title { get; set; }

@@ -271,7 +271,7 @@
 
               })
               .then(() => {
-                console.log("Entered in then");
+               // console.log("Entered in then");
                 this.toggleLoader()
 
               });

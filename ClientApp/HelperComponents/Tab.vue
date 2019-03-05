@@ -9,6 +9,7 @@
         <div class="tab-pane" v-for="name in tabs" :class="{active: tab[name]}">
 
           <slot :name="name">Demo</slot>
+
         </div>
       </div>
       <!-- /.tab-content -->
@@ -58,6 +59,7 @@
 
         this.tab[name] = true;
 
+        this.$emit('tabChange',name)
       }
 
     }

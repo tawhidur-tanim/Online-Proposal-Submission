@@ -22,6 +22,15 @@ namespace ProjectFinal101.Core.Validators
                 return new ValidationResult("Please provide all required fields");
             }
 
+            if (proposal.IsHaveInternship != null
+                && proposal.Type == ProposalTypeName.Internship
+                && proposal.IsHaveInternship.Value
+                && !CompanyVal(proposal))
+            {
+                return new ValidationResult("Please provide all required fields");
+            }
+
+
             if ((proposal.Type == ProposalTypeName.Project || proposal.Type == ProposalTypeName.Thesis)
                 && !ProposalVal(proposal))
             {
@@ -36,14 +45,20 @@ namespace ProjectFinal101.Core.Validators
         private bool InternshipVal(ProposalResource resource)
         {
 
+            return
+                   !string.IsNullOrEmpty(resource.FrameWorkDescription) &&
+                   !string.IsNullOrEmpty(resource.Language) &&
+                   !string.IsNullOrEmpty(resource.InternshipReason);
+        }
+
+        private bool CompanyVal(ProposalResource resource)
+        {
             return !string.IsNullOrEmpty(resource.CompanyAddress) &&
                    !string.IsNullOrEmpty(resource.CompanyName) &&
                    !string.IsNullOrEmpty(resource.ContactForSupervisor) &&
-                   !string.IsNullOrEmpty(resource.FrameWorkDescription) &&
-                   !string.IsNullOrEmpty(resource.Language) &&
-                   !string.IsNullOrEmpty(resource.InternshipReason) &&
                    !string.IsNullOrEmpty(resource.InternshipRefernce) &&
                    !string.IsNullOrEmpty(resource.JobDescriotion);
+
         }
 
         private bool ProposalVal(ProposalResource resource)

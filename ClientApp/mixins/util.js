@@ -57,6 +57,17 @@ export const util = {
 
     },
 
+    error(error) {
+      if (typeof error.response.data === "string") {
+
+        this.$toastr.e(error.response.data);
+
+      } else {
+        this.$toastr.e(error.response.status);
+
+      }
+    }
+
   }
 
 }
