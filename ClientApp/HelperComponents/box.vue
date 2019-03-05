@@ -6,7 +6,7 @@
         <h3 class="box-title">
           <slot name="title"></slot>
         </h3>
-        <div class="box-tools pull-right">
+        <div class="box-tools pull-right" v-if="icon">
           <!-- Buttons, labels, and many other things can be placed here! -->
           <!-- Here is a label for example -->
           <button class="btn btn-box-tool" @click="boxCollapse = !boxCollapse">
@@ -36,6 +36,16 @@
 
   import Bus from './Bus'
   export default {
+
+    props: {
+
+      icon: {
+
+        type: Boolean,
+        default: true
+      }
+
+    },
 
     created() {
 

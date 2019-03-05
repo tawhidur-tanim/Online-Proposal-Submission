@@ -388,7 +388,7 @@
           })
           .then(() => {
             console.log("Entered in then 2");
-            this.loader.hide()
+            this.toggleLoader();
 
           });
 

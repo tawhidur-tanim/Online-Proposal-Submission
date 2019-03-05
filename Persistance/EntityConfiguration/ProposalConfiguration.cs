@@ -44,6 +44,10 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
 
             builder.Property(x => x.Language)
                 .HasMaxLength(100);
+
+
+            builder.Property(x => x.CvPath)
+                .HasMaxLength(300);
         }
     }
 }

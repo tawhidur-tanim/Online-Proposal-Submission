@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from "../store/index"
 
 export default {
 
@@ -17,6 +18,18 @@ export default {
   saveProposal(proposal) {
 
     return axios.post("/api/proposal/create", proposal)//.then(({ data }) => data);
+  },
+
+
+  getOwnPorposals() {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get("/api/proposal/Own");
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
   }
 
 

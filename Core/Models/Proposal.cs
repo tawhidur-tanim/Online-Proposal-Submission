@@ -38,5 +38,7 @@ namespace ProjectFinal101.Core.Models
 
         public string ContactForSupervisor { get; set; }
 
+        public string CvPath { get; set; }
+
     }
 }

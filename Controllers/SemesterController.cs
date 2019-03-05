@@ -149,7 +149,7 @@ namespace ProjectFinal101.Controllers
 
 
         [HttpPost("students")]
-        public async Task<IActionResult> UploadStudents([FromForm]StudentsFileResource fileResource)
+        public async Task<IActionResult> UploadStudents([FromForm]FileResource fileResource)
         {
             try
             {
@@ -209,7 +209,7 @@ namespace ProjectFinal101.Controllers
         //}
 
 
-        private async Task<string> SaveFile(StudentsFileResource fileResource)
+        private async Task<string> SaveFile(FileResource fileResource)
         {
             var uploadPath = Path.Combine(_host.ContentRootPath, "uploads");
 

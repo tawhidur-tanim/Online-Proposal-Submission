@@ -59,7 +59,8 @@ namespace ProjectFinal101.Core
 
                 }));
 
-            CreateMap<Proposal, ProposalResource>();
+            CreateMap<Proposal, ProposalResource>()
+                .ForMember(x => x.Type, opt => opt.MapFrom(p => p.ProposalTypeId));
 
         }
     }

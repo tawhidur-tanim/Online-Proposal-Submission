@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Core.Repositories;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace ProjectFinal101.Controllers.BaseController
 {
@@ -28,6 +29,12 @@ namespace ProjectFinal101.Controllers.BaseController
             Mapper = mapper;
             UnitOfWork = unitOfWork;
         }
+
+        public string GetUserId()
+        {
+            return User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+
 
         protected virtual TModel BeforeCreate(TModel model)
         {

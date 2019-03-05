@@ -109,7 +109,7 @@
       </template>
     </box>
 
-
+    <apptable :tableConfig="tableConfig"></apptable>
 
   </div>
 
@@ -119,15 +119,29 @@
   import tab from '../HelperComponents/Tab'
   import repo from '../Repositories/Proposals'
   import box from '../HelperComponents/box'
+  import table from '../HelperComponents/clientTable'
   import { util } from '../mixins/util'
 
   export default {
 
     mixins: [util],
 
+    created() {
+
+      repo.getOwnPorposals().then(({ data }) => {
+
+        console.log(data);
+        this.tableConfig.data = data;
+
+      })
+
+
+    },
+
     components: {
       tab,
-      box
+      box,
+      apptable : table
     },
 
     data() {
@@ -164,6 +178,35 @@
           1: 'Project',
           3: 'Thesis',
           2: 'Internship'
+        },
+
+        tableConfig: {
+          data: [],
+
+          columns: ["title","status","type"],
+          templates: {
+
+            status: function (row, h) {
+
+              return row.status == 1
+                ? h('label', { 'class': 'label label-success' }, "Accepted")
+                : row.status == 2
+                  ? h('label', { 'class': 'label label-primary' }, "Pending")
+                  : h('label', { 'class': 'label label-danger' }, "Rejected");
+            },
+
+            type: function (row,h) {
+
+              return row.type == 1
+                ? h('label', { 'class': 'label label-success' }, "Project")
+                : row.type == 2
+                  ? h('label', { 'class': 'label label-success' }, "Internship")
+                  : h('label', { 'class': 'label label-success' }, "Thesis");
+            }
+
+          },
+
+          actions: {}
         }
 
       }

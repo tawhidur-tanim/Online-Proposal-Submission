@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectFinal101.Core.Resources
 {
-    public class StudentsFileResource
+    public class FileResource
     {
         [Required]
         public int SemesterId { get; set; }

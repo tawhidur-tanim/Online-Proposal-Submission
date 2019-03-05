@@ -60,6 +60,7 @@ namespace ProjectFinal101
             services.AddScoped<IProposalRepository, ProposalRepository>();
 
             services.Configure<SemesterFile>(Configuration.GetSection("SemesterFile"));
+            services.Configure<ProposalFile>(Configuration.GetSection("ProposalFile"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
