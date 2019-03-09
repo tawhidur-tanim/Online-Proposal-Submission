@@ -30,6 +30,18 @@ export default {
     request.catch().then(() => store.commit('toggleLoader'))
 
     return request;
+  },
+
+  saveCv(cv) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.post("/api/proposal/cv",cv);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
+
   }
 
 

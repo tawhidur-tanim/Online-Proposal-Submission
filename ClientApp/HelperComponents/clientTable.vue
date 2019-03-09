@@ -109,7 +109,7 @@ export default {
             return self.tableConfig.templates[key](row, h, index);
           };
 
-          console.log(self.tableConfig.templates[key]);
+         // console.log(self.tableConfig.templates[key]);
         });
 
 
@@ -118,7 +118,7 @@ export default {
 
         //     //return self.tableConfig.templates[key](row, h, index);
         //   };
-        console.log(options);
+       // console.log(options);
       }
 
       return options;

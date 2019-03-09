@@ -61,6 +61,7 @@ namespace ProjectFinal101.Core
 
             CreateMap<Proposal, ProposalResource>()
                 .ForMember(x => x.Type, opt => opt.MapFrom(p => p.ProposalTypeId));
+            // .ForMember(x => x.FrameWorkDescription, opt => opt.MapFrom(p => p.FrameWorkDescription))
 
         }
     }

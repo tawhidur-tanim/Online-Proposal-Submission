@@ -9,7 +9,7 @@
         <div class="box-tools pull-right" v-if="icon">
           <!-- Buttons, labels, and many other things can be placed here! -->
           <!-- Here is a label for example -->
-          <button class="btn btn-box-tool" @click="boxCollapse = !boxCollapse">
+          <button class="btn btn-box-tool" @click="toggleBox">
             <i :class="{'fa-plus': boxCollapse, 'fa-minus': !boxCollapse}" class="fa"></i>
           </button>
         </div>
@@ -51,7 +51,7 @@
 
       Bus.$on('collapseBox', () => {
 
-        this.boxCollapse = false;
+        this.boxCollapse = true;
 
       });
 
@@ -63,6 +63,17 @@
         boxCollapse: true
 
       }
+    },
+
+    methods: {
+
+      toggleBox() {
+
+        this.boxCollapse = !this.boxCollapse;
+
+        this.$emit('box::boxCollapse');
+      }
+
     }
 
   }
