@@ -60,8 +60,13 @@ namespace ProjectFinal101.Core
                 }));
 
             CreateMap<Proposal, ProposalResource>()
-                .ForMember(x => x.Type, opt => opt.MapFrom(p => p.ProposalTypeId));
-            // .ForMember(x => x.FrameWorkDescription, opt => opt.MapFrom(p => p.FrameWorkDescription))
+                .ForMember(x => x.Type, opt => opt.MapFrom(p => p.ProposalTypeId))
+                .ForMember(x => x.Reviewer, opt => opt.MapFrom(p => p.Student.Reviewer))
+                .ForMember(x => x.Supervisor, opt => opt.MapFrom(p => p.Student.Supervisor));
+
+            CreateMap<ApplicationUser, UserResource>();
+            //  .ForMember(x => , opt => opt.MapFrom(p => p.))
+
 
         }
     }

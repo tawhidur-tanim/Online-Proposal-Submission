@@ -39,5 +39,11 @@ namespace ProjectFinal101.Core.Resources
         public string InternshipRefernce { get; set; }
 
         public string ContactForSupervisor { get; set; }
+
+        public UserResource Student { get; set; }
+
+        public UserResource Supervisor { get; set; }
+
+        public UserResource Reviewer { get; set; }
     }
 }

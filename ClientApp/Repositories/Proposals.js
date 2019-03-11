@@ -36,12 +36,23 @@ export default {
 
     store.commit('toggleLoader');
 
-    const request = axios.post("/api/proposal/cv",cv);
+    const request = axios.post("/api/proposal/cv", cv);
 
     request.catch().then(() => store.commit('toggleLoader'))
 
     return request;
 
+  },
+
+  getForm() {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get("/api/proposal/truth")
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
   }
 
 

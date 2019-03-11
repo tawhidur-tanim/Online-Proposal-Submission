@@ -17,12 +17,16 @@ namespace ProjectFinal101.Controllers
     public class ProposalController : BaseController<ProposalResource, Proposal, IProposalRepository>
     {
         private readonly IHostingEnvironment _hosting;
+        private readonly ISemesterRepsitory _semesterRepsitory;
+        private readonly IUserRepository _userRepository;
         private readonly ProposalFile _file;
         public ProposalController(IProposalRepository repository, IMapper mapper, IUnitOfWork unitOfWork,
-            IOptionsSnapshot<ProposalFile> snapshot, IHostingEnvironment hosting)
+            IOptionsSnapshot<ProposalFile> snapshot, IHostingEnvironment hosting, ISemesterRepsitory semesterRepsitory, IUserRepository userRepository)
         : base(repository, mapper, unitOfWork)
         {
             _hosting = hosting;
+            _semesterRepsitory = semesterRepsitory;
+            _userRepository = userRepository;
             _file = snapshot.Value;
         }
 
@@ -33,6 +37,11 @@ namespace ProjectFinal101.Controllers
 
             model.Status = ProposalStstus.Pending;
 
+            if (!IsStudentCurrentSemeter(userId))
+            {
+                Validation = true;
+                Message = "Invalid Semester";
+            }
 
             var proposal =
                 Repository.Find(x => x.Status == ProposalStstus.Accepted || x.Status == ProposalStstus.Pending && x.StudentId == userId);
@@ -95,5 +104,44 @@ namespace ProjectFinal101.Controllers
                 return BadRequest();
             }
         }
+
+        private bool IsStudentCurrentSemeter(string userId)
+        {
+            var activeSemester = _semesterRepsitory.FirstOrDefault(x => x.Status == ACTIVE);
+
+            var user = _userRepository.FirstOrDefault(x => x.Id == userId);
+
+            return user.SemesterId != null && user.SemesterId.Value == activeSemester.Id;
+        }
+
+        [HttpGet("truth")]
+        public IActionResult GetForm()
+        {
+            try
+            {
+                var userId = GetUserId();
+                return Ok(new { show = IsStudentCurrentSemeter(userId) || User.IsInRole(RoleReference.Admin) });
+            }
+            catch
+            {
+                return Ok(new { show = false });
+            }
+        }
+
+        [HttpGet("GetProposals")]
+        public IActionResult GetProposals()
+        {
+            try
+            {
+                var proposals = Repository.GetProposals();
+
+                return Ok(proposals.Select(Mapper.Map<Proposal, ProposalResource>));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

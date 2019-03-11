@@ -59,8 +59,6 @@ export const util = {
 
     error(error) {
 
-     // console.log(error);
-
       if (typeof error.response.data === "string") {
 
         this.$toastr.e(error.response.data);

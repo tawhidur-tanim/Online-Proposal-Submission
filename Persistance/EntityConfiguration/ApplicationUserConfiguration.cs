@@ -19,6 +19,18 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
                 .HasForeignKey(x => x.StudentId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(x => x.SupervisedStudents)
+                .WithOne(x => x.Supervisor)
+                .HasForeignKey(x => x.SupervisorId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.ReviewStudents)
+                .WithOne(x => x.Reviewer)
+                .HasForeignKey(x => x.ReviewerId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

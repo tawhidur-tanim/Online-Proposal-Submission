@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectFinal101.Persistance;
 
 namespace ProjectFinal101.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190310152338_CourseTable")]
+    partial class CourseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,13 +164,9 @@ namespace ProjectFinal101.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("ReviewerId");
-
                     b.Property<string>("SecurityStamp");
 
                     b.Property<int?>("SemesterId");
-
-                    b.Property<string>("SupervisorId");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -185,11 +183,7 @@ namespace ProjectFinal101.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("ReviewerId");
-
                     b.HasIndex("SemesterId");
-
-                    b.HasIndex("SupervisorId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -375,20 +369,10 @@ namespace ProjectFinal101.Migrations
 
             modelBuilder.Entity("ProjectFinal101.Core.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("ProjectFinal101.Core.Models.ApplicationUser", "Reviewer")
-                        .WithMany("ReviewStudents")
-                        .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ProjectFinal101.Core.Models.Semester", "Semester")
                         .WithMany("Users")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ProjectFinal101.Core.Models.ApplicationUser", "Supervisor")
-                        .WithMany("SupervisedStudents")
-                        .HasForeignKey("SupervisorId")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ProjectFinal101.Core.Models.Proposal", b =>

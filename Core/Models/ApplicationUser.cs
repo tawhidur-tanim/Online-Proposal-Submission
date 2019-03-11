@@ -11,11 +11,25 @@ namespace ProjectFinal101.Core.Models
 
         public Semester Semester { get; set; }
 
+        public string SupervisorId { get; set; }
+
+        public ApplicationUser Supervisor { get; set; }
+
+        public string ReviewerId { get; set; }
+
+        public ApplicationUser Reviewer { get; set; }
+
         public IEnumerable<Proposal> Proposals { get; set; }
+
+        public IEnumerable<ApplicationUser> SupervisedStudents { get; set; }
+
+        public IEnumerable<ApplicationUser> ReviewStudents { get; set; }
 
         public ApplicationUser()
         {
             Proposals = new List<Proposal>();
+            SupervisedStudents = new List<ApplicationUser>();
+            ReviewStudents = new List<ApplicationUser>();
         }
     }
 }

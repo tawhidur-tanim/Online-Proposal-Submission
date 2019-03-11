@@ -4,7 +4,7 @@
       <h2>Proposals</h2>
     </div>
 
-    <box v-on:box::boxCollapse="boxChange">
+    <box v-on:box::boxCollapse="boxChange" v-if="isForm">
       <template slot="title">
         Proposal Submission Form
       </template>
@@ -218,7 +218,11 @@
 
       })
 
+      repo.getForm().then(({ data }) => {
 
+        this.isForm = data.show;
+
+      })
     },
 
     components: {
@@ -233,7 +237,7 @@
       return {
 
         tabNames: ['Project', 'Internship'],
-
+        isForm: false,
         proposal: {
 
           areaOfStudy: '',
@@ -329,15 +333,18 @@
           }
 
           this.toggleLoader()
+          this.proposal.status = 2
           repo.saveProposal(this.proposal).then(({ data }) => {
 
-            this.data.push(data);
+            this.tableConfig.data.push(data);
 
             this.$toastr.s("Success");
           })
             .catch((er) => {
-
+              
               this.error(er);
+
+              console.log(er);
 
             })
             .then(() => {
@@ -379,7 +386,7 @@
           })
             .catch((er) => {
 
-              console.log(er);
+             // console.log(er);
               this.error(er);
 
             })
