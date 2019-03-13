@@ -36,5 +36,8 @@ namespace ProjectFinal101.Persistance
         public DbSet<Proposal> Proposals { get; set; }
 
         public DbSet<Course> Courses { get; set; }
+
+
+
     }
 }

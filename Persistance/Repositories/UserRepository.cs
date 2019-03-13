@@ -45,5 +45,18 @@ namespace ProjectFinal101.Persistance.Repositories
                 await _userManager.AddToRoleAsync(user, RoleReference.Student);
             }
         }
+
+        public IList<ApplicationUser> SupervisorSearch(string query)
+        {
+            var sups = Entities.Join(Context.UserRoles, x => x.Id, ur => ur.UserId, (user, role) => new
+            {
+                user,
+                role
+            }).Join(Context.Roles, x => x.role.RoleId, r => r.Id, (userRole, role) => new { userRole, role })
+                .Where(x => (x.userRole.user.FullName.Contains(query) || x.userRole.user.UserName.Contains(query)) &&
+                            x.role.Name == RoleReference.Student).Select(x => x.userRole.user).Take(10).ToList();
+
+            return sups;
+        }
     }
 }

@@ -84,8 +84,17 @@
   
 
    */
-.w25 {
 
+.my-1 {
+
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.VueTables__table {
+    white-space: pre;
+}
+.w25 {
     width: 25%;
 }
 

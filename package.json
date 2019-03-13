@@ -31,6 +31,7 @@
     "vue-tables-2": "^1.4.70",
     "vue-template-compiler": "^2.5.16",
     "vue-toastr": "^2.0.16",
+    "vuejs-auto-complete": "^0.9.0",
     "vuex": "^2.5.0",
     "vuex-router-sync": "^4.3.2"
   },

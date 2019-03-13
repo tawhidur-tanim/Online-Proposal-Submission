@@ -66,6 +66,8 @@ axios.interceptors.response.use(res => {
 axios.defaults.headers.get['Accepts'] = 'application/json'
 Vue.prototype.$http = axios
 
+Vue.prototype.$tableEvent = Event;
+
 
 require('vue-toastr/src/vue-toastr.scss')
 

@@ -9,7 +9,25 @@ export const util = {
         color: '#0ACFE8'
       },
 
-      loader: null
+      loader: null,
+
+      status: {
+        1: "Accepted",
+        2: "Pending",
+        3: "Rejected"
+      },
+
+      color: {
+        1: "success",
+        2: "primary",
+        3: "danger"
+      },
+      types: {
+
+        1: 'Project',
+        3: 'Thesis',
+        2: 'Internship'
+      }
     }
   },
 
@@ -23,9 +41,17 @@ export const util = {
       }
 
       let obj = {}
-      Object.keys(object).forEach(function(key) {
+      Object.keys(object).forEach((key) => {
 
-        obj[key] = object[key];
+
+        if (typeof object[key] === "object") {
+
+          obj[key] = this.__copy(object[key]);
+        } else {
+          obj[key] = object[key];
+
+        }
+
       });
 
       return obj;

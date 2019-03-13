@@ -34,7 +34,8 @@ export default {
         data: [],
         actions: {},
         templates: {},
-        columns: []
+        columns: [],
+        customFilters: []
       })
     }
   },
@@ -100,18 +101,19 @@ export default {
         options.filterable = self.tableConfig.filterable;
       }
 
+      if (self.tableConfig.customFilters) {
+        options.customFilters = self.tableConfig.customFilters
+      }
+
       if (typeof self.tableConfig.templates === "object") {
         Object.keys(self.tableConfig.templates).forEach(function(key) {
 
           options.templates[key] = function (h, row, index) {
-            // return h('button', { 'class': 'btn btn-warning btn-sm' }, row.age);
-
+           
             return self.tableConfig.templates[key](row, h, index);
           };
-
-         // console.log(self.tableConfig.templates[key]);
+       
         });
-
 
         // options.templates["age"] = function(h, row, index) {
         //     return h('button', { 'class': 'btn btn-warning btn-sm' }, row.age);

@@ -11,5 +11,7 @@ namespace ProjectFinal101.Core.Repositories
         Task InsertBulk(List<ApplicationUser> users);
 
         Task AssignRoles(List<ApplicationUser> users);
+
+        IList<ApplicationUser> SupervisorSearch(string query);
     }
 }

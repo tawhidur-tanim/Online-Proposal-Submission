@@ -5,6 +5,7 @@ import Login from 'components/login'
 import NavBar from 'components/nav-new'
 import semester from 'components/semester'
 import proposal from 'components/proposal'
+import manageProp from 'components/manageProposal'
 
 export const routes = [
 
@@ -42,7 +43,12 @@ export const routes = [
       nav: NavBar
     }
   },
-
+  {
+    name: 'manageProposal', path: '/manageProposal', components: {
+      default: manageProp,
+      nav: NavBar
+    }
+  },
   { name: 'login', path: '/login', component: Login, display: 'Fetch data', icon: 'list' },
   { path: '*', redirect: '/' }
 ]

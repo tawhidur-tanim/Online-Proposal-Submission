@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProposalController : BaseController<ProposalResource, Proposal, IProposalRepository>
     {
         private readonly IHostingEnvironment _hosting;

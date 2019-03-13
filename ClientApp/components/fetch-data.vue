@@ -10,12 +10,28 @@
     <!--<v-server-table url="/home/get" :columns="config.columns" :options="options" ></v-server-table>-->
 
     <appTab :tabs="['Project','Thesis','Internship']">
-      <div slot="Project">1</div>
+      <div slot="Project">
+        <autoComplete source="https://api.github.com/search/repositories?q="
+                      results-property="items"
+                      results-display="full_name" input-class="form-control" placeholder="Search teachers"
+                      @selected="addDistributionGroup">
+
+        </autoComplete>
+      </div>
       <div slot="Thesis">2</div>
-      <div slot="Internship">3</div>
+      <div slot="Internship">
+      <appSelect :config="selectConfig" v-model="test"></appSelect>
+
+        {{ test }}
+
+      </div>
     </appTab>
 
-    <box></box>
+    
+
+    <box>
+      
+    </box>
     
   </div>
 </template>
@@ -26,6 +42,8 @@
   import repo from '../Repositories/Proposals'
   import tab from '../HelperComponents/Tab'
   import box from '../HelperComponents/Box'
+  import select from '../HelperComponents/select'
+  import autoComplete from 'vuejs-auto-complete'
 
   export default {
     computed: {
@@ -117,7 +135,14 @@
         },
 
 
-        options: {}
+        options: {},
+
+        selectConfig: {
+          data: [],
+          label: 'New'
+        },
+
+        test: {value: 100}
       }
     },
 
@@ -170,12 +195,22 @@
         })
 
         root.$toastr.s('success')
+      },
+
+      addDistributionGroup(arg) {
+
+        console.log(arg)
       }
 
     },
 
     async created() {
       this.loadPage(1)
+
+      for (var i = 1; i <= 100; i++) {
+
+        this.selectConfig.data.push({ value: i, text: 'Test-' + i });
+      }
     },
     beforeRouteEnter(to, from, next) {
 
@@ -196,7 +231,9 @@
     components: {
       appTable: table,
       appTab: tab,
-      box
+      box,
+      appSelect: select,
+      autoComplete
     }
 
   }

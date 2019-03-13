@@ -275,21 +275,11 @@
           templates: {
 
             status: function (row, h) {
-
-              return row.status == 1
-                ? h('label', { 'class': 'label label-success' }, "Accepted")
-                : row.status == 2
-                  ? h('label', { 'class': 'label label-primary' }, "Pending")
-                  : h('label', { 'class': 'label label-danger' }, "Rejected");
+              return h('label', { 'class': 'label label-' + this.color[row.status] }, this.status[row.status])
             },
 
             type: function (row, h) {
-
-              return row.type == 1
-                ? h('label', { 'class': 'label label-success' }, "Project")
-                : row.type == 2
-                  ? h('label', { 'class': 'label label-success' }, "Internship")
-                  : h('label', { 'class': 'label label-success' }, "Thesis");
+              return h('label', { 'class': 'label label-success' }, this.types[row.type]);
             },
 
             title: function (row) {
