@@ -11,10 +11,10 @@
 
     <appTab :tabs="['Project','Thesis','Internship']">
       <div slot="Project">
-        <autoComplete source="https://api.github.com/search/repositories?q="
-                      results-property="items"
-                      results-display="full_name" input-class="form-control" placeholder="Search teachers"
-                      @selected="addDistributionGroup">
+        <autoComplete source="/api/user/sups?query="
+                     :results-display="formattedDisplay"
+                     input-class="form-control" placeholder="Search teachers"
+                      @selected="addDistributionGroup" @clear="clear" :request-headers="auth" >
 
         </autoComplete>
       </div>
@@ -172,7 +172,9 @@
         //    })
         //    .catch((error) => console.log(error))*/
       },
+      clear() {
 
+      },
       showToast() {
         this.$toastr('success', 'i am a toastr success', 'hello')
       },
@@ -200,6 +202,11 @@
       addDistributionGroup(arg) {
 
         console.log(arg)
+      },
+
+      formattedDisplay(result) {
+
+        return result.fullName + ' [' + result.userName + ']';
       }
 
     },
@@ -234,6 +241,18 @@
       box,
       appSelect: select,
       autoComplete
+    },
+
+    computed: {
+
+      auth() {
+
+        return {
+
+          "Authorization": "bearer " + this.$store.getters.getToken
+        }
+
+      }
     }
 
   }

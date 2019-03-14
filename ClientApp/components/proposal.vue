@@ -264,21 +264,23 @@
         types: {
 
           1: 'Project',
+          2: 'Internship',
           3: 'Thesis',
-          2: 'Internship'
+
         },
 
         tableConfig: {
           data: [],
 
-          columns: ["title", "status", "type"],
+          columns: ["title", "status_", "type"],
           templates: {
 
-            status: function (row, h) {
+            status_: (row, h) => {
+              console.log(row.status, this.status)
               return h('label', { 'class': 'label label-' + this.color[row.status] }, this.status[row.status])
             },
 
-            type: function (row, h) {
+            type:  (row, h) => {
               return h('label', { 'class': 'label label-success' }, this.types[row.type]);
             },
 

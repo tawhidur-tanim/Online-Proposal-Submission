@@ -12,6 +12,6 @@ namespace ProjectFinal101.Core.Repositories
 
         Task AssignRoles(List<ApplicationUser> users);
 
-        IList<ApplicationUser> SupervisorSearch(string query);
+        IList<ApplicationUser> UserSearch(string query, string role);
     }
 }

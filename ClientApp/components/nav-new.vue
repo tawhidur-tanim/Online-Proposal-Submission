@@ -23,10 +23,10 @@
             <!-- Messages: style can be found in dropdown.less-->
             <li class="dropdown messages-menu">
               <!-- Menu toggle button -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-envelope-o"></i>
                 <span class="label label-success">4</span>
-              </a>
+              </a>-->
               <ul class="dropdown-menu">
                 <li class="header">You have 4 messages</li>
                 <li>
@@ -59,17 +59,17 @@
             <!-- Notifications Menu -->
             <li class="dropdown notifications-menu">
               <!-- Menu toggle button -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-bell-o"></i>
                 <span class="label label-warning">10</span>
-              </a>
+              </a>-->
               <ul class="dropdown-menu">
                 <li class="header">You have 10 notifications</li>
                 <li>
                   <!-- Inner Menu: contains the notifications -->
                   <ul class="menu">
                     <li>
-                      <!-- start notification -->
+
                       <a href="#">
                         <i class="fa fa-users text-aqua"></i> 5 new members joined today
                       </a>
@@ -83,12 +83,12 @@
             <!-- Tasks Menu -->
             <li class="dropdown tasks-menu">
               <!-- Menu Toggle Button -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-flag-o"></i>
                 <span class="label label-danger">9</span>
-              </a>
+              </a>-->
               <ul class="dropdown-menu">
-                <li class="header">You have 9 tasks</li>
+                <!--<li class="header">You have 9 tasks</li>-->
                 <li>
                   <!-- Inner menu: contains the tasks -->
                   <ul class="menu">
@@ -114,7 +114,7 @@
                   </ul>
                 </li>
                 <li class="footer">
-                  <a href="#">View all tasks</a>
+                  <!--<a href="#">View all tasks</a>-->
                 </li>
               </ul>
             </li>
@@ -209,7 +209,7 @@
            <router-link :to="{name: 'semesters'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Semesters</span></a></router-link>
            <router-link :to="{name: 'proposals'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Submit Proposal</span></a></router-link>
            <router-link :to="{name: 'manageProposal'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Manage Proposal</span></a></router-link>
-          <li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
+          <!--<li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
@@ -223,8 +223,8 @@
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li class="treeview">
+          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
+          <!--<li class="treeview">
             <a href="#">
               <i class="fa fa-link"></i> <span>Multilevel</span>
               <span class="pull-right-container">
@@ -235,7 +235,7 @@
               <li><a href="#">Link in level 2</a></li>
               <li><a href="#">Link in level 2</a></li>
             </ul>
-          </li>
+          </li>-->
         </ul>
         <!-- /.sidebar-menu -->
       </section>

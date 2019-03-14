@@ -46,7 +46,7 @@ namespace ProjectFinal101.Persistance.Repositories
             }
         }
 
-        public IList<ApplicationUser> SupervisorSearch(string query)
+        public IList<ApplicationUser> UserSearch(string query, string roleName)
         {
             var sups = Entities.Join(Context.UserRoles, x => x.Id, ur => ur.UserId, (user, role) => new
             {
@@ -54,7 +54,7 @@ namespace ProjectFinal101.Persistance.Repositories
                 role
             }).Join(Context.Roles, x => x.role.RoleId, r => r.Id, (userRole, role) => new { userRole, role })
                 .Where(x => (x.userRole.user.FullName.Contains(query) || x.userRole.user.UserName.Contains(query)) &&
-                            x.role.Name == RoleReference.Student).Select(x => x.userRole.user).Take(10).ToList();
+                            x.role.Name == roleName).Select(x => x.userRole.user).Take(10).ToList();
 
             return sups;
         }

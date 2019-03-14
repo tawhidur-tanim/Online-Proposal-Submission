@@ -131,6 +131,7 @@ namespace ProjectFinal101.Controllers
         }
 
         [HttpGet("GetProposals")]
+        [Authorize(Roles = RoleReference.Admin)]
         public IActionResult GetProposals()
         {
             try
@@ -138,6 +139,32 @@ namespace ProjectFinal101.Controllers
                 var proposals = Repository.GetProposals();
 
                 return Ok(proposals.Select(Mapper.Map<Proposal, ProposalResource>));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("status/{id}/{statusId}")]
+        [Authorize(Roles = RoleReference.Admin)]
+        public IActionResult ChangeStatus(long id, byte statusId)
+        {
+            try
+            {
+                var proposal = Repository.FirstOrDefault(x => x.Id == id);
+
+                if (proposal == null)
+                    return NotFound();
+
+                if (statusId < 1 || statusId > 3)
+                    return BadRequest();
+
+                proposal.Status = statusId;
+
+                UnitOfWork.Complete();
+
+                return Ok();
             }
             catch (Exception e)
             {

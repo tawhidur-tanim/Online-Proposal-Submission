@@ -17,9 +17,114 @@
         </div>
       </div>
 
-
-
       <appTable :tableConfig="table"></appTable>
+
+      <modal v-if="detailsModal" @close="detailsModal = false" cls="md">
+
+        <template slot="header">
+          <h3>Proposal Details</h3>   
+        </template>
+
+        <template slot="body">
+          <div class="row">
+            <div class="col-md-2">
+              <label>Student Name</label>
+            </div>
+            <div class="col-md-3">
+              <span v-if="proposal.student">{{ proposal.student.fullName }}</span>
+              <span v-else>{{ intern.student.fullName }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label>Student Id</label>
+            </div>
+            <div class="col-md-3">
+              <span v-if="proposal.student">{{ proposal.student.userName }}</span>
+              <span v-else>{{ intern.student.userName }}</span>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div v-if="modalData === 1 || modalData === 3">
+              <div class="col-md-6">
+                <label>Title</label>
+                <span>{{ proposal.title }}</span>
+              </div>
+
+              <div class="col-md-6">
+                <label>Area Of Study</label>
+                <span>{{ proposal.areaOfStudy }}</span>
+              </div>
+
+              <div class="col-md-6">
+                <label>Description</label>
+                <span>{{ proposal.description }}</span>
+              </div>
+
+              <div class="col-md-6">
+                <label>Type</label>
+                <span>{{  types[proposal.type] }}</span>
+              </div>
+            </div>
+            <div v-if="modalData === 2">
+              <div class="col-md-6">
+                <label>Language Skill</label>
+                <span>{{ intern.language }}</span>
+              </div>
+
+              <div class="col-md-6">
+                <label>Known Framework</label>
+                <span>{{ intern.frameWorkDescription }}</span>
+              </div>
+
+              <div class="col-md-6">
+                <label>Reason of interest</label>
+                <span>{{ intern.internshipReason }}</span>
+              </div>
+
+              <div class="col-md-6">
+                <label>Already have internship</label>
+                <span>{{  intern.isHaveInternship ? "Yes" : "No" }}</span>
+              </div>
+              <template v-if=" intern.isHaveInternship">
+                <div class="col-md-6">
+                  <label>Company Name</label>
+                  <span>{{  intern.companyName }}</span>
+                </div>
+                <div class="col-md-6">
+                  <label>Company address</label>
+                  <span>{{  intern.companyAddress }}</span>
+                </div>
+                <div class="col-md-6">
+                  <label>Job Description</label>
+                  <span>{{  intern.jobDescriotion }}</span>
+                </div>
+                <div class="col-md-6">
+                  <label>Internship Rreference</label>
+                  <span>{{  intern.internshipRefernce }}</span>
+                </div>
+                <div class="col-md-6">
+                  <label>Contact of supervisor</label>
+                  <span>{{  intern.contactForSupervisor }}</span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+      </modal>
+
+      <modal v-if="manageModal" @close="manageModal = false">
+        <template slot="header">
+          <h3>Manage</h3>
+        </template>
+
+        <template slot="body">
+          <appSelect :config="statusSelect"></appSelect>
+          <button @click="confirmStatus">Confirm</button>
+        </template>
+      </modal>
 
     </div>
 
@@ -31,6 +136,7 @@
   import repo from '../Repositories/manageProposal'
   import { util } from '../mixins/util'
   import appSelect from '../HelperComponents/select'
+  import modal from '../HelperComponents/modal'
 
   export default {
     mixins: [util],
@@ -59,7 +165,8 @@
 
     components: {
       appTable,
-      appSelect
+      appSelect,
+      modal
     },
 
     data() {
@@ -86,11 +193,11 @@
           actions: {
 
             Details: {
-              callBack: () => {}
+              callBack: this.details
             },
 
             Manage: {
-              callBack: () => { },
+              callBack: this.manage,
               cssClass: 'btn btn-primary'
             }
 
@@ -122,8 +229,44 @@
           label: "Type"
         },
 
+        statusSelect: {
+          data: [{ value: 1, text: "Accept" }, { value: 2, text: "Reject" }],
+          label: 'Status'
+        },
+
         selected: {value: '', text: ''},
-        selectedType: {value: '', text: ''}
+        selectedType: { value: '', text: '' },
+
+        detailsModal: false,
+
+        proposal: {
+          areaOfStudy: '',
+          title: '',
+          description: '',
+          type: 1,
+          status: 2,
+          student: null
+        },
+
+        intern: {
+          language: '',
+          frameWorkDescription: '',
+          internshipReason: '',
+          isHaveInternship: false,
+          companyName: '',
+          companyAddress: '',
+          jobDescriotion: '',
+          internshipRefernce: '',
+          contactForSupervisor: '',
+          type: 2,
+          status: 2,
+          student: null
+        },
+        modalData: 0,
+
+        manageModal: false,
+      //  status: {value: 1}
+
       }
     },
 
@@ -167,6 +310,28 @@
 
         this.$tableEvent.$emit('vue-tables.filter::type', this.selectedType.value);
 
+      },
+      details(row) {
+
+        this.detailsModal = true;
+        this.modalData = row.type;
+
+        if (row.type == 3) {
+          this.map(row, this.intern);
+        } else {
+
+          this.map(row, this.proposal);
+        }       
+      },
+
+      manage() {
+
+        this.manageModal = true;
+      },
+
+      confirmStatus() {
+
+        repo.changeStatus()
       }
     }
   }

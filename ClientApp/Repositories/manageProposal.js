@@ -13,8 +13,18 @@ export default {
 
     return request;
 
+  },
+
+
+  changeStatus(id, statusId) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get(`/api/user/status/${id}/${statusId}`);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
+
   }
-
-
-
 }
