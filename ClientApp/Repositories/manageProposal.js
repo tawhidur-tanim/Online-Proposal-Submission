@@ -20,11 +20,25 @@ export default {
 
     store.commit('toggleLoader');
 
-    const request = axios.get(`/api/user/status/${id}/${statusId}`);
+    const request = axios.get(`/api/proposal/status/${id}/${statusId}`);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
+
+  },
+
+
+  assignTeacher(data) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.post("/api/user/assign",data);
 
     request.catch().then(() => store.commit('toggleLoader'))
 
     return request;
 
   }
+
 }

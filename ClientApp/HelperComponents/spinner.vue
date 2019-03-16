@@ -26,7 +26,7 @@
     transition: opacity .3s ease;
   }
   #cover-spin {
-    z-index: 9999;
+    z-index: 999999;
     position: fixed;
     top: 50%;
     left: 50%;

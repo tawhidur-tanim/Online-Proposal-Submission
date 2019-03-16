@@ -27,7 +27,7 @@ namespace ProjectFinal101.Persistance.Repositories
                 .Include(x => x.Student)
                 .Include(x => x.Student.Supervisor)
                 .Include(x => x.Student.Reviewer)
-                .Where(x => x.Student.SemesterId == activeSemester.Id && x.Status == ProposalStstus.Pending)
+                .Where(x => x.Student.SemesterId == activeSemester.Id)
                 .ToList();
 
             return proposals;

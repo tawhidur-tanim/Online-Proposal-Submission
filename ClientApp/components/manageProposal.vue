@@ -1,13 +1,9 @@
 <template>
-
   <div>
-
     <div class="content">
-
       <div class="content-header">
         <h1>Manage proposals</h1>
       </div>
-
       <div class="row">
         <div class="col-md-2 my-1">
           <appSelect :config="select" v-model="selected" @change="changeSelect"></appSelect>
@@ -16,18 +12,14 @@
           <appSelect :config="selectType" v-model="selectedType" @change="changeSelectType"></appSelect>
         </div>
       </div>
-
       <appTable :tableConfig="table"></appTable>
-
       <modal v-if="detailsModal" @close="detailsModal = false" cls="md">
-
         <template slot="header">
-          <h3>Proposal Details</h3>   
+          <h3>Proposal Details</h3>
         </template>
-
         <template slot="body">
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <label>Student Name</label>
             </div>
             <div class="col-md-3">
@@ -36,7 +28,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <label>Student Id</label>
             </div>
             <div class="col-md-3">
@@ -112,31 +104,61 @@
             </div>
           </div>
         </template>
-
       </modal>
-
-      <modal v-if="manageModal" @close="manageModal = false">
+      <modal v-if="manageModalShow" @close="manageModalShow = false" :cls="manageClass">
         <template slot="header">
           <h3>Manage</h3>
         </template>
-
         <template slot="body">
-          <appSelect :config="statusSelect"></appSelect>
-          <button @click="confirmStatus">Confirm</button>
+          <template v-if="manageModal.status.value != 1">
+            <appSelect :config="statusSelect" v-model="manageModal.status"></appSelect>
+            <button @click="confirmStatus" class="btn btn-primary">Confirm</button>
+          </template>
+          <template v-if="manageModal.status.value === 1">
+            <div class="row">
+              <label class="col-md-3">
+                Supervisor Name:
+              </label>
+              <div class="col-md-2">
+                {{ manageModal.supervisor.fullName }}
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-md-3">
+                Supervisor Id:
+              </label>
+              <div class="col-md-2">
+                {{ manageModal.supervisor.userName }}
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-md-6">
+                <autoComplete source="/api/user/sups?query="
+                              input-class="form-control" placeholder="Search teachers"
+                              :results-display="formattedDisplay"
+                              @selected="addDistributionGroup" @clear="clear" :request-headers="auth">
+                </autoComplete>
+              </div>
+              <div class="col-md-6">
+                <button class="btn btn-success" @click="assign">Assign</button>
+              </div>
+            </div>
+
+          </template>
         </template>
       </modal>
-
     </div>
-
   </div>
 </template>
-
 <script>
   import appTable from '../HelperComponents/clientTable'
   import repo from '../Repositories/manageProposal'
   import { util } from '../mixins/util'
   import appSelect from '../HelperComponents/select'
   import modal from '../HelperComponents/modal'
+  import autoComplete from 'vuejs-auto-complete'
+
 
   export default {
     mixins: [util],
@@ -158,15 +180,16 @@
         this.selectType.data.push({ value: key, text: this.types[key] })
 
       })
-      this.select.data.unshift({value: '', text: 'All'})
-      this.selectType.data.unshift({value: '', text: 'All'})
+      this.select.data.unshift({ value: '', text: 'All' })
+      this.selectType.data.unshift({ value: '', text: 'All' })
 
     },
 
     components: {
       appTable,
       appSelect,
-      modal
+      modal,
+      autoComplete
     },
 
     data() {
@@ -178,14 +201,14 @@
           columns: ["studentName", "status", "type", "supervisorName", "reviewerName"],
           templates: {
 
-            status:(row,h) => {
+            status: (row, h) => {
 
               return h('label', { 'class': 'label label-' + this.color[row.status] }, this.status[row.status])
             },
 
             type: (row, h) => {
 
-              return h('label', { 'class': 'label label-success'}, this.types[row.type]);
+              return h('label', { 'class': 'label label-success' }, this.types[row.type]);
             }
 
           },
@@ -210,13 +233,13 @@
               return row.status == query;
             }
           },
-            {
-              name: 'type',
-              callback: function (row, query) {
+          {
+            name: 'type',
+            callback: function (row, query) {
 
-                return row.type == query;
-              }
-            }]
+              return row.type == query;
+            }
+          }]
         },
 
         select: {
@@ -230,11 +253,11 @@
         },
 
         statusSelect: {
-          data: [{ value: 1, text: "Accept" }, { value: 2, text: "Reject" }],
+          data: [{ value: 1, text: "Accept" }, { value: 2, text: "Pending" }, { value: 3, text: "Reject" }],
           label: 'Status'
         },
 
-        selected: {value: '', text: ''},
+        selected: { value: '', text: '' },
         selectedType: { value: '', text: '' },
 
         detailsModal: false,
@@ -262,11 +285,23 @@
           status: 2,
           student: null
         },
+
+        manageModal: {
+
+          student: {},
+
+          supervisor: {},
+
+          status: { value: 0, text: '' },
+
+          id: ''
+
+        },
         modalData: 0,
 
-        manageModal: false,
-      //  status: {value: 1}
+        manageModalShow: false,
 
+        selectedObject: {}
       }
     },
 
@@ -311,34 +346,108 @@
         this.$tableEvent.$emit('vue-tables.filter::type', this.selectedType.value);
 
       },
+
       details(row) {
 
         this.detailsModal = true;
+
         this.modalData = row.type;
 
         if (row.type == 3) {
-          this.map(row, this.intern);
-        } else {
 
+          this.map(row, this.intern);
+
+        } else {
           this.map(row, this.proposal);
-        }       
+        }
       },
 
-      manage() {
+      manage(row) {
 
-        this.manageModal = true;
+        this.manageModalShow = true;
+
+        this.map(row, this.manageModal);
+
+        this.manageModal.status = { value: row.status };
+
       },
 
       confirmStatus() {
 
-        repo.changeStatus()
+        repo.changeStatus(this.manageModal.id, this.manageModal.status.value).then(() => {
+
+          this.$toastr.s("Success");
+
+          this.updateRow({ id: this.manageModal.id, status: this.manageModal.status.value })
+
+        })
+
+      },
+
+      updateRow(newRow) {
+
+        var row = this.table.data.find(x => x.id === newRow.id);
+
+        this.map(newRow, row);
+      },
+
+      formattedDisplay(result) {
+
+        return result.fullName + ' [' + result.userName + ']';
+      },
+
+      addDistributionGroup(arg) {
+
+        this.manageModal.selectedObject = arg.selectedObject;
+      },
+
+      clear() {
+
+        this.manageModal.selectedObject = {};
+
+      },
+
+      assign() {
+
+        repo.assignTeacher({
+
+          teacherId: this.manageModal.selectedObject.id,
+          studentId: this.manageModal.student.id,
+          type: 1
+        }).then(() => {
+
+          this.$toastr.s("Assigned");
+
+          this.manageModal.supervisor = this.manageModal.selectedObject;
+
+          this.updateRow({ supervisor: this.manageModal.selectedObject, id: this.manageModal.id })
+
+          this.mapper(this.table.data);
+        })
+      }
+    },
+
+    computed: {
+
+      manageClass() {
+
+        return {
+
+          'md': this.manageModal.status.value == 1
+        }
+      },
+
+      auth() {
+
+        return {
+
+          "Authorization": "bearer " + this.$store.getters.getToken
+        }
       }
     }
   }
 
 
 </script>
-
 <style>
-
 </style>

@@ -14,7 +14,7 @@
         <autoComplete source="/api/user/sups?query="
                      :results-display="formattedDisplay"
                      input-class="form-control" placeholder="Search teachers"
-                      @selected="addDistributionGroup" @clear="clear" :request-headers="auth" >
+                     @selected="addDistributionGroup" @clear="clear" :request-headers="auth" >
 
         </autoComplete>
       </div>

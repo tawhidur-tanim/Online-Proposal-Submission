@@ -25,7 +25,7 @@ namespace ProjectFinal101.Controllers.BaseController
         {
             try
             {
-                var sups = Repository.UserSearch(query, RoleReference.Student);
+                var sups = Repository.UserSearch(query, RoleReference.Teacher);
 
                 return Ok(sups.Select(Mapper.Map<ApplicationUser, UserResource>));
             }
