@@ -67,5 +67,26 @@ namespace ProjectFinal101.Controllers.BaseController
                 return BadRequest();
             }
         }
+
+        [HttpGet("seminar")]
+        public IActionResult Seminar(string studentId, bool status)
+        {
+            try
+            {
+                var student = Repository.FirstOrDefault(x => x.Id == studentId);
+
+                if (student == null)
+                    return NotFound();
+
+                student.IsSeminar = status;
+                UnitOfWork.Complete();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

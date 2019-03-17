@@ -11,6 +11,9 @@
         <div class="col-md-2 my-1">
           <appSelect :config="selectType" v-model="selectedType" @change="changeSelectType"></appSelect>
         </div>
+        <div class="col-md-2 my-1">
+          <appSelect :config="selectSeminar" v-model="seminarAllow" @change="changeSelectSeminar"></appSelect>
+        </div>
       </div>
       <appTable :tableConfig="table"></appTable>
       <modal v-if="detailsModal" @close="detailsModal = false" cls="md">
@@ -115,27 +118,49 @@
             <button @click="confirmStatus" class="btn btn-primary">Confirm</button>
           </template>
           <template v-if="manageModal.status.value === 1">
-            <div class="row">
-              <label class="col-md-3">
-                Supervisor Name:
-              </label>
-              <div class="col-md-2">
-                {{ manageModal.supervisor.fullName }}
+            <template v-if="Object.keys(manageModal.supervisor).length > 0">
+              <div class="row">
+                <label class="col-md-3">
+                  Supervisor Name:
+                </label>
+                <div class="col-md-2">
+                  {{ manageModal.supervisor.fullName }}
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <label class="col-md-3">
-                Supervisor Id:
-              </label>
-              <div class="col-md-2">
-                {{ manageModal.supervisor.userName }}
+              <div class="row">
+                <label class="col-md-3">
+                  Supervisor Id:
+                </label>
+                <div class="col-md-3">
+                  {{ manageModal.supervisor.userName }}
+                </div>
               </div>
-            </div>
+            </template>
+
+            <template v-if="Object.keys(manageModal.reviewer).length > 0">
+              <div class="row">
+                <label class="col-md-3">
+                  Reviewer Name:
+                </label>
+                <div class="col-md-2">
+                  {{ manageModal.reviewer.fullName }}
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3">
+                  Reviewer Id:
+                </label>
+                <div class="col-md-3">
+                  {{ manageModal.reviewer.userName }}
+                </div>
+              </div>
+            </template>
+
             <hr />
-            <div class="row">
+            <div class="row" style="margin-bottom: 10px">
               <div class="col-md-6">
                 <autoComplete source="/api/user/sups?query="
-                              input-class="form-control" placeholder="Search teachers"
+                              input-class="form-control" placeholder="Search supervisor"
                               :results-display="formattedDisplay"
                               @selected="addDistributionGroup" @clear="clear" :request-headers="auth">
                 </autoComplete>
@@ -144,8 +169,32 @@
                 <button class="btn btn-success" @click="assign">Assign</button>
               </div>
             </div>
-
+            <div class="row">
+              <div class="col-md-6">
+                <autoComplete source="/api/user/sups?query="
+                              input-class="form-control" placeholder="Search reviewer"
+                              :results-display="formattedDisplay"
+                              @selected="setReviewer" @clear="clearReviewer" :request-headers="auth">
+                </autoComplete>
+              </div>
+              <div class="col-md-6">
+                <button class="btn btn-success" @click="assignSuperVisor">Assign</button>
+              </div>
+            </div>
           </template>
+        </template>
+      </modal>
+
+      <modal v-if="seminarShow" @close="seminarShow = false">
+        <template slot="header">
+          <h3>Seminar Attendance</h3>
+        </template>
+
+        <template slot="body">
+          <appSelect :config="seminarOption"></appSelect>
+        </template>
+        <template slot="footer">
+          <button class="btn btn-success">Save</button>
         </template>
       </modal>
     </div>
@@ -222,8 +271,14 @@
             Manage: {
               callBack: this.manage,
               cssClass: 'btn btn-primary'
-            }
+            },
 
+            Seminar: {
+
+              callBack: () => { this.seminarShow = true },
+              cssClass: 'btn btn-info'
+
+            }
           },
 
           customFilters: [{
@@ -239,7 +294,20 @@
 
               return row.type == query;
             }
-          }]
+            },
+            {
+              name: 'seminar',
+              callback: function (row, query) {
+
+                if (query == -1) return true;
+
+                if (!row.student || !row.student.isSeminar)
+                  return false;
+
+
+                return row.student.isSeminar == query;
+              }
+            }]
         },
 
         select: {
@@ -247,11 +315,22 @@
           label: "Status"
         },
 
+        seminarShow: false,
+
         selectType: {
           data: [],
           label: "Type"
         },
+        selectSeminar: {
+          data: [{ value: -1, text: 'All' }, { value: true, text: 'Allowed' }],
+          label: "Pre-Defence"
+        },
 
+        seminarAllow: {value: -1},
+        seminarOption: {
+          data: [{ value: true, text: 'Present' }, { value: true, text: 'Absent' }],
+          label: "Attendance"
+        },
         statusSelect: {
           data: [{ value: 1, text: "Accept" }, { value: 2, text: "Pending" }, { value: 3, text: "Reject" }],
           label: 'Status'
@@ -292,6 +371,8 @@
 
           supervisor: {},
 
+          reviewer: {},
+
           status: { value: 0, text: '' },
 
           id: ''
@@ -322,6 +403,7 @@
 
           } else {
             row.supervisorName = "No Name Found";
+            row.supervisor = {}
           }
 
           if (row.reviewer && row.reviewer.fullName) {
@@ -329,6 +411,7 @@
 
           } else {
             row.reviewerName = "No Name Found";
+            row.reviewer = {}
           }
 
         })
@@ -346,7 +429,11 @@
         this.$tableEvent.$emit('vue-tables.filter::type', this.selectedType.value);
 
       },
+      changeSelectSeminar() {
 
+        this.$tableEvent.$emit('vue-tables.filter::seminar', this.seminarAllow.value);
+
+      },
       details(row) {
 
         this.detailsModal = true;
@@ -424,6 +511,36 @@
 
           this.mapper(this.table.data);
         })
+
+      },
+
+      assignSuperVisor() {
+
+        repo.assignTeacher({
+
+          teacherId: this.manageModal.selectedReviewer.id,
+          studentId: this.manageModal.student.id,
+          type: 2
+        }).then(() => {
+
+          this.$toastr.s("Assigned");
+
+          this.manageModal.reviewer = this.manageModal.selectedReviewer;
+
+          this.updateRow({ reviewer: this.manageModal.selectedReviewer, id: this.manageModal.id })
+
+          this.mapper(this.table.data);
+        })
+
+      },
+      setReviewer(arg) {
+
+        this.manageModal.selectedReviewer = arg.selectedObject;
+        
+      },
+      clearReviewer() {
+
+        this.manageModal.selectedReviewer = {}
       }
     },
 

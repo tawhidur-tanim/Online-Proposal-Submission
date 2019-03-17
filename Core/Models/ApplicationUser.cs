@@ -19,6 +19,8 @@ namespace ProjectFinal101.Core.Models
 
         public ApplicationUser Reviewer { get; set; }
 
+        public bool? IsSeminar { get; set; }
+
         public IEnumerable<Proposal> Proposals { get; set; }
 
         public IEnumerable<ApplicationUser> SupervisedStudents { get; set; }

@@ -9,5 +9,7 @@ namespace ProjectFinal101.Core.Resources
         public string FullName { get; set; }
 
         public int? SemesterId { get; set; }
+
+        public bool? IsSemester { get; set; }
     }
 }
