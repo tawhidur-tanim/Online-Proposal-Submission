@@ -10,6 +10,6 @@ namespace ProjectFinal101.Core.Resources
 
         public int? SemesterId { get; set; }
 
-        public bool? IsSemester { get; set; }
+        public bool? IsSeminar { get; set; }
     }
 }

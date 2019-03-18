@@ -191,10 +191,10 @@
         </template>
 
         <template slot="body">
-          <appSelect :config="seminarOption"></appSelect>
+          <appSelect :config="seminarOption" v-model="seminarAttendance" ></appSelect>
         </template>
         <template slot="footer">
-          <button class="btn btn-success">Save</button>
+          <button class="btn btn-success" @click="saveAttendance">Save</button>
         </template>
       </modal>
     </div>
@@ -275,7 +275,7 @@
 
             Seminar: {
 
-              callBack: () => { this.seminarShow = true },
+              callBack: this.seminarModal,
               cssClass: 'btn btn-info'
 
             }
@@ -328,7 +328,7 @@
 
         seminarAllow: {value: -1},
         seminarOption: {
-          data: [{ value: true, text: 'Present' }, { value: true, text: 'Absent' }],
+          data: [{ value: true, text: 'Present' }, { value: false, text: 'Absent' }, { value: null, text: 'None' }],
           label: "Attendance"
         },
         statusSelect: {
@@ -382,7 +382,9 @@
 
         manageModalShow: false,
 
-        selectedObject: {}
+        selectedObject: {},
+
+        seminarAttendance: {value: null}
       }
     },
 
@@ -541,6 +543,35 @@
       clearReviewer() {
 
         this.manageModal.selectedReviewer = {}
+      },
+
+      seminarModal(row) {
+
+        this.seminarShow = true
+        this.map(row, this.manageModal);
+
+        if (row.student.isSeminar != null) {
+          this.seminarAttendance.value = row.student.isSeminar;
+        }
+      },
+      saveAttendance() {
+
+        if (this.seminarAttendance.value == null) {
+          this.$toastr.i("Please Select absent or present");
+          return;
+        }
+
+        repo
+          .seminarAttendance(this.manageModal.student.id, this.seminarAttendance.value)
+          .then(() => {
+
+            this.$toastr.s("Updated");
+
+            this.manageModal.student.isSeminar = this.seminarAttendance.value;
+            this.seminarShow = false;
+            this.updateRow({ id: this.manageModal.id, student: this.manageModal.student });
+
+          })
       }
     },
 
