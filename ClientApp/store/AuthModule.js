@@ -24,7 +24,10 @@ const getters = {
 
     return state.token;
   },
+  getUserId(state) {
 
+    return state.userId;
+  },
   getState(state) {
 
     return state;

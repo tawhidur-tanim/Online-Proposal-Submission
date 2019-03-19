@@ -6,6 +6,7 @@ import NavBar from 'components/nav-new'
 import semester from 'components/semester'
 import proposal from 'components/proposal'
 import manageProp from 'components/manageProposal'
+import supervisor from 'components/supervisor'
 
 export const routes = [
 
@@ -46,6 +47,12 @@ export const routes = [
   {
     name: 'manageProposal', path: '/manageProposal', components: {
       default: manageProp,
+      nav: NavBar
+    }
+  },
+  {
+    name: 'supervisor', path: '/supervisor', components: {
+      default: supervisor,
       nav: NavBar
     }
   },

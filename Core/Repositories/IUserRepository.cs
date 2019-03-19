@@ -13,5 +13,7 @@ namespace ProjectFinal101.Core.Repositories
         Task AssignRoles(List<ApplicationUser> users);
 
         IList<ApplicationUser> UserSearch(string query, string role);
+
+        IList<ApplicationUser> GetStudentsByTeacher(string teacherId, bool type);
     }
 }

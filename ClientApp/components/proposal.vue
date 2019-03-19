@@ -205,6 +205,7 @@
   import { util } from '../mixins/util'
   import modal from '../HelperComponents/modal'
   import Bus from '../HelperComponents/Bus'
+  import roles from '../rolesConstant'
 
   export default {
 
@@ -276,7 +277,6 @@
           templates: {
 
             status_: (row, h) => {
-              console.log(row.status, this.status)
               return h('label', { 'class': 'label label-' + this.color[row.status] }, this.status[row.status])
             },
 
@@ -336,8 +336,6 @@
               
               this.error(er);
 
-              console.log(er);
-
             })
             .then(() => {
 
@@ -394,7 +392,7 @@
 
         this.modal = true;
         Bus.collapseBox();
-        console.log(this.proposal, this.intern)
+
 
         this.modalData = row.type;
         if (row.type == 2) {
@@ -414,7 +412,24 @@
 
 
       }
-    }
+    },
+
+    beforeRouteEnter(to, from, next) {
+
+      next(vm => {
+
+        // console.log(vm.$store.getters.isAuthenticated, vm.$store.getters.state, vm.$store.getters.token, vm.$store.state.Auth.token, to)
+
+        if (vm.$store.getters.isAuthenticated && (vm.$store.getters.role == roles.student || vm.$store.getters.role == roles.admin)) {
+
+          return vm.$router.push({ name: to.name })
+        }
+        else {
+          return vm.$router.push('/login')
+        }
+
+      })
+    },
   }
 
 

@@ -37,6 +37,9 @@ namespace ProjectFinal101.Core
             CreateMap<ProposalResource, Proposal>()
                 .ForMember(x => x.ProposalTypeId, opt => opt.MapFrom(p => p.Type));
 
+            CreateMap<ProposalWithOutNavResource, Proposal>()
+                .ForMember(x => x.ProposalTypeId, opt => opt.MapFrom(p => p.Type));
+
             // domain to resource
             CreateMap<Semester, SemesterCreateResource>()
                 .ForMember(x => x.Catagories, op => op.Ignore())
@@ -64,8 +67,13 @@ namespace ProjectFinal101.Core
                 .ForMember(x => x.Reviewer, opt => opt.MapFrom(p => p.Student.Reviewer))
                 .ForMember(x => x.Supervisor, opt => opt.MapFrom(p => p.Student.Supervisor));
 
+            CreateMap<Proposal, ProposalWithOutNavResource>()
+                .ForMember(x => x.Type, opt => opt.MapFrom(p => p.ProposalTypeId));
+
             CreateMap<ApplicationUser, UserResource>();
             //  .ForMember(x => , opt => opt.MapFrom(p => p.))
+
+            CreateMap<ApplicationUser, UserWithProposalResource>();
 
 
         }

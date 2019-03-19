@@ -207,8 +207,9 @@
           <!-- Optionally, you can add icons to the links -->
           <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>-->
            <router-link :to="{name: 'semesters'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Semesters</span></a></router-link>
-           <router-link :to="{name: 'proposals'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Submit Proposal</span></a></router-link>
-           <router-link :to="{name: 'manageProposal'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Manage Proposal</span></a></router-link>
+           <router-link :to="{name: 'proposals'}" active-class="active" tag="li"><a><i class="fa fa-lightbulb-o"></i> <span>Submit Proposal</span></a></router-link>
+           <router-link :to="{name: 'manageProposal'}" active-class="active" tag="li"><a><i class="fa fa-clock-o"></i> <span>Manage Proposal</span></a></router-link>
+           <router-link :to="{name: 'supervisor'}" active-class="active" tag="li"><a><i class="fa fa-sitemap"></i> <span>Supervised Student</span></a></router-link>
           <!--<li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
           <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>

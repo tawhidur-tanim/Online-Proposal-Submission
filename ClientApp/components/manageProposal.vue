@@ -592,7 +592,24 @@
           "Authorization": "bearer " + this.$store.getters.getToken
         }
       }
-    }
+    },
+
+    beforeRouteEnter(to, from, next) {
+
+      next(vm => {
+
+        // console.log(vm.$store.getters.isAuthenticated, vm.$store.getters.state, vm.$store.getters.token, vm.$store.state.Auth.token, to)
+
+        if (vm.$store.getters.isAuthenticated && (vm.$store.getters.role == roles.teacher || vm.$store.getters.role == roles.admin)) {
+
+          return vm.$router.push({ name: to.name })
+        }
+        else {
+          return vm.$router.push('/login')
+        }
+
+      })
+    },
   }
 
 

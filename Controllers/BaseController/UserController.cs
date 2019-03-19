@@ -73,6 +73,9 @@ namespace ProjectFinal101.Controllers.BaseController
         {
             try
             {
+                if (string.IsNullOrEmpty(studentId))
+                    return BadRequest();
+
                 var student = Repository.FirstOrDefault(x => x.Id == studentId);
 
                 if (student == null)
@@ -82,6 +85,24 @@ namespace ProjectFinal101.Controllers.BaseController
                 UnitOfWork.Complete();
 
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("teacher/students")]
+        public IActionResult StudentsByTeacher(string teacherId, bool type)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(teacherId))
+                    return BadRequest();
+
+                var students = Repository.GetStudentsByTeacher(teacherId, type);
+
+                return Ok(students.Select(Mapper.Map<ApplicationUser, UserWithProposalResource>));
             }
             catch (Exception e)
             {

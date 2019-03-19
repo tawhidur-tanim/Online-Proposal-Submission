@@ -55,6 +55,12 @@
 
       });
 
+      Bus.$on('openBox', () => {
+
+        this.boxCollapse = false;
+
+      });
+
     },
 
     data() {

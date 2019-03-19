@@ -7,6 +7,11 @@ const  eventBus = new Vue({
     collapseBox() {
 
       this.$emit('collapseBox');
+    },
+
+    openBox() {
+
+      this.$emit('openBox');
     }
 
   }

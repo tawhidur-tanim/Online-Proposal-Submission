@@ -283,7 +283,7 @@
 
       edit(row, root) {
 
-        Bus.collapseBox();
+        Bus.openBox();
 
         this.isEdit = true;
         this.semesterName = row.name;

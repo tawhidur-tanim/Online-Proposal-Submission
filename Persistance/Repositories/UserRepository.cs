@@ -58,5 +58,26 @@ namespace ProjectFinal101.Persistance.Repositories
 
             return sups;
         }
+
+
+        public IList<ApplicationUser> GetStudentsByTeacher(string teacherId, bool type)
+        {
+            var students = Entities
+                .Include(x => x.Proposals)
+                .Where(x => !x.IsPassed);
+
+            students = type
+                ? students.Where(x => x.SupervisorId == teacherId)
+                : students.Where(x => x.ReviewerId == teacherId);
+
+            var users = students.ToList();
+
+            foreach (var user in users)
+            {
+                user.Proposals = user.Proposals.Where(y => y.Status == ProposalStstus.Accepted);
+            }
+
+            return users;
+        }
     }
 }

@@ -21,6 +21,8 @@ namespace ProjectFinal101.Core.Models
 
         public bool? IsSeminar { get; set; }
 
+        public bool IsPassed { get; set; }
+
         public IEnumerable<Proposal> Proposals { get; set; }
 
         public IEnumerable<ApplicationUser> SupervisedStudents { get; set; }
