@@ -12,7 +12,17 @@ export default {
     request.catch().then(() => store.commit('toggleLoader'))
 
     return request;
-  }
+  },
 
+  getSemesterFilters() {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get(`/api/semester/filters`);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
+  }
 
 }

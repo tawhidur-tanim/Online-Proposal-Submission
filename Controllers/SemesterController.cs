@@ -192,7 +192,21 @@ namespace ProjectFinal101.Controllers
             }
         }
 
+        [HttpGet("filters")]
+        [Authorize(Roles = RoleReference.Admin_Teacher)]
+        public IActionResult GetFilterSemesters()
+        {
+            try
+            {
+                var semesters = Repository.GetAll();
 
+                return Ok(semesters.Select(x => new FilterResource { Value = x.Id, Text = x.Name }));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
 
         //[HttpGet("compare")]
         //public IActionResult Compare()

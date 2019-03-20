@@ -388,7 +388,9 @@
 
         selectedObject: {},
 
-        seminarAttendance: {value: null}
+        seminarAttendance: { value: null },
+
+
       }
     },
 

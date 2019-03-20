@@ -5,6 +5,7 @@ namespace ProjectFinal101.Core.Resources
         public const string Student = "Student";
         public const string Admin = "Admin";
         public const string Teacher = "Teacher";
+        public const string Admin_Teacher = "Teacher,Admin";
 
     }
 
