@@ -51,8 +51,15 @@
         table: {
           data: [],
           filterable: ["fullName"],
-          columns: ["fullName", "userName"],
-          templates: {},
+          columns: ["fullName", "type"],
+          templates: {
+
+            fullName(row) {
+
+              return row.fullName + "\n [" + row.userName + "]";
+            }
+
+          },
           actions: {},
         }
 

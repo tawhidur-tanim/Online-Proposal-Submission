@@ -69,7 +69,7 @@ export const util = {
       // console.log("This of uti", array);
       array.forEach((item) => {
 
-       // console.log(this.__copy(item));
+        // console.log(this.__copy(item));
         ara.push(this.__copy(item));
       });
 
@@ -112,8 +112,10 @@ export const util = {
       Object.keys(from).forEach((key) => {
 
         if (to.hasOwnProperty(key)) {
+          if (typeof to[key] === typeof from[key]) {
+            to[key] = from[key];
 
-          to[key] = from[key];
+          }
         }
 
       });
@@ -122,14 +124,14 @@ export const util = {
     getDefaultValue(type) {
 
       switch (type) {
-      case 'boolean': return false;
-      case 'function': return function () { };
-      case 'null': return null;
-      case 'number': return 0;
-      case 'object': return {};
-      case 'string': return "";
-      case 'symbol': return Symbol();
-      case 'undefined': return void 0;
+        case 'boolean': return false;
+        case 'function': return function () { };
+        case 'null': return null;
+        case 'number': return 0;
+        case 'object': return {};
+        case 'string': return "";
+        case 'symbol': return Symbol();
+        case 'undefined': return void 0;
       }
     },
 

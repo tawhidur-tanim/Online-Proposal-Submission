@@ -46,7 +46,7 @@ namespace ProjectFinal101.Controllers
             }
 
             var proposal =
-                Repository.Find(x => x.Status == ProposalStstus.Accepted || x.Status == ProposalStstus.Pending && x.StudentId == userId);
+                Repository.Find(x => (x.Status == ProposalStstus.Accepted || x.Status == ProposalStstus.Pending) && x.StudentId == userId).ToList();
 
             if (proposal.Any())
             {

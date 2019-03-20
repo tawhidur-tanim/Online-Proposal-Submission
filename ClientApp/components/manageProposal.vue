@@ -113,11 +113,10 @@
           <h3>Manage</h3>
         </template>
         <template slot="body">
-          <template v-if="manageModal.status.value != 1">
-            <appSelect :config="statusSelect" v-model="manageModal.status"></appSelect>
-            <button @click="confirmStatus" class="btn btn-primary">Confirm</button>
+          <template v-if="!manageModal.status.confirm">
+            <appSelect :config="statusSelect" v-model="manageModal.status"></appSelect>          
           </template>
-          <template v-if="manageModal.status.value === 1">
+          <template v-if="manageModal.status.value === 1 && manageModal.status.confirm">
             <template v-if="Object.keys(manageModal.supervisor).length > 0">
               <div class="row">
                 <label class="col-md-3">
@@ -183,6 +182,10 @@
             </div>
           </template>
         </template>
+
+        <template slot="footer">
+          <button @click="confirmStatus" class="btn btn-primary" v-if="!manageModal.status.confirm">Confirm</button>
+        </template>
       </modal>
 
       <modal v-if="seminarShow" @close="seminarShow = false">
@@ -207,6 +210,7 @@
   import appSelect from '../HelperComponents/select'
   import modal from '../HelperComponents/modal'
   import autoComplete from 'vuejs-auto-complete'
+  import roles from '../rolesConstant'
 
 
   export default {
@@ -373,9 +377,9 @@
 
           reviewer: {},
 
-          status: { value: 0, text: '' },
+          status: { value: 0, text: '', confirm: false },
 
-          id: ''
+          id: 0
 
         },
         modalData: 0,
@@ -457,7 +461,9 @@
 
         this.map(row, this.manageModal);
 
-        this.manageModal.status = { value: row.status };
+        this.manageModal.status.value = row.status;
+
+        this.manageModal.status.confirm = row.status == 1 ;
 
       },
 
@@ -467,6 +473,7 @@
 
           this.$toastr.s("Success");
 
+          this.manageModal.status.confirm = this.manageModal.status.value == 1;
           this.updateRow({ id: this.manageModal.id, status: this.manageModal.status.value })
 
         })
@@ -581,7 +588,7 @@
 
         return {
 
-          'md': this.manageModal.status.value == 1
+          'md': this.manageModal.status.value == 1 && this.manageModal.status.confirm
         }
       },
 

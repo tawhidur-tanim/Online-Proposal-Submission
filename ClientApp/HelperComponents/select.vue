@@ -19,9 +19,9 @@
 
 
 <script>
-
+  import { util } from '../mixins/util'
   export default {
-
+    mixins: [util],
     props: {
 
       config: {
@@ -71,7 +71,9 @@
 
         if (!selectedObj) throw "Object not found";
 
-        this.$emit('input', selectedObj);
+        this.map(selectedObj, this.value);
+
+        this.$emit('input', this.value);
         this.$emit('change')
       }
 
