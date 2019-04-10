@@ -15,5 +15,7 @@ namespace ProjectFinal101.Core.Repositories
         IList<ApplicationUser> UserSearch(string query, string role);
 
         IList<ApplicationUser> GetStudentsByTeacher(string teacherId, bool type);
+
+        IList<MarksCatagory> GetCategoryByStudent(int semesterId);
     }
 }

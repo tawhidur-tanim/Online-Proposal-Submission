@@ -8,5 +8,7 @@ namespace ProjectFinal101.Core.Resources
 
         public byte Mark { get; set; }
 
+        public byte MarkType { get; set; }
+
     }
 }

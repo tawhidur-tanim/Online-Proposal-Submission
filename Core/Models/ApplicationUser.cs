@@ -29,11 +29,16 @@ namespace ProjectFinal101.Core.Models
 
         public IEnumerable<ApplicationUser> ReviewStudents { get; set; }
 
+        public IEnumerable<StudentMarkMap> Marks { get; set; }
+
+        public IEnumerable<StudentMarkMap> StudentsMark { get; set; }
+
         public ApplicationUser()
         {
             Proposals = new List<Proposal>();
             SupervisedStudents = new List<ApplicationUser>();
             ReviewStudents = new List<ApplicationUser>();
+            Marks = new List<StudentMarkMap>();
         }
     }
 }

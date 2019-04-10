@@ -30,7 +30,12 @@
     
 
     <box>
-      
+      <template slot="footer">
+        <button class="btn btn-primary" @click="getLedger">Get Payment</button>
+      </template>
+      <template slot="body">
+        {{ paid }} || {{ paid.total - paid.waiver  }}
+      </template>
     </box>
     
   </div>
@@ -142,7 +147,11 @@
           label: 'New'
         },
 
-        test: {value: 100}
+        test: { value: 100 },
+
+        payment: [],
+
+        paid: {total: 0, waiver: 0}
       }
     },
 
@@ -207,6 +216,58 @@
       formattedDisplay(result) {
 
         return result.fullName + ' [' + result.userName + ']';
+      },
+
+      getLedger() {
+
+        this.$http.get("http://software.diu.edu.bd/studentportalApi/paymentLedger",
+          {
+            headers:
+              { 'accessToken': 'b885b32f-4be3-11e9-83c9-87ba4c39215c' }
+          }).then(({ data }) => {
+
+            this.payment = data;
+
+            this.calcTk();
+            
+          })
+
+        var form = new FormData();
+
+        form.append("SELESTER_ID", "151");
+        form.append("STUDENT_ID", "151-35-964");
+
+        var headers = {
+          headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:56219'
+          }
+        }
+
+        this.$http.post("http://vus.daffodilvarsity.edu.bd/?app=result", form, headers).then(({ data }) => {
+
+          console.log(data);
+            
+          })
+
+
+
+      },
+
+      calcTk() {
+
+        //var a = 0, b = 0;
+
+        this.payment.forEach((item) => {
+
+          this.paid.total += item.debit;
+
+          if (item.headDescription === "Waiver") {
+            this.paid.waiver += item.credit;
+          }
+        })
+
+        
+
       }
 
     },

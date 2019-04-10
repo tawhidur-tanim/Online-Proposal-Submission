@@ -48,16 +48,23 @@
               </div>
             </div>
             <div class="row" style="margin-bottom: 10px;" v-for="cat in categories" :key="cat.id">
-              <div class="col-md-3 col-sm-offset-2">
+              <div class="col-md-2 col-sm-offset-2">
                 <label>Category Name</label>
                 <input type="text" class="form-control" v-model="cat.name" :name="'name'+cat.id" v-validate="'required'" :class="{'error': errors.has('name'+cat.id)}" />
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <label>Marks</label>
                 <input type="text" class="form-control" v-model="cat.mark" :name="'mark'+cat.id" v-validate="'required|max_value:100|min_value:1'" :class="{'error': errors.has('mark'+cat.id)}" />
               </div>
-              <div class="col-md-3">
-                <button class="btn btn-danger  mt25 ml25i" v-on:click.prevent="deleteCat(cat.id)"><i class="fa fa-times"></i> </button>
+              <div class="col-md-2">
+                <label>Mark Type: </label>
+                <select class="form-control" v-model="cat.markType" :name="'markType'+cat.id" v-validate="'required'" :class="{'error': errors.has('markType'+cat.id)}">
+                  <option value="1">Supervisor</option>
+                  <option value="2">Reviewer</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-danger  mt25 ml25i" v-on:click.prevent="deleteCat(cat.id)"><i class="fa fa-times"></i></button>
               </div>
 
             </div>
@@ -139,7 +146,7 @@
         status: 1,
         semesters: [],
         categories: [
-          { name: '', mark: 0, id: 1 }
+          { name: '', mark: 0, id: 1, markType: 1 }
         ],
         config: {
           data: [],
@@ -194,7 +201,7 @@
       addCat() {
 
         if (this.categories.length === 0) {
-          this.categories.push({ name: '', mark: 0, id: 1 });
+          this.categories.push({ name: '', mark: 0, id: 1, markType: 1 });
           return;
         }
 
@@ -203,7 +210,8 @@
         this.categories.push({
           name: '',
           mark: 0,
-          id: ++id
+          id: ++id,
+          markType: 1
         });
       },
 
@@ -212,7 +220,7 @@
         this.isEdit = false;
 
         this.categories = [
-          { name: '', mark: 0, id: 1 }
+          { name: '', mark: 0, id: 1, markType: 1}
         ];
         this.semesterId = -1;
         this.status = 1;

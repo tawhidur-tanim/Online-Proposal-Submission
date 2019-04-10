@@ -23,6 +23,17 @@ export default {
     request.catch().then(() => store.commit('toggleLoader'))
 
     return request;
+  },
+
+  getSupervisorCategory(semesterId) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get(`/api/user/sup/category/${semesterId}`);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
   }
 
 }

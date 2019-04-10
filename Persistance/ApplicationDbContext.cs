@@ -21,6 +21,7 @@ namespace ProjectFinal101.Persistance
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new ProposalConfiguration());
             builder.ApplyConfiguration(new ProposalTypeConfiguration());
+            builder.ApplyConfiguration(new StudentMarkMapConfiguration());
 
             base.OnModelCreating(builder);
         }
@@ -37,7 +38,7 @@ namespace ProjectFinal101.Persistance
 
         public DbSet<Course> Courses { get; set; }
 
-
+        public DbSet<StudentMarkMap> StudentMarkMaps { get; set; }
 
     }
 }

@@ -10,6 +10,8 @@ namespace ProjectFinal101.Core.Models
 
         public byte Mark { get; set; }
 
+        public byte MarkType { get; set; }
+
         public IList<SemesterCatagory> SemesterCatagories { get; set; }
 
         public MarksCatagory()

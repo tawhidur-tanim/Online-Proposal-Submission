@@ -220,6 +220,8 @@
       repo.getProposals().then(({ data }) => {
 
         this.table.data = this.mapper(data);
+        var query = { value: this.seminarAllow.value }
+        this.$tableEvent.$emit('vue-tables.filter::seminar', query);
       })
 
       Object.keys(this.status).forEach((key) => {
@@ -303,13 +305,10 @@
               name: 'seminar',
               callback: function (row, query) {
 
-                if (query == -1) return true;
-
-                if (!row.student || !row.student.isSeminar)
+                if (!row.student)
                   return false;
 
-
-                return row.student.isSeminar == query;
+                return row.student.isSeminar == query.value;
               }
             }]
         },
@@ -326,11 +325,11 @@
           label: "Type"
         },
         selectSeminar: {
-          data: [{ value: -1, text: 'All' }, { value: true, text: 'Allowed' }],
+          data: [{ value: false, text: 'Not Allowed' }, { value: true, text: 'Allowed' }],
           label: "Pre-Defence"
         },
 
-        seminarAllow: {value: -1},
+        seminarAllow: { value: false },
         seminarOption: {
           data: [{ value: true, text: 'Present' }, { value: false, text: 'Absent' }, { value: null, text: 'None' }],
           label: "Attendance"
@@ -439,7 +438,8 @@
       },
       changeSelectSeminar() {
 
-        this.$tableEvent.$emit('vue-tables.filter::seminar', this.seminarAllow.value);
+        var query = { value: this.seminarAllow.value}
+        this.$tableEvent.$emit('vue-tables.filter::seminar', query);
 
       },
       details(row) {

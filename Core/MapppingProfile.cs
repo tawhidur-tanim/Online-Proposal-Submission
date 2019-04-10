@@ -24,7 +24,8 @@ namespace ProjectFinal101.Core
                             MarksCatagory = new MarksCatagory
                             {
                                 Name = catagory.Name,
-                                Mark = catagory.Mark
+                                Mark = catagory.Mark,
+                                MarkType = catagory.MarkType
                             }
                         });
                     }
@@ -55,6 +56,7 @@ namespace ProjectFinal101.Core
                         {
                             marksCatagoryResource.Name = catagory.MarksCatagory.Name;
                             marksCatagoryResource.Mark = catagory.MarksCatagory.Mark;
+                            marksCatagoryResource.MarkType = catagory.MarksCatagory.MarkType;
                         }
 
                         resource.Catagories.Add(marksCatagoryResource);

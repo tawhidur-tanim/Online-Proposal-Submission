@@ -74,7 +74,8 @@
         this.map(selectedObj, this.value);
 
         this.$emit('input', this.value);
-        this.$emit('change')
+
+        this.$emit("change");
       }
 
     }

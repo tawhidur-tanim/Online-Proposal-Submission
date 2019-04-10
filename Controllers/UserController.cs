@@ -1,13 +1,14 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
 using System;
 using System.Linq;
 
-namespace ProjectFinal101.Controllers.BaseController
+namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -103,6 +104,22 @@ namespace ProjectFinal101.Controllers.BaseController
                 var students = Repository.GetStudentsByTeacher(teacherId, type);
 
                 return Ok(students.Select(Mapper.Map<ApplicationUser, UserWithProposalResource>));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+
+        [HttpGet("sup/category/{semesterId}")]
+        public IActionResult GetCategory(int semesterId)
+        {
+            try
+            {
+                var marksCategories = Repository.GetCategoryByStudent(semesterId);
+
+                return Ok(marksCategories.Select(Mapper.Map<MarksCatagory, MarksCatagoryResource>));
             }
             catch (Exception e)
             {

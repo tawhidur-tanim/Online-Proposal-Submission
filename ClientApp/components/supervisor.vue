@@ -5,10 +5,126 @@
         <appSelect :config="semesterFilter" v-model="semester" @change="semesterFilterChange"></appSelect>
       </div>
       <div class="col-md-2 my-1">
-        <appSelect :config="typeFilter" v-model="proposalType" @change="proposalFilterChange" ></appSelect>
+        <appSelect :config="typeFilter" v-model="proposalType" @change="proposalFilterChange"></appSelect>
       </div>
     </div>
     <appTable :tableConfig="table"></appTable>
+
+    <modal v-if="detailsModal" @close="detailsModal = false" cls="md">
+      <template slot="header">
+        <h3>Proposal Details</h3>
+      </template>
+      <template slot="body">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Student Name</label>
+          </div>
+          <div class="col-md-3">
+            <span v-if="proposal.student">{{ proposal.student.fullName }}</span>
+            <span v-else>{{ intern.student.fullName }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Student Id</label>
+          </div>
+          <div class="col-md-3">
+            <span v-if="proposal.student">{{ proposal.student.userName }}</span>
+            <span v-else>{{ intern.student.userName }}</span>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div v-if="modalData === 1 || modalData === 3">
+            <div class="col-md-6">
+              <label>Title</label>
+              <span>{{ proposal.title }}</span>
+            </div>
+
+            <div class="col-md-6">
+              <label>Area Of Study</label>
+              <span>{{ proposal.areaOfStudy }}</span>
+            </div>
+
+            <div class="col-md-6">
+              <label>Description</label>
+              <span>{{ proposal.description }}</span>
+            </div>
+
+            <div class="col-md-6">
+              <label>Type</label>
+              <span>{{  types[proposal.type] }}</span>
+            </div>
+          </div>
+          <div v-if="modalData === 2">
+            <div class="col-md-6">
+              <label>Language Skill</label>
+              <span>{{ intern.language }}</span>
+            </div>
+
+            <div class="col-md-6">
+              <label>Known Framework</label>
+              <span>{{ intern.frameWorkDescription }}</span>
+            </div>
+
+            <div class="col-md-6">
+              <label>Reason of interest</label>
+              <span>{{ intern.internshipReason }}</span>
+            </div>
+
+            <div class="col-md-6">
+              <label>Already have internship</label>
+              <span>{{  intern.isHaveInternship ? "Yes" : "No" }}</span>
+            </div>
+            <template v-if=" intern.isHaveInternship">
+              <div class="col-md-6">
+                <label>Company Name</label>
+                <span>{{  intern.companyName }}</span>
+              </div>
+              <div class="col-md-6">
+                <label>Company address</label>
+                <span>{{  intern.companyAddress }}</span>
+              </div>
+              <div class="col-md-6">
+                <label>Job Description</label>
+                <span>{{  intern.jobDescriotion }}</span>
+              </div>
+              <div class="col-md-6">
+                <label>Internship Rreference</label>
+                <span>{{  intern.internshipRefernce }}</span>
+              </div>
+              <div class="col-md-6">
+                <label>Contact of supervisor</label>
+                <span>{{  intern.contactForSupervisor }}</span>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </modal>
+
+    <modal v-if="marksModal"  @close="marksModal = false" cls="md">
+      <template slot="header">
+        <h3>Students Marks</h3>
+      </template>
+
+      <template slot="body">
+
+        <div class="row mb10" v-for="cat in marksCategory">
+          <div class="col-md-2">
+           <label> {{ cat.name}}: </label>
+          </div>
+          <div class="col-md-3">
+            <input :name="cat.name" class="form-control"/>
+          </div>
+        </div>
+
+      </template>
+
+      <template slot="footer">
+        <button class="btn btn-success">Save Marks</button>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -19,6 +135,7 @@
   import repo from '../Repositories/supervisorRepository'
   import { util } from '../mixins/util'
   import appSelect from '../HelperComponents/select'
+  import modal from '../HelperComponents/modal'
 
   export default {
     mixins: [util],
@@ -58,7 +175,8 @@
 
     components: {
       appTable,
-      appSelect
+      appSelect,
+      modal
     },
 
     data() {
@@ -93,10 +211,12 @@
           actions: {
 
             Details: {
-              cssClass: 'btn-primary'
+              cssClass: 'btn-primary',
+              callBack: this.details
             },
             Marks: {
-              cssClass: 'btn-info'
+              cssClass: 'btn-info',
+              callBack: this.supMarks
             },
             Release: {
               cssClass: 'btn-success'
@@ -150,7 +270,7 @@
           contactForSupervisor: '',
           type: 2,
           status: 2,
-          student: null
+          student: {}
         },
 
         proposal: {
@@ -159,10 +279,14 @@
           description: '',
           type: 1,
           status: 2,
-          student: null
+          student: {}
         },
         detailsModal: false,
-        modalData: 0
+        modalData: 0,
+
+        marksCategory: [],
+
+        marksModal: false
       }
     },
 
@@ -179,17 +303,30 @@
       },
       details(row) {
 
-        this.detailsModal = true;
+        this.detailsModal = row.proposals.length > 0;
 
-        this.modalData = row.type;
+        this.modalData = row.proposals[0].type;
 
-        if (row.type == 3) {
+        if (row.proposals[0].type == 3) {
 
-          this.map(row, this.intern);
+          this.map(row.proposals[0], this.intern);
+          this.map(row, this.intern.student);
 
         } else {
-          this.map(row, this.proposal);
+          this.map(row.proposals[0], this.proposal);
+          this.proposal.student = this.__copy(row);
+
         }
+      },
+
+      supMarks(row) {
+
+        repo.getSupervisorCategory(row.semesterId).then(({ data }) => {
+
+          this.marksCategory = data;
+          this.marksModal = true;
+        })
+
       }
 
     }

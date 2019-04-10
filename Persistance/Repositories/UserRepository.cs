@@ -79,5 +79,16 @@ namespace ProjectFinal101.Persistance.Repositories
 
             return users;
         }
+
+        public IList<MarksCatagory> GetCategoryByStudent(int semesterId)
+        {
+            var categories = Context
+                .SemesterCatagories
+                .Include(x => x.MarksCatagory)
+                .Where(x => x.SemesterId == semesterId)
+                .Select(x => x.MarksCatagory).ToList().Where(x => x.MarkType == MarksCategoryType.Supervisor).ToList();
+
+            return categories;
+        }
     }
 }

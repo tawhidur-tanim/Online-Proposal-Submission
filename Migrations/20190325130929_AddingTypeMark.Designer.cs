@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectFinal101.Persistance;
 
 namespace ProjectFinal101.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190325130929_AddingTypeMark")]
+    partial class AddingTypeMark
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,27 +336,6 @@ namespace ProjectFinal101.Migrations
                     b.ToTable("SemesterCatagories");
                 });
 
-            modelBuilder.Entity("ProjectFinal101.Core.Models.StudentMarkMap", b =>
-                {
-                    b.Property<string>("TeacherId");
-
-                    b.Property<string>("StudentId");
-
-                    b.Property<DateTime>("EntryDate");
-
-                    b.Property<int>("Marks");
-
-                    b.Property<int>("MarksId");
-
-                    b.Property<string>("Remarks");
-
-                    b.HasKey("TeacherId", "StudentId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentMarkMaps");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -442,19 +423,6 @@ namespace ProjectFinal101.Migrations
                         .WithMany("SemesterCatagories")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ProjectFinal101.Core.Models.StudentMarkMap", b =>
-                {
-                    b.HasOne("ProjectFinal101.Core.Models.ApplicationUser", "Student")
-                        .WithMany("Marks")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ProjectFinal101.Core.Models.ApplicationUser", "Teacher")
-                        .WithMany("StudentsMark")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }
