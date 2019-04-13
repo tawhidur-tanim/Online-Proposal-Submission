@@ -80,15 +80,37 @@ namespace ProjectFinal101.Persistance.Repositories
             return users;
         }
 
-        public IList<MarksCatagory> GetCategoryByStudent(int semesterId)
+        public IList<MarksCatagory> GetCategoryByStudent(int semesterId, byte type)
         {
             var categories = Context
                 .SemesterCatagories
                 .Include(x => x.MarksCatagory)
                 .Where(x => x.SemesterId == semesterId)
-                .Select(x => x.MarksCatagory).ToList().Where(x => x.MarkType == MarksCategoryType.Supervisor).ToList();
+                .Select(x => x.MarksCatagory).ToList().Where(x => x.MarkType == type).ToList();
 
             return categories;
+        }
+
+        public IList<StudentMarkMap> GetStudentMarks(string studentId, IEnumerable<int> categories)
+        {
+            var maps = Context
+                .StudentMarkMaps
+                .Where(x => categories.Contains(x.MarksId) && x.StudentId == studentId)
+                .ToList();
+
+            return maps;
+        }
+
+        public void SaveStudentMarks(List<StudentMarkMap> marksMap)
+        {
+            Context.StudentMarkMaps.AddRange(marksMap);
+        }
+
+        public void RemoveMarksMap(IEnumerable<string> marks)
+        {
+            var maps = Context.StudentMarkMaps.Where(x => marks.Contains(x.StudentId));
+
+            Context.StudentMarkMaps.RemoveRange(maps);
         }
     }
 }

@@ -6,6 +6,7 @@ using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ProjectFinal101.Controllers
@@ -117,7 +118,7 @@ namespace ProjectFinal101.Controllers
         {
             try
             {
-                var marksCategories = Repository.GetCategoryByStudent(semesterId);
+                var marksCategories = Repository.GetCategoryByStudent(semesterId, 1);
 
                 return Ok(marksCategories.Select(Mapper.Map<MarksCatagory, MarksCatagoryResource>));
             }
@@ -126,5 +127,64 @@ namespace ProjectFinal101.Controllers
                 return BadRequest();
             }
         }
+
+
+        [HttpGet("sup/category/{semesterId}/{studentId}/{type}")]
+        public IActionResult GetCategoryWithMarks(int semesterId, string studentId, byte type)
+        {
+            try
+            {
+                var marksCategories = Repository.GetCategoryByStudent(semesterId, type);
+
+                var maps = Repository.GetStudentMarks(studentId, marksCategories.Select(x => x.Id))
+                    .ToDictionary(x => x.MarksId);
+
+                var marksList = marksCategories.Select(catagory => new MarksResource
+                {
+                    StudentId = studentId,
+                    CategoryId = catagory.Id,
+                    CategoryMarks = catagory.Mark,
+                    CategoryName = catagory.Name,
+                    GivenMarks = maps.ContainsKey(catagory.Id) ? maps[catagory.Id].Marks : 0,
+                    Remarks = maps.ContainsKey(catagory.Id) ? maps[catagory.Id].Remarks : "",
+                })
+                .ToList();
+
+                return Ok(marksList);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("saveMarks")]
+        public IActionResult SaveStudentMarks(IList<MarksResource> marks, [FromQuery]string teacherId)
+        {
+            try
+            {
+                var marksMap = marks.Select(mark => new StudentMarkMap
+                {
+                    EntryDate = DateTime.Now,
+                    Marks = mark.GivenMarks,
+                    MarksId = mark.CategoryId,
+                    StudentId = mark.StudentId,
+                    TeacherId = teacherId,
+                    Remarks = mark.Remarks
+                })
+                .ToList();
+
+                Repository.RemoveMarksMap(marks.Select(x => x.StudentId));
+                Repository.SaveStudentMarks(marksMap);
+                UnitOfWork.Complete();
+
+                return Ok(marksMap);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

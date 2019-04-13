@@ -110,19 +110,28 @@
 
       <template slot="body">
 
-        <div class="row mb10" v-for="cat in marksCategory">
+        <div class="row mb10" v-for="(cat, index) in marksCategory">
           <div class="col-md-2">
-           <label> {{ cat.name}}: </label>
+            <label> {{ cat.categoryName}}: </label>
           </div>
           <div class="col-md-3">
-            <input :name="cat.name" class="form-control"/>
+            <input :name="cat.categoryName+index" class="form-control" v-model="cat.givenMarks"
+                   v-validate="'max_value:'+cat.categoryMarks+'|numeric'" :class="{'error': errors.has(cat.categoryName+index)}"
+                   :placeholder="'Max: '+cat.categoryMarks"
+                   />
+          </div>
+          <div class="col-md-3">
+            <input :name="cat.remarks+index" class="form-control"
+                   v-model="cat.remarks"
+                   placeholder="remarks"
+                   />
           </div>
         </div>
 
       </template>
 
       <template slot="footer">
-        <button class="btn btn-success">Save Marks</button>
+        <button class="btn btn-success" @click="saveMarks">Save Marks</button>
       </template>
     </modal>
   </div>
@@ -321,11 +330,33 @@
 
       supMarks(row) {
 
-        repo.getSupervisorCategory(row.semesterId).then(({ data }) => {
+        repo.getSupervisorCategory(row.semesterId,row.id).then(({ data }) => {
 
           this.marksCategory = data;
           this.marksModal = true;
         })
+
+      },
+
+      saveMarks() {
+
+        var teacherId = this.$store.getters.getUserId;
+
+        this.$validator.validateAll().then((result) => {
+
+          if (!result) {
+            return;
+          }
+
+          repo.saveMarks(this.marksCategory, teacherId).then(({ data }) => {
+
+            this.marksModal = false;
+
+            this.$toastr.s("Marks Updated");
+          })
+
+        })
+
 
       }
 

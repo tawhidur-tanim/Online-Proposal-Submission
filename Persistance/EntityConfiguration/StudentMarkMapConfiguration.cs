@@ -8,7 +8,7 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<StudentMarkMap> builder)
         {
-            builder.HasKey(x => new { x.TeacherId, x.StudentId });
+            builder.HasKey(x => new { x.MarksId, x.StudentId });
 
             builder.HasOne(x => x.Student)
                 .WithMany(x => x.Marks)

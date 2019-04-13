@@ -25,11 +25,22 @@ export default {
     return request;
   },
 
-  getSupervisorCategory(semesterId) {
+  getSupervisorCategory(semesterId,studentId) {
 
     store.commit('toggleLoader');
 
-    const request = axios.get(`/api/user/sup/category/${semesterId}`);
+    const request = axios.get(`/api/user/sup/category/${semesterId}/${studentId}/1`);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
+  },
+
+  saveMarks(marks,teacherId) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.post(`/api/user/saveMarks?teacherId=${teacherId}`,marks);
 
     request.catch().then(() => store.commit('toggleLoader'))
 

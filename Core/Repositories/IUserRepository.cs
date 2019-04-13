@@ -16,6 +16,12 @@ namespace ProjectFinal101.Core.Repositories
 
         IList<ApplicationUser> GetStudentsByTeacher(string teacherId, bool type);
 
-        IList<MarksCatagory> GetCategoryByStudent(int semesterId);
+        IList<MarksCatagory> GetCategoryByStudent(int semesterId, byte type);
+
+        IList<StudentMarkMap> GetStudentMarks(string studentId, IEnumerable<int> categories);
+
+        void SaveStudentMarks(List<StudentMarkMap> marksMap);
+
+        void RemoveMarksMap(IEnumerable<string> marks);
     }
 }

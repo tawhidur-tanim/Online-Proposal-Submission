@@ -55,12 +55,12 @@ Vue.directive('click-outside', {
 })
 
 axios.interceptors.request.use(config => {
-  console.log('Request Interceptor', config)
+  //console.log('Request Interceptor', config)
   return config
 })
 
 axios.interceptors.response.use(res => {
-  console.log('Response Interceptor', res)
+ // console.log('Response Interceptor', res)
   return res
 })
 axios.defaults.headers.get['Accepts'] = 'application/json'
