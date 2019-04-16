@@ -66,7 +66,7 @@
     data() {
 
       return {
-        boxCollapse: true
+        boxCollapse: this.icon
 
       }
     },

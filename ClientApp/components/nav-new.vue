@@ -37,7 +37,7 @@
                       <a href="#">
                         <div class="pull-left">
                           <!-- User Image -->
-                          <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                          <img src="dist/img/avatar04.png" class="img-circle" alt="User Image">
                         </div>
                         <!-- Message title and timestamp -->
                         <h4>
@@ -123,9 +123,9 @@
               <!-- Menu Toggle Button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                <img src="dist/img/avatar04.png" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">Tawhidur Rahman Tanim</span>
+                <span class="hidden-xs">{{name}}</span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
@@ -133,13 +133,12 @@
                   <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    Tawhidur Rahman Tanim - Web Developer
-                    <small>Member since Nov. 2012</small>
+                    {{ name }}
                   </p>
                 </li>
                 <!-- Menu Body -->
                 <li class="user-body">
-                  <div class="row">
+                  <!--<div class="row">
                     <div class="col-xs-4 text-center">
                       <a href="#">Link</a>
                     </div>
@@ -149,14 +148,14 @@
                     <div class="col-xs-4 text-center">
                       <a href="#">Link</a>
                     </div>
-                  </div>
-                  <!-- /.row -->
+                  </div>-->
+
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                  <div class="pull-left">
+                  <!--<div class="pull-left">
                     <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  </div>
+                  </div>-->
                   <div class="pull-right">
                     <a href="#" class="btn btn-default btn-flat" @click="signOut">Sign out</a>
                   </div>
@@ -180,17 +179,17 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
           <div class="pull-left image">
-            <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            <img src="dist/img/avatar04.png" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
-            <p>Tawhidur Rahman Tanim</p>
+            <p>{{name}}</p>
             <!-- Status -->
             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
           </div>
         </div>
 
         <!-- search form (Optional) -->
-        <form action="#" method="get" class="sidebar-form">
+        <!--<form action="#" method="get" class="sidebar-form">
           <div class="input-group">
             <input type="text" name="q" class="form-control" placeholder="Search...">
             <span class="input-group-btn">
@@ -199,44 +198,46 @@
               </button>
             </span>
           </div>
-        </form>
+        </form>-->
         <!-- /.search form -->
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-          <li class="header">HEADER</li>
+          <li class="header">Main Menu</li>
           <!-- Optionally, you can add icons to the links -->
           <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>-->
-           <router-link :to="{name: 'semesters'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Semesters</span></a></router-link>
-           <router-link :to="{name: 'proposals'}" active-class="active" tag="li"><a><i class="fa fa-lightbulb-o"></i> <span>Submit Proposal</span></a></router-link>
-           <router-link :to="{name: 'manageProposal'}" active-class="active" tag="li"><a><i class="fa fa-clock-o"></i> <span>Manage Proposal</span></a></router-link>
-           <router-link :to="{name: 'supervisor'}" active-class="active" tag="li"><a><i class="fa fa-sitemap"></i> <span>Supervised Student</span></a></router-link>
+          <router-link :to="{name: m.route}" active-class="active" tag="li" v-for="m in menuList" ><a><i :class="m.icon"></i> <span>{{ m.displayName}}</span></a></router-link>
+
+          <!--<router-link :to="{name: 'semesters'}" active-class="active" tag="li"><a><i class="fa fa-calendar"></i> <span>Semesters</span></a></router-link>
+          <router-link :to="{name: 'proposals'}" active-class="active" tag="li"><a><i class="fa fa-lightbulb-o"></i> <span>Submit Proposal</span></a></router-link>
+          <router-link :to="{name: 'manageProposal'}" active-class="active" tag="li"><a><i class="fa fa-clock-o"></i> <span>Manage Proposal</span></a></router-link>
+          <router-link :to="{name: 'supervisor'}" active-class="active" tag="li"><a><i class="fa fa-sitemap"></i> <span>Supervised Student</span></a></router-link>-->
           <!--<li><a href="#"><i class="fa fa-circle"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-          <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+  <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
           <!--<li class="treeview">
-            <a href="#">
-              <i class="fa fa-link"></i> <span>Multilevel</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li><a href="#">Link in level 2</a></li>
-              <li><a href="#">Link in level 2</a></li>
-            </ul>
-          </li>-->
+    <a href="#">
+      <i class="fa fa-link"></i> <span>Multilevel</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      <li><a href="#">Link in level 2</a></li>
+      <li><a href="#">Link in level 2</a></li>
+    </ul>
+  </li>-->
         </ul>
         <!-- /.sidebar-menu -->
       </section>
@@ -246,11 +247,15 @@
 </template>
 
 <script>
+
+  import axios from 'axios'
   export default {
 
     data: () => ({
 
-      userHeaderMenu: false
+      userHeaderMenu: false,
+
+      menuList: []
         
     }),
 
@@ -264,6 +269,11 @@
           'open': this.userHeaderMenu
         }
 
+      },
+
+      name() {
+
+        return this.$store.getters.name;
       }
     },
 
@@ -286,6 +296,14 @@
         el.classList.toggle('sidebar-collapse')
         el.classList.toggle('sidebar-open')
       }
+    },
+
+    created() {
+
+      axios.get("/api/account/GetMenu").then(({ data }) => {
+
+        this.menuList = data;
+      })
     }
 
 }

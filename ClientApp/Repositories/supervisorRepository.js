@@ -45,6 +45,17 @@ export default {
     request.catch().then(() => store.commit('toggleLoader'))
 
     return request;
+  },
+
+  passStudent(studentId) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get(`/api/user/passStudent/${studentId}`);
+
+    request.catch().then(() => store.commit('toggleLoader'))
+
+    return request;
   }
 
 }

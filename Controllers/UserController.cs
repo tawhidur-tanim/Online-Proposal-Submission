@@ -13,7 +13,7 @@ namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = RoleReference.Admin)]
+    [Authorize(Roles = RoleReference.Admin_Teacher)]
     public class UserController : BaseController<UserResource, ApplicationUser, IUserRepository>
     {
         public UserController(IUserRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
@@ -185,6 +185,23 @@ namespace ProjectFinal101.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("passStudent/{studnetId}")]
+        public IActionResult PassStudent(string studentId)
+        {
+            try
+            {
+                Repository.PassStudent(studentId);
+                UnitOfWork.Complete();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
 
     }
 }

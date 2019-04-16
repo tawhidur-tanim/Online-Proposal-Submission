@@ -10,5 +10,7 @@ namespace ProjectFinal101.Core.Repositories
         Semester GetWithCategory(int id);
 
         void RemoveBulk(IList<ApplicationUser> students);
+
+        Semester GetCurrentSemester();
     }
 }

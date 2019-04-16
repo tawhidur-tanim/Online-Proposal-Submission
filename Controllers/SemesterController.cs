@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProjectFinal101.Controllers
@@ -223,6 +224,41 @@ namespace ProjectFinal101.Controllers
         //}
 
 
+        [HttpGet("dashboard")]
+        [Authorize(Roles = RoleReference.Admin_Teacher_Student)]
+        public IActionResult GetDashboard()
+        {
+            try
+            {
+                var dash = new DashboardResource();
+                var user =
+                    _userRepository.GetStudent(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)
+                        ?.Value);
+
+                var currentSemester = Repository.GetCurrentSemester();
+
+                dash.CurrentSemesterName = currentSemester.Name;
+
+                if (User.IsInRole(RoleReference.Student))
+                {
+
+                    dash.Reviewer = user.Reviewer?.FullName;
+                    dash.Supervisor = user.Supervisor?.FullName;
+                }
+
+                if (User.IsInRole(RoleReference.Teacher) || User.IsInRole(RoleReference.Admin))
+                {
+                    dash.NumberOfStudents = _userRepository.GetStudentsByTeacher(user.Id, true).Count;
+                }
+
+                return Ok(dash);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
         private async Task<string> SaveFile(FileResource fileResource)
         {
             var uploadPath = Path.Combine(_host.ContentRootPath, "uploads");
@@ -286,6 +322,7 @@ namespace ProjectFinal101.Controllers
 
             return students;
         }
+
 
     }
 }

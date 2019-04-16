@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -160,12 +161,17 @@ namespace ProjectFinal101.Controllers
 
                 var user = _userManager.Users.SingleOrDefault(x => x.UserName == model.UserName);
                 var roles = await _userManager.GetRolesAsync(user);
+
+                if (user == null) return BadRequest("Something gone wrong");
+
                 var authData = new AuthDataResource
                 {
                     Token = GenerateJwtToken(user, roles),
                     Id = user.Id,
                     ExpireTime = DateTime.Now.AddHours(Convert.ToDouble(_configuration["JwtExpireDays"])),
-                    Roles = roles
+                    Roles = roles,
+
+                    Name = user.FullName + " [" + user.UserName + "]"
                 };
 
                 return Ok(authData);
@@ -176,6 +182,49 @@ namespace ProjectFinal101.Controllers
             }
 
             return BadRequest("Something gone wrong");
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetMenu()
+        {
+            var admin = new List<Menu>
+            {
+                new Menu { Route = "semesters", DisplayName = "Semesters", Icon = "fa fa-calendar"},
+                new Menu { Route = "proposals", DisplayName = "Proposals", Icon = "fa fa-lightbulb-o"},
+                new Menu { Route = "manageProposal", DisplayName = "Manage Proposal", Icon = "fa fa-clock-o"},
+                new Menu { Route = "supervisor", DisplayName = "Supervised Student", Icon = "fa fa-sitemap"},
+
+            };
+
+            var students = new List<Menu>
+            {
+                new Menu { Route = "proposals", DisplayName = "Proposals", Icon = "fa fa-lightbulb-o"}
+            };
+
+            var teachers = new List<Menu>
+            {
+                new Menu { Route = "manageProposal", DisplayName = "Manage Proposal", Icon = "fa fa-clock-o"},
+                new Menu { Route = "supervisor", DisplayName = "Supervised Student", Icon = "fa fa-sitemap"}
+            };
+
+            if (User.IsInRole(RoleReference.Student))
+            {
+                return Ok(students);
+            }
+
+            if (User.IsInRole(RoleReference.Admin))
+            {
+                return Ok(admin);
+            }
+
+            if (User.IsInRole(RoleReference.Teacher))
+            {
+                return Ok(teachers);
+            }
+
+            return Ok(new List<Menu>());
         }
 
 

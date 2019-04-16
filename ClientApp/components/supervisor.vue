@@ -134,6 +134,10 @@
         <button class="btn btn-success" @click="saveMarks">Save Marks</button>
       </template>
     </modal>
+
+    <confirmModal  v-if="confirmModal" :config="confirmConfig" @close="confirmModal = false" >
+    </confirmModal>
+
   </div>
 </template>
 
@@ -145,6 +149,7 @@
   import { util } from '../mixins/util'
   import appSelect from '../HelperComponents/select'
   import modal from '../HelperComponents/modal'
+  import confirmModal from '../HelperComponents/confirmModal'
 
   export default {
     mixins: [util],
@@ -185,7 +190,8 @@
     components: {
       appTable,
       appSelect,
-      modal
+      modal,
+      confirmModal
     },
 
     data() {
@@ -228,7 +234,8 @@
               callBack: this.supMarks
             },
             Release: {
-              cssClass: 'btn-success'
+              cssClass: 'btn-success',
+              callBack: this.confirmCall
             }
 
           },
@@ -295,7 +302,13 @@
 
         marksCategory: [],
 
-        marksModal: false
+        marksModal: false,
+
+        confirmModal: false,
+
+        confirmConfig: {
+          callBack: () => {}
+        }
       }
     },
 
@@ -357,6 +370,28 @@
 
         })
 
+
+      },
+
+      confirmCall(row) {
+
+        this.confirmModal = true;
+        var self = this;
+
+        this.confirmConfig.callBack = function (root) {
+
+          repo.passStudent(row.id).then(() => {
+
+            var index = self.table.data.findIndex((item) => {
+              return row.id == item.id;
+            })
+            self.table.data.splice(index, 1);
+
+            root.$emit('close');
+
+          })
+
+        }
 
       }
 

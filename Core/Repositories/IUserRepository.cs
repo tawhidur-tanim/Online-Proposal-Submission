@@ -23,5 +23,9 @@ namespace ProjectFinal101.Core.Repositories
         void SaveStudentMarks(List<StudentMarkMap> marksMap);
 
         void RemoveMarksMap(IEnumerable<string> marks);
+
+        void PassStudent(string studentId);
+
+        ApplicationUser GetStudent(string studentId);
     }
 }

@@ -11,6 +11,8 @@ namespace ProjectFinal101.Core.Resources
 
         public string Id { get; set; }
 
+        public string Name { get; set; }
+
         public IList<string> Roles { get; set; }
     }
 }

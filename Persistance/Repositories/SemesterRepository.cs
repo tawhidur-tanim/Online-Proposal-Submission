@@ -2,6 +2,7 @@ using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
+using ProjectFinal101.Core.Resources;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,6 +39,11 @@ namespace ProjectFinal101.Persistance.Repositories
             var removeList = Context.ApplicationUsers.Where(x => ids.Contains(x.UserName)).ToList();
 
             Context.BulkDelete(removeList);
+        }
+
+        public Semester GetCurrentSemester()
+        {
+            return Entities.FirstOrDefault(x => x.Status == StatusDetails.Active);
         }
     }
 }

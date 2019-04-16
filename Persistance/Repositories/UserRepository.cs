@@ -112,5 +112,20 @@ namespace ProjectFinal101.Persistance.Repositories
 
             Context.StudentMarkMaps.RemoveRange(maps);
         }
+
+        public void PassStudent(string studentId)
+        {
+            var student = Entities.FirstOrDefault(x => x.Id == studentId);
+
+            if (student != null) student.IsPassed = true;
+        }
+
+        public ApplicationUser GetStudent(string studentId)
+        {
+            return Entities
+                 .Include(x => x.Reviewer)
+                 .Include(x => x.Supervisor)
+                 .FirstOrDefault(x => x.Id == studentId);
+        }
     }
 }

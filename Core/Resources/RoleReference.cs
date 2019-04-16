@@ -2,6 +2,7 @@ namespace ProjectFinal101.Core.Resources
 {
     public class RoleReference
     {
+        public const string Admin_Teacher_Student = "Teacher,Admin,Student";
         public const string Student = "Student";
         public const string Admin = "Admin";
         public const string Teacher = "Teacher";

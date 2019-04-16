@@ -10,7 +10,9 @@ const state = {
 
   expireDate: null,
 
-  roles: []
+  roles: [],
+
+  name: ''
 }
 
 const getters = {
@@ -24,10 +26,12 @@ const getters = {
 
     return state.token;
   },
+
   getUserId(state) {
 
     return state.userId;
   },
+
   getState(state) {
 
     return state;
@@ -36,8 +40,12 @@ const getters = {
   role(state) {
 
     return state.roles[0];
-  }
+  },
 
+  name(state) {
+
+    return state.name;
+  }
 }
 
 const mutations = {
@@ -45,6 +53,7 @@ const mutations = {
   'authData'(state,authData) {
 
     state.token = authData.token;
+    state.name = authData.name;
     state.userId = authData.id;
     state.expireDate = authData.expireTime;
     state.roles = authData.roles;
@@ -56,6 +65,7 @@ const mutations = {
     state.userId = null;
     state.expireDate = null;
     state.roles = null;
+    state.name = null;
   }
 
 }
@@ -70,6 +80,7 @@ const actions = {
       .then(( data ) => {
 
         localStorage.setItem('token', data.token);
+        localStorage.setItem('name', data.name);
         localStorage.setItem('expireTime', data.expireTime);
         localStorage.setItem('userId', data.id);
         localStorage.setItem('roles', JSON.stringify(data.roles));
@@ -99,6 +110,7 @@ const actions = {
     localStorage.removeItem('expireTime');
     localStorage.removeItem('userId');
     localStorage.removeItem('roles');
+    localStorage.removeItem('name');
 
     commit('clearAuth');
     delete this._vm.$http.defaults.headers.common['Authorization'];
@@ -129,7 +141,8 @@ const actions = {
       id: localStorage.getItem('userId'),
       token: token,
       expireTime: expireIn,
-      roles: JSON.parse(localStorage.getItem('roles'))
+      roles: JSON.parse(localStorage.getItem('roles')),
+      name: localStorage.getItem('name')
     })
 
     dispatch('tryLogout');
