@@ -45,5 +45,10 @@ namespace ProjectFinal101.Persistance.Repositories
         {
             return Entities.FirstOrDefault(x => x.Status == StatusDetails.Active);
         }
+
+        public int GetStudentsCount(int activeSemesterId)
+        {
+            return Context.ApplicationUsers.Count(x => x.SemesterId.Value == activeSemesterId);
+        }
     }
 }

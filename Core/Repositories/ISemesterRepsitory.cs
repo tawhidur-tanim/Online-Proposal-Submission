@@ -12,5 +12,6 @@ namespace ProjectFinal101.Core.Repositories
         void RemoveBulk(IList<ApplicationUser> students);
 
         Semester GetCurrentSemester();
+        int GetStudentsCount(int activeSemesterId);
     }
 }

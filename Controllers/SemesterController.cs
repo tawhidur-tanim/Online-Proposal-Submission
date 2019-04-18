@@ -22,6 +22,7 @@ namespace ProjectFinal101.Controllers
     public class SemesterController : BaseController<SemesterCreateResource, Semester, ISemesterRepsitory>
     {
         private readonly ISemesterCatagoryRepository _catagoryRepository;
+        private readonly IProposalRepository _proposalRepository;
         private readonly IHostingEnvironment _host;
 
         private readonly IUserRepository _userRepository;
@@ -30,11 +31,13 @@ namespace ProjectFinal101.Controllers
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ISemesterCatagoryRepository catagoryRepository,
+            IProposalRepository proposalRepository,
             IHostingEnvironment host,
             IUserRepository userRepository, IOptionsSnapshot<SemesterFile> options)
             : base(repsitory, mapper, unitOfWork)
         {
             _catagoryRepository = catagoryRepository;
+            _proposalRepository = proposalRepository;
             _host = host;
 
             _file = options.Value;
@@ -260,6 +263,35 @@ namespace ProjectFinal101.Controllers
                 return BadRequest();
             }
         }
+
+
+        [HttpGet("Stats")]
+        [Authorize(Roles = RoleReference.Admin)]
+        public IActionResult GetStats()
+        {
+            try
+            {
+                var activeSemester = Repository.GetCurrentSemester();
+
+                var semesterStudents = Repository.GetStudentsCount(activeSemester.Id);
+
+                var currentProposals = _proposalRepository.GetProposalCount(activeSemester.Id);
+
+                var stats = new StatResource
+                {
+                    AcceptedProposal = currentProposals.Count(x => x.Status == ProposalStstus.Accepted),
+                    TotalProposal = currentProposals.Count,
+                    CurrentStudents = semesterStudents
+                };
+
+                return Ok(stats);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
 
         private async Task<string> SaveFile(FileResource fileResource)
         {

@@ -8,5 +8,8 @@ namespace ProjectFinal101.Core.Repositories
         IList<Proposal> GetProposalByStudent(string userId);
 
         IList<Proposal> GetProposals();
+
+        IList<Proposal> GetProposalCount(int activeSemesterId);
+
     }
 }

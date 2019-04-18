@@ -306,11 +306,12 @@
     },
 
     created() {
+      if (this.$store.getters.isAuthenticated) {
+        axios.get("/api/account/GetMenu").then(({ data }) => {
 
-      axios.get("/api/account/GetMenu").then(({ data }) => {
-
-        this.menuList = data;
-      })
+          this.menuList = data;
+        })
+      }
     }
 
 }

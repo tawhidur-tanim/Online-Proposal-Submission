@@ -32,5 +32,11 @@ namespace ProjectFinal101.Persistance.Repositories
 
             return proposals;
         }
+
+        public IList<Proposal> GetProposalCount(int activeSemesterId)
+        {
+            return Entities.Include(x => x.Student)
+                .Where(x => x.Student.SemesterId == activeSemesterId).ToList();
+        }
     }
 }

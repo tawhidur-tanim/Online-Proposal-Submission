@@ -10,7 +10,17 @@ export default {
 
     const request = axios.get(`/api/semester/dashboard`);
 
-    request.catch().then(() => store.commit('toggleLoader'))
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
 
     return request;
 
@@ -22,7 +32,39 @@ export default {
 
     const request = axios.post(`/api/account/PasswordChange`,resource);
 
-    request.catch().then(() => store.commit('toggleLoader'))
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
+
+    return request;
+
+  },
+
+  getStats() {
+
+    store.commit('toggleLoader');
+
+    const request = axios.get(`/api/semester/stats`);
+
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
 
     return request;
 

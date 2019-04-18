@@ -1,6 +1,48 @@
 <template>
     <div class="content">
 
+      <template v-if="role == roles.admin">
+        <div class="row">
+
+          <div class="col-md-4">
+
+            <div class="info-box">
+
+              <span class="info-box-icon bg-green"><i class="fa fa-graduation-cap"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Students</span>
+                <span class="info-box-number">{{ stats.currentStudents }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+
+            <div class="info-box">
+
+              <span class="info-box-icon bg-blue"><i class="fa fa-file-text-o"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Proposals</span>
+                <span class="info-box-number">{{ stats.totalProposal}} </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+
+            <div class="info-box">
+
+              <span class="info-box-icon bg-purple"><i class="fa fa-check"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Accepted Proposals</span>
+                <span class="info-box-number">{{ stats.acceptedProposal}} </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </template>
+
       <box :icon="false">
 
         <template slot="title">
@@ -88,9 +130,10 @@
   import roles from '../rolesConstant'
   import modal from '../HelperComponents/modal'
   import bus from '../HelperComponents/Bus'
+  import { util } from '../mixins/util'
 
   export default {
-
+    mixins: [util],
     data() {
       return {
 
@@ -100,6 +143,13 @@
         oldPass: '',
         newPass: '',
         confirmPass: '',
+
+        stats: {
+
+          acceptedProposal: 0,
+          totalProposal: 0,
+          currentStudents: 0
+        }
       }
     },
 
@@ -136,13 +186,23 @@
 
     created() {
 
-      repo.getDash().then(({ data }) => {
+      if (this.$store.getters.isAuthenticated) {
+        repo.getDash().then(({ data }) => {
 
-        this.dash = data;
+          this.dash = data;
 
-      })
+        })
 
-      bus.$on("passchange", this.passChange);
+        bus.$on("passchange", this.passChange);
+
+        repo.getStats().then(({ data }) => {
+
+          this.map(data, this.stats);
+
+        }) 
+      }
+
+
     },
 
     methods: {
