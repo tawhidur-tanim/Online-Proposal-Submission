@@ -153,9 +153,9 @@
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                  <!--<div class="pull-left">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  </div>-->
+                  <div class="pull-left">
+                    <a href="#" class="btn btn-default btn-flat" @click="passChange">Password Change</a>
+                  </div>
                   <div class="pull-right">
                     <a href="#" class="btn btn-default btn-flat" @click="signOut">Sign out</a>
                   </div>
@@ -249,6 +249,7 @@
 <script>
 
   import axios from 'axios'
+  import bus from '../HelperComponents/Bus'
   export default {
 
     data: () => ({
@@ -295,6 +296,12 @@
 
         el.classList.toggle('sidebar-collapse')
         el.classList.toggle('sidebar-open')
+
+      },
+      passChange() {
+
+        bus.$emit("passchange")
+
       }
     },
 

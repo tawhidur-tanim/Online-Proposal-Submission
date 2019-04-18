@@ -2,19 +2,35 @@
     <div class="content">
 
       <box :icon="false">
+
+        <template slot="title">
+          Current Semester: {{ dash.currentSemesterName}}
+        </template>
+        
         <template slot="body">
           <div class="row">
             <div class="col-md-6">
               <table class="table table-hover table-bordered">
                 <tbody>
-                  <tr>
-                    <td>Supervisor: </td>
-                    <td>XXX</td>
-                  </tr>
-                  <tr>
-                    <td>Reviewer: </td>
-                    <td>XXX</td>
-                  </tr>
+
+                  <template v-if="roles.student === role">
+                    <tr>
+                      <td>Supervisor: </td>
+                      <td>{{dash.supervisor}}</td>
+                    </tr>
+                    <tr>
+                      <td>Reviewer: </td>
+                      <td>{{dash.reviewer}}</td>
+                    </tr>
+                  </template>
+
+                  <template v-else>
+                    <tr>
+                      <td>No. of student assigned: </td>
+                      <td>{{dash.numberOfStudents}}</td>
+                    </tr>
+                  </template>
+
                 </tbody>
               </table>
             </div>
@@ -22,16 +38,78 @@
         </template>
       </box>
 
+      <modal v-if="passModal" @close="passModal = false">
+
+        <template slot="header">
+          <h3>Password Change</h3>
+        </template>
+
+        <template slot="body">
+
+          <div class="form-group">
+            <label>Old Password</label>
+            <input class="form-control" type="password"
+                   v-model="oldPass" v-validate="'required'" name="password1"
+                   :class="{'error': errors.has('password1')}" data-vv-as="Password" />
+            <span class="error-font">{{ errors.first('password1') }}</span>
+          </div>
+
+          <div class="form-group">
+            <label>New Password</label>
+            <input class="form-control" type="password"
+                   v-model="newPass" v-validate="'required|min:6'" ref="pass" name="password"
+                   :class="{'error': errors.has('password')}" data-vv-as="New Password" />
+            <span class="error-font">{{ errors.first('password') }}</span>
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input class="form-control" type="password" v-model="confirmPass"
+                   v-validate="'required|confirmed:pass'" name="confirmPassword" data-vv-as="Confirm Password"
+                   :class="{'error': errors.has('confirmPassword')}" />
+            <span class="error-font">{{ errors.first('confirmPassword') }}</span>
+          </div>
+
+        </template>
+
+        <template slot="footer">
+          <button class="btn btn-success" @click="passEnter">Change</button>
+        </template>
+
+      </modal>
+
     </div>
 </template>
 
 <script>
 
   import box from '../HelperComponents/box'
+  import repo from '../Repositories/homeRepository'
+  import roles from '../rolesConstant'
+  import modal from '../HelperComponents/modal'
+  import bus from '../HelperComponents/Bus'
 
-export default {
-  data () {
-    return {}
+  export default {
+
+    data() {
+      return {
+
+        dash: {},
+        roles: roles,
+        passModal: false,
+        oldPass: '',
+        newPass: '',
+        confirmPass: '',
+      }
+    },
+
+    computed: {
+
+      role() {
+
+        return this.$store.getters.role;
+      }
+
     },
 
     beforeRouteEnter(to, from, next) {
@@ -52,8 +130,50 @@ export default {
     },
 
     components: {
-      box
+      box,
+      modal
+    },
+
+    created() {
+
+      repo.getDash().then(({ data }) => {
+
+        this.dash = data;
+
+      })
+
+      bus.$on("passchange", this.passChange);
+    },
+
+    methods: {
+
+      passChange() {
+
+        this.passModal = true;
+
+      },
+      passEnter() {
+
+        this.$validator.validateAll().then((result) => {
+
+          if(!result) {
+            return;
+          }
+
+          repo.passChange({ password: this.oldPass, newPassword: this.newPass, confirmPassword: this.confirmPass })
+            .then(() => {
+
+
+              this.$toastr.s("Password Changed");
+
+            })
+
+        })
+
+
+      }
     }
+
 }
 </script>
 

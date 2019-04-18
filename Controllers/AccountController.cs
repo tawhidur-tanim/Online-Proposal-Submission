@@ -185,6 +185,34 @@ namespace ProjectFinal101.Controllers
         }
 
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> PasswordChange(RegisterResource resource)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+
+                var result = await _userManager.ChangePasswordAsync(user, resource.Password, resource.ConfirmPassword);
+
+                if (result.Succeeded)
+                    return Ok();
+
+                return BadRequest(result.Errors);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+
         [HttpGet]
         [Authorize]
         public IActionResult GetMenu()

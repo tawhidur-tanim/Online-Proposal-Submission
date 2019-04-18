@@ -12,13 +12,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProjectFinal101.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = RoleReference.Admin)]
+    //[Authorize(Roles = RoleReference.Admin)]
     [ApiController]
     public class SemesterController : BaseController<SemesterCreateResource, Semester, ISemesterRepsitory>
     {
@@ -77,6 +76,7 @@ namespace ProjectFinal101.Controllers
         }
 
         [HttpGet("Semesters")]
+        [Authorize(Roles = RoleReference.Admin)]
         public IActionResult GetSemesters()
         {
             try
@@ -90,6 +90,7 @@ namespace ProjectFinal101.Controllers
         }
 
         [HttpPost("update")]
+        [Authorize(Roles = RoleReference.Admin)]
         public IActionResult UpdateSemester(SemesterCreateResource resource)
         {
             try
@@ -150,6 +151,7 @@ namespace ProjectFinal101.Controllers
 
 
         [HttpPost("students")]
+        [Authorize(Roles = RoleReference.Admin)]
         public async Task<IActionResult> UploadStudents([FromForm]FileResource fileResource)
         {
             try
@@ -232,8 +234,8 @@ namespace ProjectFinal101.Controllers
             {
                 var dash = new DashboardResource();
                 var user =
-                    _userRepository.GetStudent(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)
-                        ?.Value);
+                    _userRepository.GetStudent(GetUserId());
+
 
                 var currentSemester = Repository.GetCurrentSemester();
 
