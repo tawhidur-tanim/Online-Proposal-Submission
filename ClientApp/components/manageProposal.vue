@@ -14,6 +14,9 @@
         <div class="col-md-2 my-1">
           <appSelect :config="selectSeminar" v-model="seminarAllow" @change="changeSelectSeminar"></appSelect>
         </div>
+        <div class="col-md-2" style="margin-top: 32px;">
+         <button class="btn btn-success" @click="excelDownload">Get Excel</button>
+        </div>
       </div>
       <appTable :tableConfig="table"></appTable>
       <modal v-if="detailsModal" @close="detailsModal = false" cls="md">
@@ -211,6 +214,8 @@
   import modal from '../HelperComponents/modal'
   import autoComplete from 'vuejs-auto-complete'
   import roles from '../rolesConstant'
+  import axios from 'axios'
+import { Date } from 'core-js';
 
 
   export default {
@@ -581,6 +586,35 @@
             this.updateRow({ id: this.manageModal.id, student: this.manageModal.student });
 
           })
+      },
+
+      excelDownload() {
+
+        //var form = document.createElement("form");
+        //form.setAttribute("method", "get");
+        //form.setAttribute("action", "/api/proposal/excel");
+
+        //form.setAttribute("target", "_blank");
+
+        ////form.append("")
+
+        //document.body.appendChild(form);
+
+        //form.submit();
+        //form.remove();
+
+        axios({
+          method: 'post',
+          url: '/api/proposal/excel',
+          responseType: 'arraybuffer',
+        }).then((response) => {
+          let blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = this.$moment().format() + '.xlsx';
+          link.click()
+        })
+
       }
     },
 

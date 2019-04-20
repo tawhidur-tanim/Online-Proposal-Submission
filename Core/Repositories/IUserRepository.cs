@@ -27,5 +27,7 @@ namespace ProjectFinal101.Core.Repositories
         void PassStudent(string studentId);
 
         ApplicationUser GetStudent(string studentId);
+
+        int GetStudentTotalMarks(string studentId);
     }
 }

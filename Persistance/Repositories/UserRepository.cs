@@ -127,5 +127,16 @@ namespace ProjectFinal101.Persistance.Repositories
                  .Include(x => x.Supervisor)
                  .FirstOrDefault(x => x.Id == studentId);
         }
+
+        public int GetStudentTotalMarks(string studentId)
+        {
+            var marks = Context.StudentMarkMaps.Where(x => x.StudentId == studentId);
+            var sum = 0;
+            foreach (var studentMarkMap in marks)
+            {
+                sum += studentMarkMap.Marks;
+            }
+            return sum;
+        }
     }
 }

@@ -139,6 +139,8 @@ namespace ProjectFinal101.Controllers
                 var maps = Repository.GetStudentMarks(studentId, marksCategories.Select(x => x.Id))
                     .ToDictionary(x => x.MarksId);
 
+                var totalMarks = Repository.GetStudentTotalMarks(studentId);
+
                 var marksList = marksCategories.Select(catagory => new MarksResource
                 {
                     StudentId = studentId,
@@ -150,7 +152,7 @@ namespace ProjectFinal101.Controllers
                 })
                 .ToList();
 
-                return Ok(marksList);
+                return Ok(new { totalMarks, marksList });
             }
             catch (Exception e)
             {
@@ -186,11 +188,21 @@ namespace ProjectFinal101.Controllers
             }
         }
 
-        [HttpGet("passStudent/{studnetId}")]
+        [HttpGet("passStudent/{studentId}")]
         public IActionResult PassStudent(string studentId)
         {
             try
             {
+                var student = Repository.FirstOrDefault(x => x.Id == studentId);
+
+                if (student.SupervisorId != GetUserId())
+                    return BadRequest();
+
+                var totalMarks = Repository.GetStudentTotalMarks(studentId);
+
+                if (totalMarks < 40)
+                    return BadRequest("Marks Must be at least 40");
+
                 Repository.PassStudent(studentId);
                 UnitOfWork.Complete();
 

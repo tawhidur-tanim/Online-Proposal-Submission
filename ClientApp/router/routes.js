@@ -7,6 +7,7 @@ import semester from 'components/semester'
 import proposal from 'components/proposal'
 import manageProp from 'components/manageProposal'
 import supervisor from 'components/supervisor'
+import reviewer from 'components/reviewer'
 
 export const routes = [
 
@@ -53,6 +54,12 @@ export const routes = [
   {
     name: 'supervisor', path: '/supervisor', components: {
       default: supervisor,
+      nav: NavBar
+    }
+  },
+  {
+    name: 'reviewer', path: '/reviewer', components: {
+      default: reviewer,
       nav: NavBar
     }
   },

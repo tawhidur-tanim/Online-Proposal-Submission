@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Core.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
@@ -22,6 +23,20 @@ namespace ProjectFinal101.Controllers.BaseController
         protected readonly int ACTIVE = 1;
         protected readonly int PENDING = 2;
         protected readonly int DISABLED = 3;
+
+        protected Dictionary<int, string> ProposalStatus = new Dictionary<int, string>
+        {
+            {1, "Accepted"},
+            {2, "Pending"},
+            {3, "Rejected"}
+        };
+
+        protected Dictionary<int, string> ProjectTypes = new Dictionary<int, string>
+        {
+            {1, "Project"},
+            {2, "Internship"},
+            {3, "Thesis"}
+        };
 
         public BaseController(TRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
         {

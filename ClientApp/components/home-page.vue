@@ -193,7 +193,7 @@
 
         })
 
-        bus.$on("passchange", this.passChange);
+      //  bus.$on("passchange", this.passChange);
 
         repo.getStats().then(({ data }) => {
 
@@ -222,7 +222,6 @@
 
           repo.passChange({ password: this.oldPass, newPassword: this.newPass, confirmPassword: this.confirmPass })
             .then(() => {
-
 
               this.$toastr.s("Password Changed");
 

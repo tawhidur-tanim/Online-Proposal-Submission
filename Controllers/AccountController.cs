@@ -223,6 +223,7 @@ namespace ProjectFinal101.Controllers
                 new Menu { Route = "proposals", DisplayName = "Proposals", Icon = "fa fa-lightbulb-o"},
                 new Menu { Route = "manageProposal", DisplayName = "Manage Proposal", Icon = "fa fa-clock-o"},
                 new Menu { Route = "supervisor", DisplayName = "Supervised Student", Icon = "fa fa-sitemap"},
+                new Menu { Route = "reviewer", DisplayName = "Review Student", Icon = "fa fa-sitemap"},
 
             };
 
@@ -234,7 +235,9 @@ namespace ProjectFinal101.Controllers
             var teachers = new List<Menu>
             {
                 new Menu { Route = "manageProposal", DisplayName = "Manage Proposal", Icon = "fa fa-clock-o"},
-                new Menu { Route = "supervisor", DisplayName = "Supervised Student", Icon = "fa fa-sitemap"}
+                new Menu { Route = "supervisor", DisplayName = "Supervised Student", Icon = "fa fa-sitemap"},
+                new Menu { Route = "reviewer", DisplayName = "Review Student", Icon = "fa fa-sitemap"}
+
             };
 
             if (User.IsInRole(RoleReference.Student))

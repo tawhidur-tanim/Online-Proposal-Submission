@@ -1,4 +1,5 @@
 using AutoMapper;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -131,7 +132,7 @@ namespace ProjectFinal101.Controllers
         }
 
         [HttpGet("GetProposals")]
-        [Authorize(Roles = RoleReference.Admin)]
+        [Authorize(Roles = RoleReference.Admin_Teacher)]
         public IActionResult GetProposals()
         {
             try
@@ -147,7 +148,7 @@ namespace ProjectFinal101.Controllers
         }
 
         [HttpGet("status/{id}/{statusId}")]
-        [Authorize(Roles = RoleReference.Admin)]
+        [Authorize(Roles = RoleReference.Admin_Teacher)]
         public IActionResult ChangeStatus(long id, byte statusId)
         {
             try
@@ -165,6 +166,46 @@ namespace ProjectFinal101.Controllers
                 UnitOfWork.Complete();
 
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("excel")]
+        [Authorize(Roles = RoleReference.Admin_Teacher)]
+        public IActionResult GetExcel()
+        {
+            try
+            {
+                var workBook = new XLWorkbook();
+
+                var sheet = workBook.Worksheets.Add("Proposals"); //.Cell(1, 1).SetValue("Hello World");
+
+                sheet.ColumnWidth = 25;
+
+                sheet.Cell(1, 1).SetValue("Student Name").Style.Font.Bold = true;
+                sheet.Cell(1, 2).SetValue("Status").Style.Font.Bold = true;
+                sheet.Cell(1, 3).SetValue("Type").Style.Font.Bold = true;
+                sheet.Cell(1, 4).SetValue("Supervisor Name").Style.Font.Bold = true;
+                sheet.Cell(1, 5).SetValue("Reviewer Name").Style.Font.Bold = true;
+
+                var proposals = Repository.GetProposals();
+                var length = proposals.Count;
+
+                for (var i = 2; i <= length + 1; i++)
+                {
+                    sheet.Cell(i, 1).SetValue(proposals[i - 2].Student?.FullName);
+                    sheet.Cell(i, 2).SetValue(ProposalStatus[proposals[i - 2].Status]);
+                    sheet.Cell(i, 3).SetValue(ProjectTypes[proposals[i - 2].ProposalTypeId]);
+                    sheet.Cell(i, 4).SetValue(proposals[i - 2].Student?.Supervisor?.FullName);
+                    sheet.Cell(i, 5).SetValue(proposals[i - 2].Student?.Reviewer?.FullName);
+                }
+
+                var stream = new MemoryStream();
+                workBook.SaveAs(stream);
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "HelloWorld.xlsx");
             }
             catch (Exception e)
             {

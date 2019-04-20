@@ -102,12 +102,10 @@
         </div>
       </template>
     </modal>
-
-    <modal v-if="marksModal"  @close="marksModal = false" cls="md">
+    <modal v-if="marksModal" @close="marksModal = false" cls="md">
       <template slot="header">
         <h3>Students Marks</h3>
       </template>
-
       <template slot="body">
         <div class="row mb10" v-for="(cat, index) in marksCategory">
           <div class="col-md-2">
@@ -130,13 +128,11 @@
           </div>
         </div>
       </template>
-
       <template slot="footer">
         <button class="btn btn-success" @click="saveMarks">Save Marks</button>
       </template>
     </modal>
-
-    <confirmModal  v-if="confirmModal" :config="confirmConfig" @close="confirmModal = false" >
+    <confirmModal v-if="confirmModal" :config="confirmConfig" @close="confirmModal = false">
     </confirmModal>
 
   </div>
@@ -175,7 +171,7 @@
 
       var userId = this.$store.getters.getUserId;
 
-      repo.getStudentsBySupervisor(userId).then(({ data}) => {
+      repo.getStudentsByReviewerr(userId).then(({ data }) => {
         this.table.data = data;
 
       })
@@ -233,10 +229,6 @@
             Marks: {
               cssClass: 'btn-info',
               callBack: this.supMarks
-            },
-            Release: {
-              cssClass: 'btn-success',
-              callBack: this.confirmCall
             }
 
           },
@@ -248,7 +240,7 @@
                 if (query == -1) return true;
                 if (row.proposals.length == 0) return false;
 
-                return row.proposals[0].type == query; 
+                return row.proposals[0].type == query;
               }
             },
             {
@@ -256,7 +248,7 @@
               callback: (row, query) => {
 
                 if (query == -1) return true;
-                
+
                 return row.semesterId == query;
               }
             }
@@ -309,9 +301,7 @@
 
         confirmConfig: {
           callBack: () => {}
-        },
-
-        totalMarks: 0
+        }
       }
     },
 
@@ -326,6 +316,7 @@
         this.$tableEvent.$emit('vue-tables.filter::semester', this.semester.value);
 
       },
+
       details(row) {
 
         this.detailsModal = row.proposals.length > 0;
@@ -346,11 +337,12 @@
 
       supMarks(row) {
 
-        repo.getSupervisorCategory(row.semesterId,row.id).then(({ data }) => {
+        repo.getReviewerCategory(row.semesterId, row.id).then(({ data }) => {
 
           this.marksCategory = data.marksList;
           this.marksModal = true;
           this.totalMarks = data.totalMarks;
+
         })
 
       },
@@ -365,7 +357,7 @@
             return;
           }
 
-          repo.saveMarks(this.marksCategory, teacherId).then(({ data }) => {
+          repo.saveMarks(this.marksCategory, teacherId).then(() => {
 
             this.marksModal = false;
 
@@ -375,28 +367,6 @@
         })
 
 
-      },
-
-      confirmCall(row) {
-
-        this.confirmModal = true;
-        var self = this;
-
-        this.confirmConfig.callBack = function (root) {
-
-          repo.passStudent(row.id).then(() => {
-
-            var index = self.table.data.findIndex((item) => {
-              return row.id == item.id;
-            })
-            self.table.data.splice(index, 1);
-
-            root.$emit('close');
-
-          })
-
-        }
-
       }
 
     }
@@ -405,5 +375,4 @@
 
 </script>
 <style>
-
 </style>
