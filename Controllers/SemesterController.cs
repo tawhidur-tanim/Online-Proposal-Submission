@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ProjectFinal101.Controllers.BaseController;
+using ProjectFinal101.Core;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
@@ -171,9 +172,16 @@ namespace ProjectFinal101.Controllers
                 if (!_file.IsValidFile(fileResource.File))
                     return BadRequest();
 
-                var filePath = await SaveFile(fileResource);
+                var reader = new ExcelReader(_host);
 
-                var students = GetStudents(filePath).ToList();
+                var resources = await reader.GetValues(fileResource.File);
+
+                var students =
+                    resources.Select(x => new ApplicationUser { UserName = x.ColumnOne, FullName = x.ColumnTwo }).ToList();
+
+                //var filePath = await SaveFile(fileResource);
+
+                //var students = GetStudents(filePath).ToList();
 
                 var userNames = students.Select(x => x.UserName);
 
@@ -184,7 +192,7 @@ namespace ProjectFinal101.Controllers
                 students.ForEach(x => x.SemesterId = fileResource.SemesterId);
 
                 await _userRepository.InsertBulk(students);
-                await _userRepository.AssignRoles(students);
+                await _userRepository.AssignRoles(students, RoleReference.Student);
 
                 return Ok(new
                 {

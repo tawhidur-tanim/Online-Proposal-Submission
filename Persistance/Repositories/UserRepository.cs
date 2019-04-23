@@ -38,11 +38,11 @@ namespace ProjectFinal101.Persistance.Repositories
             }
         }
 
-        public async Task AssignRoles(List<ApplicationUser> users)
+        public async Task AssignRoles(List<ApplicationUser> users, string roleName)
         {
             foreach (var user in users)
             {
-                await _userManager.AddToRoleAsync(user, RoleReference.Student);
+                await _userManager.AddToRoleAsync(user, roleName);
             }
         }
 

@@ -1,4 +1,5 @@
 using ProjectFinal101.Core.Models;
+using ProjectFinal101.Core.Resources;
 using System.Collections.Generic;
 
 namespace ProjectFinal101.Core.Repositories
@@ -11,5 +12,6 @@ namespace ProjectFinal101.Core.Repositories
 
         IList<Proposal> GetProposalCount(int activeSemesterId);
 
+        IList<Proposal> GetProposals(ParamResource resource);
     }
 }

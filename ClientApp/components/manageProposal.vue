@@ -603,10 +603,30 @@ import { Date } from 'core-js';
         //form.submit();
         //form.remove();
 
+        var param = {
+          query: '',
+
+          filters: [
+            {
+              column: 'seminarAllow',
+              value: this.seminarAllow.value
+            },
+            {
+              column: 'ProposalTypeId',
+              value: this.selectedType.value
+            },
+            {
+              column: 'Status',
+              value: this.selected.value
+            }
+          ]
+        }
+
         axios({
           method: 'post',
           url: '/api/proposal/excel',
           responseType: 'arraybuffer',
+          data: param
         }).then((response) => {
           let blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
           let link = document.createElement('a')
@@ -614,6 +634,7 @@ import { Date } from 'core-js';
           link.download = this.$moment().format() + '.xlsx';
           link.click()
         })
+
 
       }
     },

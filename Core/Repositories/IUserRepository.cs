@@ -10,7 +10,7 @@ namespace ProjectFinal101.Core.Repositories
 
         Task InsertBulk(List<ApplicationUser> users);
 
-        Task AssignRoles(List<ApplicationUser> users);
+        Task AssignRoles(List<ApplicationUser> users, string roleName);
 
         IList<ApplicationUser> UserSearch(string query, string role);
 

@@ -1,13 +1,17 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFinal101.Controllers.BaseController;
+using ProjectFinal101.Core;
 using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Repositories;
 using ProjectFinal101.Core.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectFinal101.Controllers
 {
@@ -16,9 +20,12 @@ namespace ProjectFinal101.Controllers
     [Authorize(Roles = RoleReference.Admin_Teacher)]
     public class UserController : BaseController<UserResource, ApplicationUser, IUserRepository>
     {
-        public UserController(IUserRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IHostingEnvironment _host;
+
+        public UserController(IUserRepository repository, IMapper mapper, IUnitOfWork unitOfWork, IHostingEnvironment host)
             : base(repository, mapper, unitOfWork)
         {
+            _host = host;
         }
 
 
@@ -205,6 +212,30 @@ namespace ProjectFinal101.Controllers
 
                 Repository.PassStudent(studentId);
                 UnitOfWork.Complete();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+
+        [HttpPost("SaveTeacher")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveTeacher(IFormFile teacherList)
+        {
+            try
+            {
+                var reader = new ExcelReader(_host);
+
+                var values = await reader.GetValues(teacherList);
+
+                var teachers = values.Select(x => new ApplicationUser { UserName = x.ColumnOne, FullName = x.ColumnTwo }).ToList();
+
+                await Repository.InsertBulk(teachers);
+                await Repository.AssignRoles(teachers, RoleReference.Teacher);
 
                 return Ok();
             }

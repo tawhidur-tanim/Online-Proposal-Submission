@@ -175,7 +175,7 @@ namespace ProjectFinal101.Controllers
 
         [HttpPost("excel")]
         [Authorize(Roles = RoleReference.Admin_Teacher)]
-        public IActionResult GetExcel()
+        public IActionResult GetExcel([FromBody]ParamResource resource)
         {
             try
             {
@@ -191,7 +191,8 @@ namespace ProjectFinal101.Controllers
                 sheet.Cell(1, 4).SetValue("Supervisor Name").Style.Font.Bold = true;
                 sheet.Cell(1, 5).SetValue("Reviewer Name").Style.Font.Bold = true;
 
-                var proposals = Repository.GetProposals();
+                var proposals = Repository.GetProposals(resource);
+
                 var length = proposals.Count;
 
                 for (var i = 2; i <= length + 1; i++)
