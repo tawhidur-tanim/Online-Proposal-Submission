@@ -8,6 +8,7 @@ import proposal from 'components/proposal'
 import manageProp from 'components/manageProposal'
 import supervisor from 'components/supervisor'
 import reviewer from 'components/reviewer'
+import settings from 'components/settings'
 
 export const routes = [
 
@@ -60,6 +61,12 @@ export const routes = [
   {
     name: 'reviewer', path: '/reviewer', components: {
       default: reviewer,
+      nav: NavBar
+    }
+  },
+  {
+    name: 'settings', path: '/settings', components: {
+      default: settings,
       nav: NavBar
     }
   },

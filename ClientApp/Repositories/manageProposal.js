@@ -9,7 +9,19 @@ export default {
 
     const request = axios.get("/api/proposal/GetProposals")
 
-    request.catch().then(() => store.commit('toggleLoader'))
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
+
+    return request;
 
     return request;
 

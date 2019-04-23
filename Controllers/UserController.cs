@@ -234,6 +234,13 @@ namespace ProjectFinal101.Controllers
 
                 var teachers = values.Select(x => new ApplicationUser { UserName = x.ColumnOne, FullName = x.ColumnTwo }).ToList();
 
+                var userNames = teachers.Select(x => x.UserName);
+
+                var studentsInDb = Repository.Find(x => userNames.Contains(x.UserName)).Select(x => x.UserName);
+
+                teachers = teachers.Where(x => !studentsInDb.Contains(x.UserName)).ToList();
+
+
                 await Repository.InsertBulk(teachers);
                 await Repository.AssignRoles(teachers, RoleReference.Teacher);
 
