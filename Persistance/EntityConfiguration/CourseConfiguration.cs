@@ -13,8 +13,15 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd();
 
-            builder.Property(x => x.Name)
-                .HasMaxLength(255);
+            builder.Property(x => x.Title)
+                .HasMaxLength(255)
+                .IsRequired(true);
+
+            builder.Property(x => x.CourseCode)
+                .HasMaxLength(255)
+                .IsRequired(true);
+
+            builder.Property(x => x.Credit);
         }
     }
 }

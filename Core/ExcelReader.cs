@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using ProjectFinal101.Core.Models;
 using ProjectFinal101.Core.Resources;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,58 @@ namespace ProjectFinal101.Core
                 }
 
                 return excelResources;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IList<Course>> GetCourses(IFormFile courses)
+        {
+            try
+            {
+                var path = await SaveFile(courses);
+
+                var workBook = new XLWorkbook(path);
+
+                var courseList = new List<Course>();
+
+                foreach (var worksheet in workBook.Worksheets)
+                {
+                    var row = worksheet
+                        .FirstRowUsed()
+                        .RowUsed();
+
+                    row = row.RowBelow();
+
+                    while (!row.Cell(1).IsEmpty())
+                    {
+                        var courseTitle = row.Cell(2).GetString().Trim();
+                        var courseCode = row.Cell(3).GetString().Trim();
+                        int.TryParse(row.Cell(4).GetString().Trim(), out var courseCredit);
+
+                        if (!string.IsNullOrEmpty(courseTitle) && !string.IsNullOrEmpty(courseCode) && courseCredit != 0)
+                        {
+                            if (courseList.All(x => x.CourseCode != courseCode))
+                            {
+                                var course = new Course
+                                {
+                                    CourseCode = courseCode,
+                                    Credit = courseCredit,
+                                    Title = courseTitle
+                                };
+
+                                courseList.Add(course);
+                            };
+                        }
+
+                        row = row.RowBelow();
+
+                    }
+                }
+
+                return courseList;
             }
             catch (Exception e)
             {

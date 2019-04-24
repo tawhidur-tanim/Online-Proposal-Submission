@@ -41,6 +41,10 @@ namespace ProjectFinal101.Core
             CreateMap<ProposalWithOutNavResource, Proposal>()
                 .ForMember(x => x.ProposalTypeId, opt => opt.MapFrom(p => p.Type));
 
+
+            CreateMap<CourseResource, Course>()
+                .ForMember(x => x.Id, opt => opt.Ignore());
+
             // domain to resource
             CreateMap<Semester, SemesterCreateResource>()
                 .ForMember(x => x.Catagories, op => op.Ignore())
@@ -76,6 +80,8 @@ namespace ProjectFinal101.Core
             //  .ForMember(x => , opt => opt.MapFrom(p => p.))
 
             CreateMap<ApplicationUser, UserWithProposalResource>();
+
+            CreateMap<Course, CourseResource>();
 
 
         }

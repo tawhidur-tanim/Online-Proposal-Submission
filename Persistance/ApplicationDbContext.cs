@@ -22,6 +22,7 @@ namespace ProjectFinal101.Persistance
             builder.ApplyConfiguration(new ProposalConfiguration());
             builder.ApplyConfiguration(new ProposalTypeConfiguration());
             builder.ApplyConfiguration(new StudentMarkMapConfiguration());
+            builder.ApplyConfiguration(new CourseConfiguration());
 
             base.OnModelCreating(builder);
         }

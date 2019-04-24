@@ -58,6 +58,7 @@ namespace ProjectFinal101
             services.AddScoped<ISemesterCatagoryRepository, SemesterCatagoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProposalRepository, ProposalRepository>();
+            services.AddScoped<ICourseRepository, CourseRepository>();
 
             services.Configure<SemesterFile>(Configuration.GetSection("SemesterFile"));
             services.Configure<ProposalFile>(Configuration.GetSection("ProposalFile"));

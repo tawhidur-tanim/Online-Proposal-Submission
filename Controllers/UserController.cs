@@ -223,7 +223,6 @@ namespace ProjectFinal101.Controllers
 
 
         [HttpPost("SaveTeacher")]
-        [AllowAnonymous]
         public async Task<IActionResult> SaveTeacher(IFormFile teacherList)
         {
             try

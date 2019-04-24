@@ -1,6 +1,6 @@
-namespace ProjectFinal101.Core.Models
+namespace ProjectFinal101.Core.Resources
 {
-    public class Course
+    public class CourseResource
     {
         public int Id { get; set; }
 
