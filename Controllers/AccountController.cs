@@ -224,12 +224,16 @@ namespace ProjectFinal101.Controllers
                 new Menu { Route = "manageProposal", DisplayName = "Manage Proposal", Icon = "fa fa-clock-o"},
                 new Menu { Route = "supervisor", DisplayName = "Supervised Student", Icon = "fa fa-sitemap"},
                 new Menu { Route = "reviewer", DisplayName = "Review Student", Icon = "fa fa-sitemap"},
+                new Menu { Route = "settings", DisplayName = "System Settings", Icon = "fa fa-cog"},
+                new Menu { Route = "gpa", DisplayName = "Course GPA", Icon = "fa fa-keyboard-o"},
 
             };
 
             var students = new List<Menu>
             {
-                new Menu { Route = "proposals", DisplayName = "Proposals", Icon = "fa fa-lightbulb-o"}
+                new Menu { Route = "proposals", DisplayName = "Proposals", Icon = "fa fa-lightbulb-o"},
+                new Menu { Route = "gpa", DisplayName = "Course GPA", Icon = "fa fa-keyboard-o"},
+
             };
 
             var teachers = new List<Menu>

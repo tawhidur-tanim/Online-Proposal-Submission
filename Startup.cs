@@ -52,6 +52,11 @@ namespace ProjectFinal101
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OnlyStudentAccess", policy => policy.RequireRole(RoleReference.Student));
+            });
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IWeatherRepository, WeatherRepositoryFake>();
             services.AddScoped<ISemesterRepsitory, SemesterRepository>();

@@ -9,6 +9,7 @@ import manageProp from 'components/manageProposal'
 import supervisor from 'components/supervisor'
 import reviewer from 'components/reviewer'
 import settings from 'components/settings'
+import courseGpa from 'components/courseGpa'
 
 export const routes = [
 
@@ -67,6 +68,12 @@ export const routes = [
   {
     name: 'settings', path: '/settings', components: {
       default: settings,
+      nav: NavBar
+    }
+  },
+  {
+    name: 'gpa', path: '/gpa', components: {
+      default: courseGpa,
       nav: NavBar
     }
   },

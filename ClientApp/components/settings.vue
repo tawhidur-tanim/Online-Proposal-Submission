@@ -60,19 +60,19 @@
       <template slot="body">
         <div class="form-group">
           <label>Course Title</label>
-          <input class="form-control" name="title" v-validate="'required'" :class="{'error': errors.has('title')}"
+          <input class="form-control" name="title" v-validate="'required'" :class="{'error': errors.has('create.title')}"
                  v-model="course.title" data-vv-scope="create" />
         </div>
 
         <div class="form-group">
           <label>Course Code</label>
-          <input class="form-control" name="code" v-validate="'required'" :class="{'error': errors.has('code')}"
+          <input class="form-control" name="code" v-validate="'required'" :class="{'error': errors.has('create.code')}"
                  v-model="course.courseCode" data-vv-scope="create" />
         </div>
 
         <div class="form-group">
           <label>Course Credit</label>
-          <input class="form-control" name="credit" v-validate="'required|numeric'" :class="{'error': errors.has('credit')}"
+          <input class="form-control" name="credit" v-validate="'required|numeric'" :class="{'error': errors.has('create.credit')}"
                  v-model="course.credit" data-vv-scope="create" />
         </div>
       </template>
@@ -239,6 +239,23 @@
         })
 
       }
+    },
+
+    beforeRouteEnter(to, from, next) {
+
+      next(vm => {
+
+        // console.log(vm.$store.getters.isAuthenticated, vm.$store.getters.state, vm.$store.getters.token, vm.$store.state.Auth.token, to)
+
+        if (vm.$store.getters.isAuthenticated && vm.$store.getters.role == roles.admin) {
+
+          return vm.$router.push({ name: to.name })
+        }
+        else {
+          return vm.$router.push('/login')
+        }
+
+      })
     }
 
   }

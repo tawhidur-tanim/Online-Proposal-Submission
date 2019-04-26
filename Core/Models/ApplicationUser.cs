@@ -33,12 +33,15 @@ namespace ProjectFinal101.Core.Models
 
         public IEnumerable<StudentMarkMap> StudentsMark { get; set; }
 
+        public IEnumerable<StudentCourseGpaMap> GpaMaps { get; set; }
+
         public ApplicationUser()
         {
             Proposals = new List<Proposal>();
             SupervisedStudents = new List<ApplicationUser>();
             ReviewStudents = new List<ApplicationUser>();
             Marks = new List<StudentMarkMap>();
+            GpaMaps = new List<StudentCourseGpaMap>();
         }
     }
 }
