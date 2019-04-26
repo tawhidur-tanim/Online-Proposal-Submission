@@ -110,6 +110,9 @@
             </div>
           </div>
         </template>
+        <template slot="footer" v-if="modalData === 2">
+          <button class="btn btn-primary" @click="gpaDetails">GPA Details</button>
+        </template>
       </modal>
       <modal v-if="manageModalShow" @close="manageModalShow = false" :cls="manageClass">
         <template slot="header">
@@ -203,6 +206,41 @@
           <button class="btn btn-success" @click="saveAttendance">Save</button>
         </template>
       </modal>
+
+      <modal v-if="gpaShow" @close="gpaShow = false" :cls="'md'">
+        <template slot="header">
+          <h3>GPA Details</h3>
+        </template>
+
+        <template slot="body">
+          <div style="overflow:scroll; height:400px;">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Course Name</th>
+                  <th>Course Code</th>
+                  <th>Credit</th>
+                  <th>GPA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="course in courseList">
+                  <td>{{ course.title }}</td>
+                  <td>{{ course.courseCode }}</td>
+                  <td>{{ course.credit }}</td>
+                  <td>
+                    {{ course.gpa }}
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+
+
+        </template>
+      </modal>
+
     </div>
   </div>
 </template>
@@ -215,7 +253,8 @@
   import autoComplete from 'vuejs-auto-complete'
   import roles from '../rolesConstant'
   import axios from 'axios'
-import { Date } from 'core-js';
+  import gpaRepo from '../Repositories/gpaRepository'
+  import { Date } from 'core-js';
 
 
   export default {
@@ -393,7 +432,9 @@ import { Date } from 'core-js';
         selectedObject: {},
 
         seminarAttendance: { value: null },
+        gpaShow: false,
 
+        courseList: []
 
       }
     },
@@ -453,7 +494,7 @@ import { Date } from 'core-js';
 
         this.modalData = row.type;
 
-        if (row.type == 3) {
+        if (row.type == 2) {
 
           this.map(row, this.intern);
 
@@ -589,20 +630,6 @@ import { Date } from 'core-js';
       },
 
       excelDownload() {
-
-        //var form = document.createElement("form");
-        //form.setAttribute("method", "get");
-        //form.setAttribute("action", "/api/proposal/excel");
-
-        //form.setAttribute("target", "_blank");
-
-        ////form.append("")
-
-        //document.body.appendChild(form);
-
-        //form.submit();
-        //form.remove();
-
         var param = {
           query: '',
 
@@ -636,6 +663,16 @@ import { Date } from 'core-js';
         })
 
 
+      },
+
+      gpaDetails() {
+
+        this.gpaShow = true;
+
+        gpaRepo.getCourses(this.intern.student.id).then(({data }) => {
+
+          this.courseList = data;
+        })
       }
     },
 

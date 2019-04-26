@@ -101,7 +101,7 @@
       },
 
       reloadTable() {
-        repo.getCourses().then(({ data }) => {
+        repo.getCourses(this.$store.getters.getUserId).then(({ data }) => {
 
           this.courseList = data;
 

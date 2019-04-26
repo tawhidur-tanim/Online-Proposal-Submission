@@ -5,11 +5,11 @@ import store from "../store/index"
 export default {
 
 
-  getCourses() {
+  getCourses(studentId) {
 
     store.commit('toggleLoader');
 
-    const request = axios.get(`/api/course/getcourses`);
+    const request = axios.get(`/api/course/getcourses/${studentId}`);
 
     request.catch(() => {
 

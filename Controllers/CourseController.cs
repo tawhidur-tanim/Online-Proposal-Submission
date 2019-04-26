@@ -51,16 +51,21 @@ namespace ProjectFinal101.Controllers
         }
 
 
-        [HttpGet("getCourses")]
+        [HttpGet("getCourses/{studentId}")]
         [Authorize(Roles = RoleReference.Admin_Teacher_Student)]
-        public IActionResult GetCourses()
+        public IActionResult GetCourses(string studentId)
         {
             try
             {
+                if (User.IsInRole(RoleReference.Student) && GetUserId() != studentId)
+                {
+                    return BadRequest();
+                }
+
                 var courses = Repository.GetAll().ToList();
 
                 var studentCourses = Repository
-                    .GetStudentCourse(GetUserId()).ToDictionary(x => x.CourseId);
+                    .GetStudentCourse(studentId).ToDictionary(x => x.CourseId);
 
                 var studentCourseIds = studentCourses
                     .Where(x => Math.Abs(x.Value.Gpa) > 0)

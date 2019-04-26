@@ -113,6 +113,7 @@ export const util = {
 
         if (to.hasOwnProperty(key)) {
           if (typeof to[key] === typeof from[key]) {
+
             to[key] = from[key];
 
           }
