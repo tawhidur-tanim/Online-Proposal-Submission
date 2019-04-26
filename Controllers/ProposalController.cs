@@ -22,20 +22,36 @@ namespace ProjectFinal101.Controllers
         private readonly IHostingEnvironment _hosting;
         private readonly ISemesterRepsitory _semesterRepsitory;
         private readonly IUserRepository _userRepository;
+        private readonly ICourseRepository _courseRepository;
         private readonly ProposalFile _file;
         public ProposalController(IProposalRepository repository, IMapper mapper, IUnitOfWork unitOfWork,
-            IOptionsSnapshot<ProposalFile> snapshot, IHostingEnvironment hosting, ISemesterRepsitory semesterRepsitory, IUserRepository userRepository)
+            IOptionsSnapshot<ProposalFile> snapshot, IHostingEnvironment hosting, ISemesterRepsitory semesterRepsitory, IUserRepository userRepository, ICourseRepository courseRepository)
         : base(repository, mapper, unitOfWork)
         {
             _hosting = hosting;
             _semesterRepsitory = semesterRepsitory;
             _userRepository = userRepository;
+            _courseRepository = courseRepository;
             _file = snapshot.Value;
         }
 
         protected override Proposal BeforeCreate(Proposal model, ProposalResource resource)
         {
             var userId = GetUserId();
+
+            if (resource.Type == ProposalTypeName.Internship)
+            {
+                var courses = _courseRepository.GetAll();
+
+                var studentGpa = _courseRepository.GetStudentCourse(userId);
+
+                if (studentGpa.Count != courses.Count())
+                {
+                    Validation = true;
+                    Message = "Please Enter GPA of all required courses";
+                }
+            }
+
             model.StudentId = userId;
 
             model.Status = ProposalStstus.Pending;
