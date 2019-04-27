@@ -112,6 +112,7 @@
         </template>
         <template slot="footer" v-if="modalData === 2">
           <button class="btn btn-primary" @click="gpaDetails">GPA Details</button>
+          <button class="btn btn-primary" @click="cvDownload(intern.id)">CV</button>
         </template>
       </modal>
       <modal v-if="manageModalShow" @close="manageModalShow = false" :cls="manageClass">
@@ -409,7 +410,8 @@
           contactForSupervisor: '',
           type: 2,
           status: 2,
-          student: null
+          student: null,
+          id: 0
         },
 
         manageModal: {
@@ -660,7 +662,11 @@
           link.href = window.URL.createObjectURL(blob)
           link.download = this.$moment().format() + '.xlsx';
           link.click()
-        })
+          })
+          .catch(() => {
+
+            this.$toastr.e("Somwthing Gone Wrong");
+          })
 
 
       },
@@ -673,6 +679,37 @@
 
           this.courseList = data;
         })
+      },
+
+      cvDownload(id) {
+
+        //var form = document.createElement("form");
+        //form.setAttribute("method", "get");
+        //form.setAttribute("action", "/api/proposal/getCv/"+id);
+        //form.setAttribute("target", "_blank");
+        //document.body.appendChild(form);
+        //form.submit();
+        //form.remove();
+
+
+        axios({
+          method: 'get',
+          url: '/api/proposal/getCv/'+id,
+          responseType: 'arraybuffer',
+        }).then((response) => {
+
+         // console.log(response.headers['content-disposition'].split(';')[1])
+
+          let blob = new Blob([response.data], { type: response.headers['Content-Type'] });
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = response.headers['content-disposition'].split(';')[1].split('=')[1];
+          link.click()
+        })
+          .catch((error) => {
+            this.$toastr.e("Somwthing Gone Wrong");
+
+          })
       }
     },
 

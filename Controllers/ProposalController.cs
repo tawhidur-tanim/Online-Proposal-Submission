@@ -3,6 +3,7 @@ using ClosedXML.Excel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using ProjectFinal101.Controllers.BaseController;
 using ProjectFinal101.Core.Models;
@@ -11,6 +12,7 @@ using ProjectFinal101.Core.Resources;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectFinal101.Controllers
 {
@@ -106,7 +108,7 @@ namespace ProjectFinal101.Controllers
                 if (!_file.IsValidFile(resource.File))
                     return BadRequest();
 
-                var path = Path.Combine(_hosting.ContentRootPath, "uploads", Guid.NewGuid() + Path.GetExtension(resource.File.Name));
+                var path = Path.Combine(_hosting.ContentRootPath, "uploads", Guid.NewGuid() + Path.GetExtension(resource.File.FileName));
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
@@ -223,6 +225,47 @@ namespace ProjectFinal101.Controllers
                 var stream = new MemoryStream();
                 workBook.SaveAs(stream);
                 return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "HelloWorld.xlsx");
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+
+        [HttpGet("getCv/{proposalId}")]
+        // [Authorize(Roles = RoleReference.Admin_Teacher)]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCv(int proposalId)
+        {
+            try
+            {
+                if (proposalId <= 0)
+                {
+                    return BadRequest();
+                }
+
+                var proposal = Repository.FirstOrDefault(x => x.Id == proposalId);
+
+                if (string.IsNullOrEmpty(proposal.CvPath))
+                    return BadRequest();
+
+                var memoryStream = new MemoryStream();
+
+                using (var fileStream = new FileStream(proposal.CvPath, FileMode.Open))
+                {
+                    await fileStream.CopyToAsync(memoryStream);
+
+                }
+
+                var provider = new FileExtensionContentTypeProvider();
+
+                if (!provider.TryGetContentType(Path.GetFileName(proposal.CvPath), out var contentType))
+                {
+                    contentType = "application/octet-stream";
+                }
+                // memoryStream.Position = 0;
+                return File(memoryStream.ToArray(), contentType, Path.GetFileName(proposal.CvPath));
             }
             catch (Exception e)
             {
