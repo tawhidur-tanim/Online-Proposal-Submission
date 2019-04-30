@@ -23,7 +23,6 @@ export default {
 
     return request;
 
-    return request;
 
   },
 
@@ -34,7 +33,17 @@ export default {
 
     const request = axios.get(`/api/proposal/status/${id}/${statusId}`);
 
-    request.catch().then(() => store.commit('toggleLoader'))
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
 
     return request;
 
@@ -47,7 +56,17 @@ export default {
 
     const request = axios.post("/api/user/assign", data);
 
-    request.catch().then(() => store.commit('toggleLoader'))
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
 
     return request;
 
@@ -59,7 +78,38 @@ export default {
 
     const request = axios.get(`/api/user/seminar?studentId=${studentId}&status=${status}`);
 
-    request.catch().then(() => store.commit('toggleLoader'))
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
+
+    return request;
+  },
+
+  saveComments(comments) {
+
+    store.commit('toggleLoader');
+
+    const request = axios.post(`/api/proposal/SaveComments`,comments);
+
+    request.catch(() => {
+
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+
+    }).then(() => {
+      if (store.getters.isSpin) {
+        store.commit('toggleLoader')
+      }
+    })
 
     return request;
   }

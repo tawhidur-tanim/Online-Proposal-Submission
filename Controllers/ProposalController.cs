@@ -273,5 +273,29 @@ namespace ProjectFinal101.Controllers
             }
         }
 
+
+        [HttpPost("SaveComments")]
+        [Authorize(Roles = RoleReference.Admin_Teacher)]
+        public IActionResult SaveComments(CommentsResourse resourse)
+        {
+            try
+            {
+                var proposal = Repository.FirstOrDefault(x => x.Id == resourse.Id);
+
+                if (proposal == null)
+                    return BadRequest();
+
+                proposal.Comments = resourse.Comments;
+
+                UnitOfWork.Complete();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+        }
+
     }
 }

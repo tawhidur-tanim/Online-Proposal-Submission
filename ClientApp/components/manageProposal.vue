@@ -242,6 +242,23 @@
         </template>
       </modal>
 
+      <modal v-if="remarksModalShow" @close="remarksModalShow = false" cls="md">
+        <template  slot="header">
+          <h3>Comments On Mid Defense</h3>
+        </template>
+
+        <template slot="body">
+          <div class="form-group">
+            <label>Comments: </label>
+            <textarea class="form-control" rows="8" v-model="comments"></textarea>
+          </div>
+        </template>
+
+        <template slot="footer">
+          <button class="btn btn-success" @click="SaveComments">Save</button>
+        </template>
+      </modal>
+
     </div>
   </div>
 </template>
@@ -321,13 +338,19 @@
 
             Manage: {
               callBack: this.manage,
-              cssClass: 'btn btn-primary'
+              cssClass: 'btn btn-primary btn-sm'
             },
 
             Seminar: {
 
               callBack: this.seminarModal,
-              cssClass: 'btn btn-info'
+              cssClass: 'btn btn-info btn-sm'
+
+            },
+            Comments: {
+
+              callBack: this.addComments,
+              cssClass: 'btn btn-warning btn-sm'
 
             }
           },
@@ -436,8 +459,13 @@
         seminarAttendance: { value: null },
         gpaShow: false,
 
-        courseList: []
+        courseList: [],
 
+        remarksModalShow: false,
+
+        comments: '',
+
+        proposalId: 0
       }
     },
 
@@ -710,6 +738,42 @@
             this.$toastr.e("Somwthing Gone Wrong");
 
           })
+      },
+
+      addComments(row) {
+
+        this.remarksModalShow = true;
+
+        this.comments = row.comments ? row.comments : '';
+
+        this.proposalId = row.id;
+      },
+
+      SaveComments() {
+
+        var comments = {
+
+          comments: this.comments,
+          id: this.proposalId
+        }
+
+        repo.saveComments(comments)
+          .then(() => {
+            this.$toastr.s("Success");
+
+            var index = this.table.data.findIndex(x => x.id == this.proposalId);
+
+            this.table.data[index].comments = this.comments;
+
+            this.remarksModalShow = false;
+
+
+          })
+          .catch(() => {
+
+            this.$toastr.e("Something Gone Wrong");
+          })
+
       }
     },
 

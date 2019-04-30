@@ -40,5 +40,7 @@ namespace ProjectFinal101.Core.Models
 
         public string CvPath { get; set; }
 
+        public string Comments { get; set; }
+
     }
 }

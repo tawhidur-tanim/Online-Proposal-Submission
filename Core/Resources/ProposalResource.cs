@@ -40,6 +40,9 @@ namespace ProjectFinal101.Core.Resources
 
         public string ContactForSupervisor { get; set; }
 
+        public string Comments { get; set; }
+
+
         public UserResource Student { get; set; }
 
         public UserResource Supervisor { get; set; }

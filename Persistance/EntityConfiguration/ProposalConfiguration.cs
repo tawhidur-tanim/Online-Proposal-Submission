@@ -47,6 +47,9 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
 
 
             builder.Property(x => x.CvPath)
+                .HasMaxLength(1000);
+
+            builder.Property(x => x.Comments)
                 .HasMaxLength(300);
         }
     }
