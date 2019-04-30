@@ -201,13 +201,19 @@ namespace ProjectFinal101.Controllers
 
                 var sheet = workBook.Worksheets.Add("Proposals"); //.Cell(1, 1).SetValue("Hello World");
 
-                sheet.ColumnWidth = 25;
+                sheet.ColumnWidth = 30;
+                sheet.Author = User.Identity.Name;
+                sheet.RowHeight = 30;
 
-                sheet.Cell(1, 1).SetValue("Student Name").Style.Font.Bold = true;
-                sheet.Cell(1, 2).SetValue("Status").Style.Font.Bold = true;
-                sheet.Cell(1, 3).SetValue("Type").Style.Font.Bold = true;
-                sheet.Cell(1, 4).SetValue("Supervisor Name").Style.Font.Bold = true;
-                sheet.Cell(1, 5).SetValue("Reviewer Name").Style.Font.Bold = true;
+                sheet.Cell(1, 1).SetValue("Serial").Style.Font.Bold = true;
+                sheet.Cell(1, 1).Style.Alignment.Indent = 1;
+                sheet.Cell(1, 2).SetValue("Student Name").Style.Font.Bold = true;
+                sheet.Cell(1, 3).SetValue("Status").Style.Font.Bold = true;
+                sheet.Cell(1, 4).SetValue("Type").Style.Font.Bold = true;
+                sheet.Cell(1, 5).SetValue("Supervisor Name").Style.Font.Bold = true;
+                sheet.Cell(1, 6).SetValue("Reviewer Name").Style.Font.Bold = true;
+                sheet.Cell(1, 7).SetValue("Comments").Style.Font.Bold = true;
+
 
                 var proposals = Repository.GetProposals(resource);
 
@@ -215,12 +221,17 @@ namespace ProjectFinal101.Controllers
 
                 for (var i = 2; i <= length + 1; i++)
                 {
-                    sheet.Cell(i, 1).SetValue(proposals[i - 2].Student?.FullName);
-                    sheet.Cell(i, 2).SetValue(ProposalStatus[proposals[i - 2].Status]);
-                    sheet.Cell(i, 3).SetValue(ProjectTypes[proposals[i - 2].ProposalTypeId]);
-                    sheet.Cell(i, 4).SetValue(proposals[i - 2].Student?.Supervisor?.FullName);
-                    sheet.Cell(i, 5).SetValue(proposals[i - 2].Student?.Reviewer?.FullName);
+                    sheet.Cell(i, 1).SetValue(i - 1);
+                    sheet.Cell(i, 2).SetValue(proposals[i - 2].Student?.FullName);
+                    sheet.Cell(i, 3).SetValue(ProposalStatus[proposals[i - 2].Status]);
+                    sheet.Cell(i, 4).SetValue(ProjectTypes[proposals[i - 2].ProposalTypeId]);
+                    sheet.Cell(i, 5).SetValue(proposals[i - 2].Student?.Supervisor?.FullName);
+                    sheet.Cell(i, 6).SetValue(proposals[i - 2].Student?.Reviewer?.FullName);
+                    sheet.Cell(i, 7).SetValue(proposals[i - 2].Comments);
+                    sheet.Cell(i, 7).Style.Alignment.WrapText = true;
                 }
+
+                sheet.Columns().AdjustToContents();
 
                 var stream = new MemoryStream();
                 workBook.SaveAs(stream);
@@ -280,6 +291,10 @@ namespace ProjectFinal101.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+
                 var proposal = Repository.FirstOrDefault(x => x.Id == resourse.Id);
 
                 if (proposal == null)

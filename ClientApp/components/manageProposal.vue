@@ -250,7 +250,8 @@
         <template slot="body">
           <div class="form-group">
             <label>Comments: </label>
-            <textarea class="form-control" rows="8" v-model="comments"></textarea>
+            <textarea class="form-control" rows="8" v-model="comments" v-validate="'max:3000'" name="comments"
+                      :class="{'error': errors.has('comments')}"></textarea>
           </div>
         </template>
 

@@ -50,7 +50,7 @@ namespace ProjectFinal101.Persistance.EntityConfiguration
                 .HasMaxLength(1000);
 
             builder.Property(x => x.Comments)
-                .HasMaxLength(300);
+                .HasMaxLength(3000);
         }
     }
 }
